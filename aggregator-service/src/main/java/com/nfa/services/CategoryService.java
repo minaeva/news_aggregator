@@ -15,4 +15,5 @@ public interface CategoryService {
 
     void deleteById(int theId);
 
+    public Category getByNameOrSave(String name);
 }

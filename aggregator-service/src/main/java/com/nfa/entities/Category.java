@@ -13,12 +13,13 @@ import java.util.List;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
+
     @Column(name = "name")
-    String name;
-    @ManyToMany(
-            cascade = {
+    private String name;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
                     CascadeType.DETACH,
                     CascadeType.MERGE,
                     CascadeType.PERSIST,

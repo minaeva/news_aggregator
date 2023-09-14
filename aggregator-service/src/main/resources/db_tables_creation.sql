@@ -9,26 +9,33 @@ CREATE DATABASE aggregator_db
 
 GRANT ALL ON DATABASE aggregator_db TO news_admin;
 
+DROP TABLE public.article_category;
+DROP TABLE public.category;
+DROP TABLE public.article;
+DROP TABLE public.source;
+
+
 CREATE TABLE public.category
 (
     id integer NOT NULL,
-    name character varying(30) NOT NULL,
+    name character varying(100) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE public.source
 (
     id integer NOT NULL,
-    name character varying(20) NOT NULL,
+    name character varying(100) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE public.article
 (
     id integer NOT NULL,
-    title character varying(20) NOT NULL,
-    description character varying(200),
-    url character varying(50),
+    title character varying(250) NOT NULL,
+    description character varying(400),
+    content character varying(800),
+    url character varying(200),
     date_added date,
     source_id integer,
     PRIMARY KEY (id),

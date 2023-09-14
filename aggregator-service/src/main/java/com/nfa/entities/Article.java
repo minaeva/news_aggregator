@@ -3,39 +3,46 @@ package com.nfa.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "article")
 @Data
 @NoArgsConstructor
 public class Article {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
+
     @Column(name = "title")
-    String title;
+    private String title;
+
     @Column(name = "description")
-    String description;
+    private String description;
+
+    @Column(name = "content")
+    private String content;
+
     @Column(name = "url")
-    String url;
+    private String url;
+
     @Column(name = "date_added")
-    @CreationTimestamp
-    Date dateAdded;
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+    private Date dateAdded;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "source_id")
-    Source source;
-    @ManyToMany(
-            cascade = {CascadeType.ALL})
+    private Source source;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(
             name = "article_category",
             joinColumns = @JoinColumn(name = "article_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    List<Category> categories;
+    private Set<Category> categories;
 
     public Article(String title, String description, String url) {
         this.title = title;

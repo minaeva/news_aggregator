@@ -10,11 +10,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Source {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
+
     @Column(name = "name")
-    String name;
+    private String name;
 
     public Source(String name) {
         this.name = name;

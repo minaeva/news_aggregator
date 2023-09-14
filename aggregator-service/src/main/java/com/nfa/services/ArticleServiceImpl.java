@@ -6,6 +6,7 @@ import com.nfa.dto.SourceDto;
 import com.nfa.entities.Article;
 import com.nfa.entities.Category;
 import com.nfa.repositories.ArticleRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
+
     private static final String DATE_ADDED = "dateAdded";
     private final ArticleRepository articleRepository;
 
@@ -40,6 +43,15 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article save(ArticleDto articleDto) {
         return articleRepository.save(dtoToEntity(articleDto));
+    }
+
+    @Override
+    @Transactional
+    public List<Article> saveAll(List<ArticleDto> articleDtoList) {
+        return articleRepository.saveAll(
+                articleDtoList.stream()
+                        .map(articleDto -> dtoToEntity(articleDto))
+                        .toList());
     }
 
     @Override
@@ -82,18 +94,18 @@ public class ArticleServiceImpl implements ArticleService {
         article.setDateAdded(articleDto.getDateAdded());
         //todo article.setSource(articleDto.getSourceDto());
         if (articleDto.getCategories() != null) {
-            article.setCategories(dtoToEntityCategoryList(articleDto));
+            article.setCategories(
+                    articleDto.getCategories().stream()
+                            .map(categoryDto -> categoryDtoToEntity(categoryDto))
+                            .collect(Collectors.toSet()));
         }
         return article;
     }
 
-    private List<Category> dtoToEntityCategoryList(ArticleDto articleDto) {
-        List<Category> categoryList = new ArrayList<>();
-        for (CategoryDto categoryDto : articleDto.getCategories()) {
-            Category category = new Category();
-            category.setName(categoryDto.getName());
-            categoryList.add(category);
-        }
-        return categoryList;
+    private Category categoryDtoToEntity(CategoryDto categoryDto) {
+        Category category = new Category();
+        category.setId(categoryDto.getId());
+        category.setName(categoryDto.getName());
+        return category;
     }
 }

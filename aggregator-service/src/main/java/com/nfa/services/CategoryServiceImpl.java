@@ -1,5 +1,6 @@
 package com.nfa.services;
 
+import com.nfa.dto.CategoryDto;
 import com.nfa.entities.Category;
 import com.nfa.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
+
     private final CategoryRepository categoryRepository;
 
     @Override
@@ -31,5 +33,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteById(int theId) {
         categoryRepository.deleteById(theId);
+    }
+
+    public Category getByNameOrSave(String name) {
+        Category savedCategory;
+        Optional<Category> existentCategory = categoryRepository.findByName(name);
+        savedCategory = existentCategory.orElseGet(() -> categoryRepository.save(new Category(name)));
+        return savedCategory;
     }
 }

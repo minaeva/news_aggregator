@@ -11,6 +11,8 @@ public interface SourceService {
 
     SourceDto findById(int theId);
 
+    public Source getByNameOrSave(String name);
+
     Source save(SourceDto sourceDto);
 
     void deleteById(int theId);

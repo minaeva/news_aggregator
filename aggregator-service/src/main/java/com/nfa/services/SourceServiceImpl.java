@@ -24,10 +24,15 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public SourceDto findById(int theId) {
         Optional<Source> source = sourceRepository.findById(theId);
-        if (source.get() != null) {
-            return entityToDto(source.get());
-        }
-        return null;
+        return source.map(this::entityToDto).orElse(null);
+    }
+
+    @Override
+    public Source getByNameOrSave(String name) {
+        Source savedSource;
+        Optional<Source> existentSource = sourceRepository.findByName(name);
+        savedSource = existentSource.orElseGet(() -> sourceRepository.save(new Source(name)));
+        return savedSource;
     }
 
     @Override
@@ -39,6 +44,7 @@ public class SourceServiceImpl implements SourceService {
     public void deleteById(int theId) {
         sourceRepository.deleteById(theId);
     }
+
     private Source dtoToEntity(SourceDto sourceDto) {
         return new Source(sourceDto.getName());
     }
@@ -47,9 +53,9 @@ public class SourceServiceImpl implements SourceService {
         return new SourceDto(source.getName());
     }
 
-    private  List<SourceDto> entityToDtoList(List<Source> sources) {
+    private List<SourceDto> entityToDtoList(List<Source> sources) {
         List<SourceDto> sourceDtoList = new ArrayList<>();
-        for (Source source: sources) {
+        for (Source source : sources) {
             sourceDtoList.add(new SourceDto(source.getName()));
         }
         return sourceDtoList;

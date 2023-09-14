@@ -14,6 +14,8 @@ public interface ArticleService {
 
     Article save(ArticleDto articleDto);
 
+    List<Article> saveAll(List<ArticleDto> articleDtoList);
+
     void deleteById(int theId);
 
 }

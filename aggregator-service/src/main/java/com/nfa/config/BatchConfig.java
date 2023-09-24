@@ -1,5 +1,6 @@
 package com.nfa.config;
 
+
 import com.nfa.batch.*;
 import com.nfa.client.BBCClient;
 import com.nfa.client.GnewsClient;
@@ -17,7 +18,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 @Configuration
 public class BatchConfig {
+
 
     @Autowired
     BBCProcessor bbcProcessor;
@@ -47,6 +49,7 @@ public class BatchConfig {
     }
 
     @Bean
+
     public Step gnewsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("Gnews Step", jobRepository)
                 .<GnewsArticle, Article>chunk(20, transactionManager)
@@ -74,12 +77,13 @@ public class BatchConfig {
         return new ArticleWriter();
     }
 
-    @Bean
+   
+
     public Step bbcStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("BBC Step", jobRepository)
                 .<BBCArticle, Article>chunk(20, transactionManager)
                 .reader(bbcReader())
-                .processor(bbcProcessor)
+                .processor(bbcProcessor())
                 .writer(writer())
                 .build();
     }

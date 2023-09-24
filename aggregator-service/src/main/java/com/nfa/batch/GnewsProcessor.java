@@ -1,5 +1,6 @@
 package com.nfa.batch;
 
+
 import com.nfa.client.responses.GnewsArticle;
 import com.nfa.entities.Article;
 import com.nfa.entities.Source;
@@ -25,13 +26,16 @@ public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
     public Article process(@NonNull GnewsArticle gnewsArticle) throws Exception {
         log.info("Processing Gnews article for {}", gnewsArticle);
 
+
         Article article = new Article();
         article.setTitle(gnewsArticle.getTitle());
         article.setDescription(gnewsArticle.getDescription());
         article.setContent(gnewsArticle.getContent());
 
+
         article.setUrl(gnewsArticle.getUrl());
         article.setDateAdded(gnewsArticle.getPublishedAt());
+
 
         Source source = sourceService.getByNameOrSave(gnewsArticle.getSource().getName());
         article.setSource(source);

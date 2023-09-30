@@ -32,6 +32,10 @@ public class NewsUserEntity {
     @Enumerated(EnumType.STRING)
     private RegistrationSource registrationSource;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscription_id")
+    private SubscriptionEntity subscription;
+
     public NewsUserEntity(String name, String email, String password, RegistrationSource registrationSource) {
         this.name = name;
         this.email = email;

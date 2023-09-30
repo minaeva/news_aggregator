@@ -1,6 +1,10 @@
 package com.nfa.controller;
 
 import com.nfa.config.jwt.JwtProvider;
+import com.nfa.controller.request.AuthRequest;
+import com.nfa.controller.request.RegistrationRequest;
+import com.nfa.controller.response.AuthResponse;
+import com.nfa.controller.response.RegistrationResponse;
 import com.nfa.dto.NewsUserDto;
 import com.nfa.entity.RegistrationSource;
 import com.nfa.exception.NewsUserNotFoundException;

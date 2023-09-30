@@ -1,5 +1,6 @@
 package com.nfa.controller;
 
+import com.nfa.controller.request.RegistrationRequest;
 import com.nfa.entity.RegistrationSource;
 import com.nfa.exception.NewsUserValidationException;
 import lombok.extern.java.Log;

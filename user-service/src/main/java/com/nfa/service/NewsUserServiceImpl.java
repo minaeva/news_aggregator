@@ -7,6 +7,10 @@ import com.nfa.repository.NewsUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class NewsUserServiceImpl implements NewsUserService {
@@ -32,6 +36,13 @@ public class NewsUserServiceImpl implements NewsUserService {
     @Override
     public void save(NewsUserDto newsUserDto) {
         newsUserRepository.save(dtoToEntity(newsUserDto));
+    }
+
+    @Override
+    public Set<Long> findAllBySource(String source) {
+        List<NewsUserEntity> storedUsers = newsUserRepository.findBySubscription_Source(source);
+        return storedUsers.stream().map(user -> user.getId())
+                .collect(Collectors.toSet());
     }
 
     private NewsUserEntity dtoToEntity(NewsUserDto dto) {

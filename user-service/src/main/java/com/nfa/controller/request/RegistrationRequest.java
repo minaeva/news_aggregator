@@ -1,4 +1,4 @@
-package com.nfa.controller;
+package com.nfa.controller.request;
 
 import com.nfa.entity.RegistrationSource;
 import lombok.Data;

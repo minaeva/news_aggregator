@@ -1,4 +1,4 @@
-package com.nfa.controller;
+package com.nfa.controller.request;
 
 import lombok.Data;
 import lombok.ToString;

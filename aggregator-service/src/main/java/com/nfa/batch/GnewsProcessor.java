@@ -11,7 +11,10 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
+import static com.nfa.batch.ReaderHelper.getStringNotLongerThan;
+
 @Slf4j
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
 
     private static final String NOT_SPECIFIED = "NOT_SPECIFIED";
@@ -26,14 +29,12 @@ public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
     public Article process(@NonNull GnewsArticle gnewsArticle) throws Exception {
         log.info("Processing Gnews article for {}", gnewsArticle);
 
-
         Article article = new Article();
-        article.setTitle(gnewsArticle.getTitle());
-        article.setDescription(gnewsArticle.getDescription());
-        article.setContent(gnewsArticle.getContent());
+        article.setTitle(getStringNotLongerThan(gnewsArticle.getTitle(), 400));
+        article.setDescription(getStringNotLongerThan(gnewsArticle.getDescription(), 800));
+        article.setContent(getStringNotLongerThan(gnewsArticle.getContent(), 800));
 
-
-        article.setUrl(gnewsArticle.getUrl());
+        article.setUrl(getStringNotLongerThan(gnewsArticle.getUrl(), 400));
         article.setDateAdded(gnewsArticle.getPublishedAt());
 
 

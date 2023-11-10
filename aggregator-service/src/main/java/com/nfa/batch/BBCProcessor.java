@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
+import static com.nfa.batch.ReaderHelper.getStringNotLongerThan;
+
 @Slf4j
 @Component
 @StepScope
@@ -30,11 +32,11 @@ public class BBCProcessor implements ItemProcessor<BBCArticle, Article> {
         log.info("Processing BBC article for {}", bbcArticle);
 
         Article article = new Article();
-        article.setTitle(bbcArticle.getTitle());
-        article.setDescription(bbcArticle.getDescription());
-        article.setContent(bbcArticle.getContent());
+        article.setTitle(getStringNotLongerThan(bbcArticle.getTitle(), 400));
+        article.setDescription(getStringNotLongerThan(bbcArticle.getDescription(), 800));
+        article.setContent(getStringNotLongerThan(bbcArticle.getContent(), 800));
 
-        article.setUrl(bbcArticle.getUrl());
+        article.setUrl(getStringNotLongerThan(bbcArticle.getUrl(), 400));
         article.setDateAdded(bbcArticle.getPublishedAt());
 
         Source source = sourceService.getByNameOrSave(bbcArticle.getSource().getName());

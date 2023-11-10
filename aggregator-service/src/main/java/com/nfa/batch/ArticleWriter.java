@@ -11,10 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ArticleWriter implements ItemWriter<Article> {
 
     @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     private ArticleRepository articleRepository;
 
     @Override
-    public void write(Chunk<? extends Article> chunk) throws Exception {
+    public void write(Chunk<? extends Article> chunk) {
         log.info("Writing: {}", chunk.getItems().size());
         articleRepository.saveAll(chunk.getItems());
     }

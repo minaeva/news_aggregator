@@ -1,11 +1,10 @@
 package com.nfa.batch.processors;
 
+import com.nfa.batch.BatchHelper;
 import com.nfa.client.responses.NYTArticle;
 import com.nfa.entities.Article;
-import com.nfa.entities.Keyword;
 import com.nfa.entities.Source;
 import com.nfa.services.ArticleService;
-import com.nfa.services.KeywordService;
 import com.nfa.services.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -13,9 +12,6 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static com.nfa.batch.BatchHelper.getStringNotLongerThan;
 
@@ -31,7 +27,7 @@ public class NYTProcessor implements ItemProcessor<NYTArticle, Article> {
     private ArticleService articleService;
 
     @Autowired
-    private KeywordService keywordService;
+    private BatchHelper batchHelper;
 
     @Override
     public Article process(@NonNull NYTArticle nytArticle) {
@@ -44,26 +40,13 @@ public class NYTProcessor implements ItemProcessor<NYTArticle, Article> {
         Article article = new Article();
         article.setTitle(getStringNotLongerThan(nytArticle.getTitle(), 400));
         article.setContent(getStringNotLongerThan(nytArticle.getContent(), 800));
-
         article.setUrl(getStringNotLongerThan(nytArticle.getUrl(), 400));
         article.setDateAdded(nytArticle.getPublishedDate());
 
         Source source = sourceService.getByNameOrSave(nytArticle.getSource());
         article.setSource(source);
 
-        Set<Keyword> allKeywords = Set.copyOf(keywordService.findAll());
-        String articleTitle = article.getTitle();
-
-        Set<Keyword> articleKeywords = new HashSet<>();
-        // todo articleTitle.split(" ")
-        for (Keyword aKeyword : allKeywords) {
-            if (articleTitle.toLowerCase().contains(aKeyword.getName().toLowerCase())) {
-                articleKeywords.add(aKeyword);
-            }
-        }
-        article.setKeywords(articleKeywords);
-
-        log.info("ARTICLE: {}", article);
+        batchHelper.setKeywordsTitleContains(article);
         return article;
     }
 }

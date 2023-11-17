@@ -39,6 +39,7 @@ public class ToKafkaWriter implements ItemWriter<Article> {
     }
 
     private void produce(String message) {
+        log.info("Producing keyword {} to Kafka", message);
         kafkaTemplate.send(NEWS_AGGREGATED, message);
     }
 

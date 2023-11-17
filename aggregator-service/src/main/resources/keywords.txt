@@ -1,0 +1,7 @@
+US|USA
+israel|israel
+climate|climate
+gaza|gazian
+ukraine|ukrainian
+Biden|president
+Palestine|palestin

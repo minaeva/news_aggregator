@@ -1,6 +1,6 @@
 package com.nfa.batch;
 
-public class ReaderHelper {
+public class BatchHelper {
 
     public static String getStringNotLongerThan(String input, int length) {
         if (input.length() < length) {

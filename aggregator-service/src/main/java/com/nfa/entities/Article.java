@@ -14,7 +14,7 @@ import java.util.Set;
 public class Article {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "title")
@@ -32,17 +32,20 @@ public class Article {
     @Column(name = "date_added")
     private Date dateAdded;
 
+    @Column(name = "is_processed")
+    private boolean processed;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "source_id")
     private Source source;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "article_category",
+            name = "article_keyword",
             joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
+            inverseJoinColumns = @JoinColumn(name = "keyword_id")
     )
-    private Set<Category> categories;
+    private Set<Keyword> keywords;
 
     public Article(String title, String description, String url) {
         this.title = title;

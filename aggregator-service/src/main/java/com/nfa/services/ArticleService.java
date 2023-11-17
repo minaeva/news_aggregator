@@ -3,6 +3,7 @@ package com.nfa.services;
 import com.nfa.dto.ArticleDto;
 import com.nfa.entities.Article;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,5 +18,7 @@ public interface ArticleService {
     List<Article> saveAll(List<ArticleDto> articleDtoList);
 
     void deleteById(int theId);
+
+    boolean isArticleInDB(Date dateAdded, String title);
 
 }

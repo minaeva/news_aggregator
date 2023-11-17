@@ -14,7 +14,7 @@ public class ArticleDto {
     String url;
     Date dateAdded;
     SourceDto sourceDto;
-    List<CategoryDto> categories;
+    List<KeywordDto> keywordDtos;
 
     public ArticleDto(String title, String description, String url, SourceDto sourceDto) {
         this.title = title;

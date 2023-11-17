@@ -1,33 +1,43 @@
-package com.nfa.batch;
+package com.nfa.batch.processors;
 
 
 import com.nfa.client.responses.GnewsArticle;
 import com.nfa.entities.Article;
+import com.nfa.entities.Keyword;
 import com.nfa.entities.Source;
-import com.nfa.services.CategoryService;
+import com.nfa.services.ArticleService;
+import com.nfa.services.KeywordService;
 import com.nfa.services.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 
-import static com.nfa.batch.ReaderHelper.getStringNotLongerThan;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.nfa.batch.BatchHelper.getStringNotLongerThan;
 
 @Slf4j
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
 
-    private static final String NOT_SPECIFIED = "NOT_SPECIFIED";
-
     @Autowired
     private SourceService sourceService;
 
     @Autowired
-    private CategoryService categoryService;
+    private ArticleService articleService;
+
+    @Autowired
+    private KeywordService keywordService;
 
     @Override
-    public Article process(@NonNull GnewsArticle gnewsArticle) throws Exception {
+    public Article process(@NonNull GnewsArticle gnewsArticle) {
         log.info("Processing Gnews article for {}", gnewsArticle);
+
+        if (articleService.isArticleInDB(gnewsArticle.getPublishedAt(), gnewsArticle.getTitle())) {
+            return null;
+        }
 
         Article article = new Article();
         article.setTitle(getStringNotLongerThan(gnewsArticle.getTitle(), 400));
@@ -37,14 +47,22 @@ public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
         article.setUrl(getStringNotLongerThan(gnewsArticle.getUrl(), 400));
         article.setDateAdded(gnewsArticle.getPublishedAt());
 
-
         Source source = sourceService.getByNameOrSave(gnewsArticle.getSource().getName());
         article.setSource(source);
 
-//        Category category = categoryService.getByNameOrSave(NOT_SPECIFIED);
-//        article.setCategories(List.of(category));
+        Set<Keyword> allKeywords = Set.copyOf(keywordService.findAll());
+        String articleTitle = article.getTitle();
 
-        log.info("ARTICLE: {}", article);
+        Set<Keyword> articleKeywords = new HashSet<>();
+        // todo articleTitle.split(" ")
+        for (Keyword aKeyword : allKeywords) {
+            if (articleTitle.toLowerCase().contains(aKeyword.getName().toLowerCase())) {
+                articleKeywords.add(aKeyword);
+            }
+        }
+        article.setKeywords(articleKeywords);
+
+        log.info("Processed article: {}", article);
         return article;
     }
 }

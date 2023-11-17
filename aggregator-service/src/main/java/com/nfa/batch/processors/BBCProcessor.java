@@ -1,9 +1,11 @@
-package com.nfa.batch;
+package com.nfa.batch.processors;
 
 import com.nfa.client.responses.BBCArticle;
 import com.nfa.entities.Article;
+import com.nfa.entities.Keyword;
 import com.nfa.entities.Source;
-import com.nfa.services.CategoryService;
+import com.nfa.services.ArticleService;
+import com.nfa.services.KeywordService;
 import com.nfa.services.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -12,24 +14,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import static com.nfa.batch.ReaderHelper.getStringNotLongerThan;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.nfa.batch.BatchHelper.getStringNotLongerThan;
 
 @Slf4j
 @Component
 @StepScope
 public class BBCProcessor implements ItemProcessor<BBCArticle, Article> {
 
-    private static final String NOT_SPECIFIED = "NOT_SPECIFIED";
+    @Autowired
+    private ArticleService articleService;
 
     @Autowired
     private SourceService sourceService;
 
     @Autowired
-    private CategoryService categoryService;
+    private KeywordService keywordService;
 
     @Override
     public Article process(@NonNull BBCArticle bbcArticle) throws Exception {
         log.info("Processing BBC article for {}", bbcArticle);
+
+        if (articleService.isArticleInDB(bbcArticle.getPublishedAt(), bbcArticle.getTitle())) {
+            return null;
+        }
 
         Article article = new Article();
         article.setTitle(getStringNotLongerThan(bbcArticle.getTitle(), 400));
@@ -42,8 +52,17 @@ public class BBCProcessor implements ItemProcessor<BBCArticle, Article> {
         Source source = sourceService.getByNameOrSave(bbcArticle.getSource().getName());
         article.setSource(source);
 
-//        Category category = categoryService.getByNameOrSave(NOT_SPECIFIED);
-//        article.setCategories(List.of(category));
+        Set<Keyword> allKeywords = Set.copyOf(keywordService.findAll());
+        String articleTitle = article.getTitle();
+
+        Set<Keyword> articleKeywords = new HashSet<>();
+    // todo articleTitle.split(" ")
+        for (Keyword aKeyword : allKeywords) {
+            if (articleTitle.toLowerCase().contains(aKeyword.getName().toLowerCase())) {
+                articleKeywords.add(aKeyword);
+            }
+        }
+        article.setKeywords(articleKeywords);
 
         log.info("ARTICLE: {}", article);
         return article;

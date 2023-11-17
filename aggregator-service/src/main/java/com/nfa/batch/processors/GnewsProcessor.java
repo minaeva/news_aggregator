@@ -31,10 +31,13 @@ public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
     public Article process(@NonNull GnewsArticle gnewsArticle) {
         log.info("Processing Gnews article for {}", gnewsArticle);
 
-        if (articleService.isArticleInDB(gnewsArticle.getPublishedAt(), gnewsArticle.getTitle())) {
-            return null;
+        if (batchHelper.isNewArticle(gnewsArticle.getPublishedAt(), gnewsArticle.getTitle())) {
+            return externalArticleToInternalArticle(gnewsArticle);
         }
+        return null;
+    }
 
+    private Article externalArticleToInternalArticle(GnewsArticle gnewsArticle) {
         Article article = new Article();
         article.setTitle(getStringNotLongerThan(gnewsArticle.getTitle(), 400));
         article.setDescription(getStringNotLongerThan(gnewsArticle.getDescription(), 800));

@@ -29,9 +29,8 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public Source getByNameOrSave(String name) {
-        Source savedSource;
         Optional<Source> existentSource = sourceRepository.findByName(name);
-        savedSource = existentSource.orElseGet(() -> sourceRepository.save(new Source(name)));
+        Source savedSource = existentSource.orElseGet(() -> sourceRepository.save(new Source(name)));
         return savedSource;
     }
 

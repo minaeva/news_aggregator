@@ -2,19 +2,17 @@ package com.nfa.batch.readers;
 
 import com.nfa.entities.Article;
 import com.nfa.repositories.ArticleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemReader;
 
 import java.util.Iterator;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class ArticleFromDbItemReader implements ItemReader<Article> {
 
-    ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
     private Iterator<Article> dataIterator;
-
-    public ArticleFromDbItemReader(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
 
     @Override
     public Article read() {

@@ -7,6 +7,7 @@ News-aggregator: fetches the news, saves the new ones to db, looks for the keywo
 Notification: consumes event and sends email to the users with the subscriptions to the keyword the event contains
 
 **To run/debug**
+JVM version 17 is needed
 keywords.txt contains the list of keywords to track
 first run - uncomment spring.jpa.hibernate.ddl-auto=create
 mvn spring-boot:run

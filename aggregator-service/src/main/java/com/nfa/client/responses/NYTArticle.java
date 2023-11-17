@@ -3,7 +3,7 @@ package com.nfa.client.responses;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class NYTArticle {
@@ -16,5 +16,5 @@ public class NYTArticle {
     @JsonProperty(value = "abstract")
     private String content;
     @JsonProperty(value = "published_date")
-    private Date publishedDate;
+    private LocalDate publishedDate;
 }

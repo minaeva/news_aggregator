@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -30,7 +30,7 @@ public class Article {
     private String url;
 
     @Column(name = "date_added")
-    private Date dateAdded;
+    private LocalDateTime dateAdded;
 
     @Column(name = "is_processed")
     private boolean processed;

@@ -3,7 +3,7 @@ package com.nfa.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -12,7 +12,7 @@ public class ArticleDto {
     String title;
     String description;
     String url;
-    Date dateAdded;
+    LocalDateTime dateAdded;
     SourceDto sourceDto;
     List<KeywordDto> keywordDtos;
 

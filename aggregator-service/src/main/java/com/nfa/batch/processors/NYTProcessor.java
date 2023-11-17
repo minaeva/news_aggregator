@@ -32,16 +32,18 @@ public class NYTProcessor implements ItemProcessor<NYTArticle, Article> {
     @Override
     public Article process(@NonNull NYTArticle nytArticle) {
         log.info("Processing NYT article for {}", nytArticle);
-
-        if (articleService.isArticleInDB(nytArticle.getPublishedDate(), nytArticle.getTitle())) {
-            return null;
+        if (batchHelper.isNewArticle(nytArticle.getPublishedDate().atStartOfDay(), nytArticle.getTitle())) {
+            return externalArticleToInternalArticle(nytArticle);
         }
+        return null;
+    }
 
+    private Article externalArticleToInternalArticle(NYTArticle nytArticle) {
         Article article = new Article();
         article.setTitle(getStringNotLongerThan(nytArticle.getTitle(), 400));
         article.setContent(getStringNotLongerThan(nytArticle.getContent(), 800));
         article.setUrl(getStringNotLongerThan(nytArticle.getUrl(), 400));
-        article.setDateAdded(nytArticle.getPublishedDate());
+        article.setDateAdded(nytArticle.getPublishedDate().atStartOfDay());
 
         Source source = sourceService.getByNameOrSave(nytArticle.getSource());
         article.setSource(source);

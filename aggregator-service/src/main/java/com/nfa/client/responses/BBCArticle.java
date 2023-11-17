@@ -2,7 +2,7 @@ package com.nfa.client.responses;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class BBCArticle {
@@ -13,6 +13,6 @@ public class BBCArticle {
     private String description;
     private String url;
     private String urlToImage;
-    private Date publishedAt;
+    private LocalDateTime publishedAt;
     private String content;
 }

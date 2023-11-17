@@ -13,8 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -63,18 +63,13 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public boolean isArticleInDB(Date dateAdded, String title) {
+    public boolean isArticleInDB(LocalDateTime dateAdded, String title) {
         Optional<List<Article>> articlesByDateAdded = articleRepository.findArticleByDateAdded(dateAdded);
         AtomicBoolean result = new AtomicBoolean(false);
-        articlesByDateAdded
-                .ifPresent(articles -> {
-                    Optional<Article> savedArticle = articles.stream()
-                            .filter(article -> article.getTitle().equals(title))
-                            .findAny();
-                    if (savedArticle.isPresent()) {
-                        result.set(true);
-                    }
-                });
+        articlesByDateAdded.ifPresent(articles ->
+                result.set(articles.stream()
+                        .anyMatch(article -> article.getTitle().contains(title))
+                ));
         return result.get();
     }
 
@@ -111,7 +106,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setDescription(articleDto.getDescription());
         article.setUrl(articleDto.getUrl());
         article.setDateAdded(articleDto.getDateAdded());
-        //todo article.setSource(articleDto.getSourceDto());
+        //TODO: article.setSource(articleDto.getSourceDto());
         if (articleDto.getKeywordDtos() != null) {
             article.setKeywords(
                     articleDto.getKeywordDtos().stream()

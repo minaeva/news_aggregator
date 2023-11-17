@@ -33,10 +33,13 @@ public class BBCProcessor implements ItemProcessor<BBCArticle, Article> {
     public Article process(@NonNull BBCArticle bbcArticle) {
         log.info("Processing BBC article for {}", bbcArticle);
 
-        if (articleService.isArticleInDB(bbcArticle.getPublishedAt(), bbcArticle.getTitle())) {
-            return null;
+        if (batchHelper.isNewArticle(bbcArticle.getPublishedAt(), bbcArticle.getTitle())) {
+            return externalArticleToInternalArticle(bbcArticle);
         }
+        return null;
+    }
 
+    private Article externalArticleToInternalArticle(BBCArticle bbcArticle) {
         Article article = new Article();
         article.setTitle(getStringNotLongerThan(bbcArticle.getTitle(), 400));
         article.setDescription(getStringNotLongerThan(bbcArticle.getDescription(), 800));

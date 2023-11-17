@@ -23,7 +23,7 @@ public class ToKafkaWriter implements ItemWriter<Article> {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @Override
     public void write(Chunk<? extends Article> chunk) {

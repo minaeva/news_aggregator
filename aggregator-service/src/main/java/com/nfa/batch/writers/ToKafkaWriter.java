@@ -11,7 +11,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -36,8 +35,7 @@ public class ToKafkaWriter implements ItemWriter<Article> {
                 .map(Keyword::getName)
                 .forEach(this::produce);
 
-        chunk.getItems().stream()
-                .forEach(this::markProcessed);
+        chunk.getItems().forEach(this::markProcessed);
     }
 
     private void produce(String message) {

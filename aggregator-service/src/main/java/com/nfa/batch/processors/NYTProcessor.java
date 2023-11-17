@@ -24,8 +24,6 @@ import static com.nfa.batch.BatchHelper.getStringNotLongerThan;
 @StepScope
 public class NYTProcessor implements ItemProcessor<NYTArticle, Article> {
 
-    private static final String NOT_SPECIFIED = "NOT_SPECIFIED";
-
     @Autowired
     private SourceService sourceService;
 
@@ -36,7 +34,7 @@ public class NYTProcessor implements ItemProcessor<NYTArticle, Article> {
     private KeywordService keywordService;
 
     @Override
-    public Article process(@NonNull NYTArticle nytArticle) throws Exception {
+    public Article process(@NonNull NYTArticle nytArticle) {
         log.info("Processing NYT article for {}", nytArticle);
 
         if (articleService.isArticleInDB(nytArticle.getPublishedDate(), nytArticle.getTitle())) {

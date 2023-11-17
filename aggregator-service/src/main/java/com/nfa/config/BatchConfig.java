@@ -90,7 +90,7 @@ public class BatchConfig {
     public FlatFileItemReader<KeywordDto> keywordsReader() {
         DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
         tokenizer.setDelimiter("|");
-        tokenizer.setNames(new String[]{"name", "rule"});
+        tokenizer.setNames("name", "rule");
         DefaultLineMapper<KeywordDto> keywordLineMapper = new DefaultLineMapper<>();
         keywordLineMapper.setLineTokenizer(tokenizer);
         keywordLineMapper.setFieldSetMapper(new KeywordMapper());

@@ -52,7 +52,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> saveAll(List<ArticleDto> articleDtoList) {
         return articleRepository.saveAll(
                 articleDtoList.stream()
-                        .map(articleDto -> dtoToEntity(articleDto))
+                        .map(this::dtoToEntity)
                         .toList());
     }
 
@@ -73,7 +73,7 @@ public class ArticleServiceImpl implements ArticleService {
                             .findAny();
                     if (savedArticle.isPresent()) {
                         result.set(true);
-                    };
+                    }
                 });
         return result.get();
     }
@@ -115,7 +115,7 @@ public class ArticleServiceImpl implements ArticleService {
         if (articleDto.getKeywordDtos() != null) {
             article.setKeywords(
                     articleDto.getKeywordDtos().stream()
-                            .map(keywordDto -> categoryDtoToEntity(keywordDto))
+                            .map(this::categoryDtoToEntity)
                             .collect(Collectors.toSet()));
         }
         return article;

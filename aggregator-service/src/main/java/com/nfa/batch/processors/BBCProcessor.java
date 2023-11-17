@@ -34,7 +34,7 @@ public class BBCProcessor implements ItemProcessor<BBCArticle, Article> {
     private KeywordService keywordService;
 
     @Override
-    public Article process(@NonNull BBCArticle bbcArticle) throws Exception {
+    public Article process(@NonNull BBCArticle bbcArticle) {
         log.info("Processing BBC article for {}", bbcArticle);
 
         if (articleService.isArticleInDB(bbcArticle.getPublishedAt(), bbcArticle.getTitle())) {

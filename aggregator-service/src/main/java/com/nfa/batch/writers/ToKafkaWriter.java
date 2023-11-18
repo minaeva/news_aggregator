@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,12 +30,14 @@ public class ToKafkaWriter implements ItemWriter<Article> {
     @Override
     public void write(Chunk<? extends Article> chunk) {
         log.info("Producing keywords to Kafka: {}", chunk.getItems().size());
-        chunk.getItems().stream()
+        Set<String> uniqueKeywords = chunk.getItems().stream()
                 .map(Article::getKeywords)
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .map(Keyword::getName)
-                .forEach(this::produce);
+                .collect(Collectors.toSet());
+
+        uniqueKeywords.forEach(this::produce);
 
         chunk.getItems().forEach(this::markProcessed);
     }

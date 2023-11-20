@@ -4,7 +4,6 @@ import com.nfa.batch.BatchHelper;
 import com.nfa.client.responses.BBCArticle;
 import com.nfa.entities.Article;
 import com.nfa.entities.Source;
-import com.nfa.services.ArticleService;
 import com.nfa.services.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -19,9 +18,6 @@ import static com.nfa.batch.BatchHelper.getStringNotLongerThan;
 @Component
 @StepScope
 public class BBCProcessor implements ItemProcessor<BBCArticle, Article> {
-
-    @Autowired
-    private ArticleService articleService;
 
     @Autowired
     private SourceService sourceService;

@@ -30,10 +30,18 @@ keywords.txt contains the list of keywords to track
 To start the aggregator-service, locate the folder, run 
 _mvn spring-boot:run_
 
-The server will start at http://localhost:8071/news
+The server will start at http://localhost:8071/aggregator
 
 To debug the application, go to AggregatorServiceApplication > right-click line with the class name > debug
 
+spring.application.name=aggregator
+server.port=8071
+
+spring.application.name=notificator
+server.port=8072
+
+spring.application.name=user
+server.port=8073
 ----------
 
 **News providers limitations**

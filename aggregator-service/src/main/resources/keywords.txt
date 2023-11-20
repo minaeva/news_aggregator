@@ -1,7 +1,12 @@
 US|USA
-israel|israel
+Israel|israeli
 climate|climate
-gaza|gazian
-ukraine|ukrainian
+Gaza|gazian
+Ukraine|ukrainian
 Biden|president
-Palestine|palestin
+Palestine|palestinian
+Hamas|hamas
+Russia|russian
+China|chinese
+India|indian
+Terrorism|terroristic

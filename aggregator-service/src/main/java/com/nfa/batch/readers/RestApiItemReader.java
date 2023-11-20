@@ -31,8 +31,7 @@ public class RestApiItemReader<T> implements ItemReader {
 
     private List<T> fetchDataFromApi() {
         if (cachedData == null) {
-            List<T> fetchedData = client.fetchData();
-            cachedData = fetchedData;
+            cachedData = client.fetchData();
         }
         return cachedData;
     }

@@ -5,7 +5,6 @@ import com.nfa.batch.BatchHelper;
 import com.nfa.client.responses.GnewsArticle;
 import com.nfa.entities.Article;
 import com.nfa.entities.Source;
-import com.nfa.services.ArticleService;
 import com.nfa.services.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
@@ -20,9 +19,6 @@ public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
 
     @Autowired
     private SourceService sourceService;
-
-    @Autowired
-    private ArticleService articleService;
 
     @Autowired
     private BatchHelper batchHelper;

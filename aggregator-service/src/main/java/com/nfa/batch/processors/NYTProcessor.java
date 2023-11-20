@@ -4,7 +4,6 @@ import com.nfa.batch.BatchHelper;
 import com.nfa.client.responses.NYTArticle;
 import com.nfa.entities.Article;
 import com.nfa.entities.Source;
-import com.nfa.services.ArticleService;
 import com.nfa.services.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -24,14 +23,12 @@ public class NYTProcessor implements ItemProcessor<NYTArticle, Article> {
     private SourceService sourceService;
 
     @Autowired
-    private ArticleService articleService;
-
-    @Autowired
     private BatchHelper batchHelper;
 
     @Override
     public Article process(@NonNull NYTArticle nytArticle) {
         log.info("Processing NYT article for {}", nytArticle);
+
         if (batchHelper.isNewArticle(nytArticle.getPublishedDate().atStartOfDay(), nytArticle.getTitle())) {
             return externalArticleToInternalArticle(nytArticle);
         }

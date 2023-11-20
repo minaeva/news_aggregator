@@ -1,4 +1,4 @@
-package com.nfa.batch;
+package com.nfa.batch.readers;
 
 import com.nfa.client.Client;
 import org.springframework.batch.item.ItemReader;
@@ -11,6 +11,7 @@ public class RestApiItemReader<T> implements ItemReader {
     private final Client client;
     private final Class<T> targetType;
     private Iterator<T> dataIterator;
+    private List<T> cachedData;
 
     public RestApiItemReader(Client client, Class<T> targetType) {
         this.client = client;
@@ -19,14 +20,19 @@ public class RestApiItemReader<T> implements ItemReader {
 
     @Override
     public T read() {
+        if (fetchDataFromApi() == null) {
+            return null;
+        }
         if (dataIterator == null) {
             dataIterator = fetchDataFromApi().listIterator();
         }
-
         return dataIterator.hasNext() ? dataIterator.next() : null;
     }
 
     private List<T> fetchDataFromApi() {
-        return client.fetchData();
+        if (cachedData == null) {
+            cachedData = client.fetchData();
+        }
+        return cachedData;
     }
 }

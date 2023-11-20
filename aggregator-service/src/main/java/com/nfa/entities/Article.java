@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -14,7 +14,7 @@ import java.util.Set;
 public class Article {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "title")
@@ -30,7 +30,10 @@ public class Article {
     private String url;
 
     @Column(name = "date_added")
-    private Date dateAdded;
+    private LocalDateTime dateAdded;
+
+    @Column(name = "is_processed")
+    private boolean processed;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "source_id")
@@ -38,11 +41,11 @@ public class Article {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "article_category",
+            name = "article_keyword",
             joinColumns = @JoinColumn(name = "article_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
+            inverseJoinColumns = @JoinColumn(name = "keyword_id")
     )
-    private Set<Category> categories;
+    private Set<Keyword> keywords;
 
     public Article(String title, String description, String url) {
         this.title = title;

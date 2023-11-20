@@ -3,17 +3,19 @@ package com.nfa.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "keyword")
 @Data
 @NoArgsConstructor
-public class Category {
+public class Keyword {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "name")
@@ -26,13 +28,15 @@ public class Category {
                     CascadeType.REFRESH
             })
     @JoinTable(
-            name = "article_category",
-            joinColumns = @JoinColumn(name = "category_id"),
+            name = "article_keyword",
+            joinColumns = @JoinColumn(name = "keyword_id"),
             inverseJoinColumns = @JoinColumn(name = "article_id")
     )
+    @Lazy
+    @ToString.Exclude
     private List<Article> articles;
 
-    public Category(String name) {
+    public Keyword(String name) {
         this.name = name;
     }
 }

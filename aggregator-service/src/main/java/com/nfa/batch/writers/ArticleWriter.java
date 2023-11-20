@@ -1,4 +1,4 @@
-package com.nfa.batch;
+package com.nfa.batch.writers;
 
 import com.nfa.entities.Article;
 import com.nfa.repositories.ArticleRepository;

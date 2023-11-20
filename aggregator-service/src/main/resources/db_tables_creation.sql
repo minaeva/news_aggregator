@@ -16,12 +16,12 @@ CREATE DATABASE aggregator_db
 \connect aggregator_db;
 SELECT current_database();
 
-DROP TABLE public.article_category;
-DROP TABLE public.category;
+DROP TABLE public.article_keyword;
+DROP TABLE public.keyword;
 DROP TABLE public.article;
 DROP TABLE public.source;
 
-CREATE TABLE public.category
+CREATE TABLE public.keyword
 (
     id integer NOT NULL,
     name character varying(100) NOT NULL,
@@ -44,6 +44,7 @@ CREATE TABLE public.article
     url character varying(400),
     date_added date,
     source_id integer,
+    is_processed boolean,
     PRIMARY KEY (id),
     CONSTRAINT source_id FOREIGN KEY (source_id)
         REFERENCES public.source (id) MATCH SIMPLE
@@ -52,17 +53,17 @@ CREATE TABLE public.article
         NOT VALID
 );
 
-CREATE TABLE public.article_category
+CREATE TABLE public.article_keyword
 (
     article_id integer NOT NULL,
-    category_id integer NOT NULL,
+    keyword_id integer NOT NULL,
     FOREIGN KEY (article_id)
         REFERENCES public.article (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
-    FOREIGN KEY (category_id)
-        REFERENCES public.category (id) MATCH SIMPLE
+    FOREIGN KEY (keyword_id)
+        REFERENCES public.keyword (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID

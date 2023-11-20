@@ -1,21 +1,24 @@
 package com.nfa.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
+@Builder
+public class KeywordDto {
     int id;
     String name;
+    String rule;
 
-    public CategoryDto(int id) {
+    public KeywordDto(int id) {
         this.id = id;
     }
 
-    public CategoryDto(String name) {
+    public KeywordDto(String name) {
         this.name = name;
     }
 

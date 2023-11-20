@@ -1,7 +1,7 @@
 package com.nfa.client;
 
-import com.nfa.client.responses.BBCArticle;
-import com.nfa.client.responses.BBCResponse;
+import com.nfa.client.responses.NYTArticle;
+import com.nfa.client.responses.NYTResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,21 +14,21 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class BBCClient implements Client {
+public class NYTClient implements Client {
 
     @Autowired
     @Lazy
     private RestTemplate restTemplate;
 
-    @Value("${data_providers.bbc.url}")
+    @Value("${data_providers.nyt.url}")
     private String url;
 
     @Override
-    public List<BBCArticle> fetchData() {
+    public List<NYTArticle> fetchData() {
         try {
-            BBCResponse response = restTemplate.getForObject(this.url, BBCResponse.class);
+            NYTResponse response = restTemplate.getForObject(this.url, NYTResponse.class);
             if (response != null) {
-                return response.getArticles();
+                return response.getResults();
             }
         } catch (HttpClientErrorException ex) {
             log.info("error " + ex.getStatusCode());

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ToKafkaWriter implements ItemWriter<Article> {
 
-    public static final String NEWS_AGGREGATED = "news_aggregated";
+    public static final String KEYWORDS_TOPIC = "keywordstopic";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -29,7 +29,7 @@ public class ToKafkaWriter implements ItemWriter<Article> {
 
     @Override
     public void write(Chunk<? extends Article> chunk) {
-        log.info("Producing keywords to Kafka: {}", chunk.getItems().size());
+        log.info("Producing ={}= keywords to Kafka", chunk.getItems().size());
         Set<String> uniqueKeywords = chunk.getItems().stream()
                 .map(Article::getKeywords)
                 .flatMap(Collection::stream)
@@ -43,8 +43,8 @@ public class ToKafkaWriter implements ItemWriter<Article> {
     }
 
     private void produce(String message) {
-        log.info("Producing keyword {} to Kafka", message);
-        kafkaTemplate.send(NEWS_AGGREGATED, message);
+        log.info("Producing keyword ={}= to Kafka", message);
+        kafkaTemplate.send(KEYWORDS_TOPIC, message);
     }
 
     private void markProcessed(Article article) {

@@ -3,12 +3,14 @@ package com.nfa.batch.readers;
 import com.nfa.entities.Article;
 import com.nfa.repositories.ArticleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemReader;
 
 import java.util.Iterator;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ArticleFromDbItemReader implements ItemReader<Article> {
 
     private final ArticleRepository articleRepository;
@@ -23,6 +25,9 @@ public class ArticleFromDbItemReader implements ItemReader<Article> {
     }
 
     private List<Article> fetchDataFromDb() {
-        return articleRepository.findAllByProcessedIsFalseAndKeywordsNotEmpty();
+
+        List<Article> articlesToProcess = articleRepository.findAllByProcessedIsFalseAndKeywordsNotEmpty();
+        log.info("fetchDataFromDb, articlesToProcess = {}", articlesToProcess);
+        return articlesToProcess;
     }
 }

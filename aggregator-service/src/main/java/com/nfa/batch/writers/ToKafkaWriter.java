@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class ToKafkaWriter implements ItemWriter<Article> {
 
-    public static final String KEYWORDS_TOPIC = "keywordstopic";
+    private static final String KEYWORDS_TOPIC = "keywordstopic";
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;

@@ -27,6 +27,11 @@ _spring.jpa.hibernate.ddl-auto=create_
 
 keywords.txt contains the list of keywords to track
 
+To start Kafka,  
+cd aggregator-service
+docker-compose up -d
+
+
 To start the aggregator-service, locate the folder, run 
 _mvn spring-boot:run_
 

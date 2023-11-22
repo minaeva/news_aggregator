@@ -1,6 +1,6 @@
 package com.nfa.config;
 
-import com.nfa.dto.NewsUserDto;
+import com.nfa.dto.ReaderDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +15,10 @@ public class CustomNewsUserDetails implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
-    public static CustomNewsUserDetails fromNewsUserDtoToCustomUserDetails(NewsUserDto newsUserDto){
+    public static CustomNewsUserDetails fromNewsUserDtoToCustomUserDetails(ReaderDto readerDto){
         CustomNewsUserDetails details = new CustomNewsUserDetails();
-        details.email = newsUserDto.getEmail();
-        details.password = newsUserDto.getPassword();
+        details.email = readerDto.getEmail();
+        details.password = readerDto.getPassword();
         details.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(NEWS_USER));
         return details;
     }

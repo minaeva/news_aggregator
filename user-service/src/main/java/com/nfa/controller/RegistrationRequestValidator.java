@@ -2,7 +2,7 @@ package com.nfa.controller;
 
 import com.nfa.controller.request.RegistrationRequest;
 import com.nfa.entity.RegistrationSource;
-import com.nfa.exception.NewsUserValidationException;
+import com.nfa.exception.ReaderValidationException;
 import lombok.extern.java.Log;
 import org.springframework.util.StringUtils;
 
@@ -12,23 +12,19 @@ public class RegistrationRequestValidator {
     private RegistrationRequestValidator() {
     }
 
-    public static void validateRegistrationRequest(RegistrationRequest request) throws NewsUserValidationException {
-
-        if (StringUtils.isEmpty(request.getEmail())) {
-            throw new NewsUserValidationException("Email cannot be empty");
-        }
+    public static void validateRegistrationRequest(RegistrationRequest request) throws ReaderValidationException {
 
         if (RegistrationSource.ONSITE.equals(request.getRegistrationSource()) &&
-                StringUtils.isEmpty(request.getPassword())) {
-            throw new NewsUserValidationException("Password cannot be empty");
+                !StringUtils.hasLength(request.getPassword())) {
+            throw new ReaderValidationException("Password cannot be empty");
         }
 
-        if (StringUtils.isEmpty(request.getEmail())) {
-            throw new NewsUserValidationException("Email cannot be empty");
+        if (!StringUtils.hasLength(request.getEmail())) {
+            throw new ReaderValidationException("Email cannot be empty");
         }
 
-        if (StringUtils.isEmpty(request.getRegistrationSource())) {
-            throw new NewsUserValidationException("Registration source cannot be empty");
+        if (request.getRegistrationSource() == null) {
+            throw new ReaderValidationException("Registration source cannot be empty");
         }
 
     }

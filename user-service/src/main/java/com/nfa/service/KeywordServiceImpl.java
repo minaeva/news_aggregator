@@ -20,15 +20,7 @@ public class KeywordServiceImpl implements KeywordService {
         return existingKeyword.orElseGet(() -> keywordRepository.save(new Keyword(name)));
     }
 
-    @Override
-    public KeywordDto getDtoByNameOrCreate(String name) {
-        Keyword savedKeyword = getByNameOrCreate(name);
-        return toDto(savedKeyword);
-    }
-
     private static KeywordDto toDto(Keyword keyword) {
-        return KeywordDto.builder()
-                .name(keyword.getName())
-                .build();
+        return new KeywordDto(keyword.getName());
     }
 }

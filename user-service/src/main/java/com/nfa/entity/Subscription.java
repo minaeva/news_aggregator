@@ -31,7 +31,7 @@ public class Subscription {
     private Set<Keyword> keywords;
 
     @Column(name = "times_per_day")
-    private int timesPerDay;
+    private Integer timesPerDay;
 
     public Subscription(Reader reader) {
         this.reader = reader;

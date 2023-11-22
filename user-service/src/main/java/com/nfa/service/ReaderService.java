@@ -12,5 +12,5 @@ public interface ReaderService {
 
     void save(ReaderDto readerDto);
 
-     ReaderDto update(String email, SubscriptionDto request) throws ReaderNotFoundException;
+    ReaderDto update(String email, SubscriptionDto request) throws ReaderNotFoundException;
 }

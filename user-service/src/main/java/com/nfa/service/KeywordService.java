@@ -7,6 +7,4 @@ public interface KeywordService {
 
     Keyword getByNameOrCreate(String name);
 
-    KeywordDto getDtoByNameOrCreate(String name);
-
 }

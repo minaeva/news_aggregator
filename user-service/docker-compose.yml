@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   postgres:
-    image: bitnami/postgresql:latest
+    image: postgres:latest
     restart: always
     container_name: user-db-container
     environment:

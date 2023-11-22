@@ -11,6 +11,6 @@ public class SubscriptionDto {
 
     private List<String> keywordNames;
 
-    private int timesPerDay;
+    private Integer timesPerDay;
 
 }

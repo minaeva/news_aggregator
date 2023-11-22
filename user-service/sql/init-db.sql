@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.reader
     password character varying(400),
     role character varying(40),
     registration_source character varying(40),
+    times_per_day integer,
     PRIMARY KEY (email)
     );
 

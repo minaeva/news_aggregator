@@ -2,13 +2,13 @@ package com.nfa.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SubscriptionDto {
 
-    private String source;
+    private List<String> keywordNames;
 
-    private String category;
-
-    private String keywords;
+    private int timesPerDay;
 
 }

@@ -1,10 +1,10 @@
 package com.nfa.config;
 
-import com.nfa.dto.NewsUserDto;
-import com.nfa.entity.NewsUserRole;
+import com.nfa.dto.ReaderDto;
+import com.nfa.entity.ReaderRole;
 import com.nfa.entity.RegistrationSource;
-import com.nfa.exception.NewsUserNotFoundException;
-import com.nfa.service.NewsUserService;
+import com.nfa.exception.ReaderNotFoundException;
+import com.nfa.service.ReaderService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private final NewsUserService newsUserService;
+    private final ReaderService readerService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
@@ -38,26 +38,26 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             String name = attributes.getOrDefault("name", "").toString();
             String email = attributes.getOrDefault("email", "").toString();
 
-            NewsUserDto newsUserDto = new NewsUserDto();
+            ReaderDto readerDto = new ReaderDto();
             try {
-                newsUserDto = newsUserService.findByEmail(email);
-                DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(newsUserDto.getRole().name())),
+                readerDto = readerService.findByEmail(email);
+                DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
                         attributes, "id");
-                Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(newsUserDto.getRole().name())),
+                Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
                         oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                 SecurityContextHolder.getContext().setAuthentication(securityAuth);
-            } catch (NewsUserNotFoundException e) {
-                newsUserDto.setName(name);
-                newsUserDto.setEmail(email);
-                newsUserDto.setRole(NewsUserRole.NEWS_USER_ROLE);
-                newsUserDto.setRegistrationSource(RegistrationSource.GOOGLE);
-                newsUserService.save(newsUserDto);
+            } catch (ReaderNotFoundException e) {
+                readerDto.setName(name);
+                readerDto.setEmail(email);
+                readerDto.setRole(ReaderRole.READER_ROLE);
+                readerDto.setRegistrationSource(RegistrationSource.GOOGLE);
+                readerService.save(readerDto);
 
                 DefaultOAuth2User newUser = new DefaultOAuth2User(
-                        List.of(new SimpleGrantedAuthority(newsUserDto.getRole().name())),
+                        List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
                         attributes, "id");
                 Authentication securityAuth = new OAuth2AuthenticationToken(newUser,
-                        List.of(new SimpleGrantedAuthority(newsUserDto.getRole().name())),
+                        List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
                         oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                 SecurityContextHolder.getContext().setAuthentication(securityAuth);
             }

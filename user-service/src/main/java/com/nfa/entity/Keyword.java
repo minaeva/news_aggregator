@@ -27,13 +27,13 @@ public class Keyword {
             CascadeType.REFRESH
     })
     @JoinTable(
-            name = "reader_keyword",
+            name = "subscription_keyword",
             joinColumns = @JoinColumn(name = "keyword_id"),
-            inverseJoinColumns = @JoinColumn(name = "reader_email")
+            inverseJoinColumns = @JoinColumn(name = "subscription_id")
     )
     @Lazy
     @ToString.Exclude
-    private List<Reader> readers;
+    private List<Subscription> subscriptions;
 
     public Keyword(String name) {
         this.name = name;

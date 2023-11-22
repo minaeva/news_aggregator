@@ -3,12 +3,17 @@ package com.nfa.controller;
 import com.nfa.config.jwt.JwtProvider;
 import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
+import com.nfa.dto.SubscriptionRequest;
+import com.nfa.exception.KeywordNotFoundException;
 import com.nfa.exception.ReaderNotFoundException;
+import com.nfa.exception.ReaderUnauthorizedException;
 import com.nfa.exception.ReaderValidationException;
-import com.nfa.service.ReaderService;
+import com.nfa.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.nfa.config.jwt.JwtHelper.AUTHORIZATION;
 import static com.nfa.config.jwt.JwtHelper.getJwtFromString;
@@ -20,26 +25,33 @@ import static com.nfa.config.jwt.JwtHelper.getJwtFromString;
 @RequestMapping("/subscription")
 public class SubscriptionController {
 
-    private final ReaderService readerService;
+    private final SubscriptionService subscriptionService;
     private final JwtProvider jwtProvider;
 
     @PostMapping
-    public ReaderDto registerSubscription(@RequestHeader(AUTHORIZATION) String jwtWithBearer, @RequestBody SubscriptionDto request)
-            throws ReaderValidationException, ReaderNotFoundException {
+    public SubscriptionDto registerSubscription(@RequestHeader(AUTHORIZATION) String jwtWithBearer,
+                                                @RequestBody SubscriptionRequest request)
+            throws ReaderValidationException, ReaderNotFoundException, ReaderUnauthorizedException {
         log.info("handling register subscription request: " + request);
         log.info("jwt: " + jwtWithBearer);
         String jwt = getJwtFromString(jwtWithBearer);
 
-        if (jwt != null && jwtProvider.validateToken(jwt)) {
-            String email = jwtProvider.getEmailFromToken(jwt);
-            validateSubscriptionRequest(request);
-            return readerService.update(email, request);
+        if (jwt == null || !jwtProvider.validateToken(jwt)) {
+            throw new ReaderUnauthorizedException("Token is invalid");
         }
-        return null;
+        String email = jwtProvider.getEmailFromToken(jwt);
+        validateSubscriptionRequest(request);
+        return subscriptionService.update(email, request);
     }
 
-    private void validateSubscriptionRequest(SubscriptionDto request) throws ReaderValidationException {
-        if (request == null || request.getKeywordNames() == null || request.getTimesPerDay() == 0)  {
+    @GetMapping("/{keyword}")
+    public List<ReaderDto> getReadersByKeyword(@PathVariable("keyword") String keyword) throws KeywordNotFoundException {
+        log.info("getReadersByKeyword, keyword is " + keyword);
+        return subscriptionService.getByKeyword(keyword);
+    }
+
+    private void validateSubscriptionRequest(SubscriptionRequest request) throws ReaderValidationException {
+        if (request == null || request.getKeywordNames() == null || request.getTimesPerDay() == 0) {
             throw new ReaderValidationException("request cannot be null");
         }
     }

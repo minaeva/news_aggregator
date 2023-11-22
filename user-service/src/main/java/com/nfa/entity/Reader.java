@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "reader")
 @Data
@@ -33,16 +31,9 @@ public class Reader {
     @Enumerated(EnumType.STRING)
     private RegistrationSource registrationSource;
 
-    @Column(name = "times_per_day")
-    private int timesPerDay;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "reader_keyword",
-            joinColumns = @JoinColumn(name = "reader_email"),
-            inverseJoinColumns = @JoinColumn(name = "keyword_id")
-    )
-    private Set<Keyword> keywords;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "subscription_id")
+    private Subscription subscription;
 
     public Reader(String name, String email, String password, RegistrationSource registrationSource) {
         this.name = name;

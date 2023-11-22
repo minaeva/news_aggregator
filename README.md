@@ -24,7 +24,7 @@ Maven 3.9.2 should be installed
 To start the notification-service, locate the folder, run
 >mvn spring-boot:run
 
-The server will start at http://localhost:8072/notificator
+The server will start at http://localhost:8072
 
 --------
 **2. aggregator-service**
@@ -42,7 +42,7 @@ keywords.txt contains the list of keywords to track
 To start the aggregator-service, locate the folder, run 
 >mvn spring-boot:run
 
-The server will start at http://localhost:8071/aggregator
+The server will start at http://localhost:8071
 
 To debug the application, go to AggregatorServiceApplication > right-click line with the class name > debug
 
@@ -59,7 +59,7 @@ When running for the first time, go to _user-service/src/main/resources/applicat
 To start the aggregator-service, locate the folder, run
 >mvn spring-boot:run 
  
-The server will start at http://localhost:8073/user
+The server will start at http://localhost:8073
 
 ----------
 

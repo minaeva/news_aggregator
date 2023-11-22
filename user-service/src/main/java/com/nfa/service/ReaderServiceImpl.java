@@ -2,16 +2,11 @@ package com.nfa.service;
 
 import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
-import com.nfa.entity.Keyword;
 import com.nfa.entity.Reader;
 import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -41,21 +36,11 @@ public class ReaderServiceImpl implements ReaderService {
         readerRepository.save(toEntity(readerDto));
     }
 
+    //TODO: check if needed
     @Override
     public ReaderDto update(String email, SubscriptionDto request) throws ReaderNotFoundException {
         Reader reader = readerRepository.findByEmail(email)
                 .orElseThrow(ReaderNotFoundException::new);
-
-        Set<Keyword> keywordList = new HashSet<>();
-        List<String> keywordNames = request.getKeywordNames();
-        for (String keywordName: keywordNames) {
-            Keyword savedKeyword = keywordService.getByNameOrCreate(keywordName);
-            keywordList.add(savedKeyword);
-        }
-
-        reader.setKeywords(keywordList);
-        reader.setTimesPerDay(request.getTimesPerDay());
-
         Reader savedReader = readerRepository.save(reader);
         return toDto(savedReader);
     }
@@ -70,7 +55,7 @@ public class ReaderServiceImpl implements ReaderService {
         return entity;
     }
 
-    private static ReaderDto toDto(Reader reader) {
+    public static ReaderDto toDto(Reader reader) {
         ReaderDto readerDto = new ReaderDto();
         readerDto.setId(reader.getId());
         readerDto.setName(reader.getName());

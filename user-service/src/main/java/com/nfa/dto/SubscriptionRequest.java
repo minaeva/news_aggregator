@@ -5,9 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SubscriptionDto {
-
-    private Long readerId;
+public class SubscriptionRequest {
 
     private List<String> keywordNames;
 

@@ -30,7 +30,7 @@ public class AuthController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/registration")
-    public RegistrationResponse registerNewsUser(@RequestBody RegistrationRequest request) throws ReaderValidationException {
+    public RegistrationResponse registerNewsUser(@RequestBody RegistrationRequest request) {
         log.info("handling register news user request: " + request);
 
         if (!RegistrationSource.ONSITE.equals(request.getRegistrationSource())) {
@@ -47,8 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public AuthResponse authenticate(@RequestBody AuthRequest authRequest)
-            throws ReaderUnauthorizedException {
+    public AuthResponse authenticate(@RequestBody AuthRequest authRequest) {
         log.info("handling authenticate news user request: " + authRequest);
         ReaderDto readerDto;
         try {
@@ -62,7 +61,7 @@ public class AuthController {
     }
 
     @GetMapping("/jwt")
-    public ReaderDto getUserByJwt(@RequestHeader(AUTHORIZATION) String jwtWithBearer) throws ReaderNotFoundException, ReaderUnauthorizedException {
+    public ReaderDto getUserByJwt(@RequestHeader(AUTHORIZATION) String jwtWithBearer) {
         log.info("handling getUserByJwt request: " + jwtWithBearer);
         String jwt = getJwtFromString(jwtWithBearer);
 

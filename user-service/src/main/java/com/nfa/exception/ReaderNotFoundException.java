@@ -1,6 +1,6 @@
 package com.nfa.exception;
 
-public class ReaderNotFoundException extends Exception {
+public class ReaderNotFoundException extends RuntimeException {
 
     public ReaderNotFoundException() {
         super();

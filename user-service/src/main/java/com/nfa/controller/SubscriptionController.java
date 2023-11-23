@@ -4,8 +4,6 @@ import com.nfa.config.jwt.JwtProvider;
 import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.dto.SubscriptionRequest;
-import com.nfa.exception.KeywordNotFoundException;
-import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.exception.ReaderUnauthorizedException;
 import com.nfa.exception.ReaderValidationException;
 import com.nfa.service.SubscriptionService;
@@ -30,8 +28,7 @@ public class SubscriptionController {
 
     @PostMapping
     public SubscriptionDto registerSubscription(@RequestHeader(AUTHORIZATION) String jwtWithBearer,
-                                                @RequestBody SubscriptionRequest request)
-            throws ReaderValidationException, ReaderNotFoundException, ReaderUnauthorizedException {
+                                                @RequestBody SubscriptionRequest request) {
         log.info("handling register subscription request: " + request);
         log.info("jwt: " + jwtWithBearer);
         String jwt = getJwtFromString(jwtWithBearer);
@@ -45,12 +42,12 @@ public class SubscriptionController {
     }
 
     @GetMapping("/{keyword}")
-    public List<ReaderDto> getReadersByKeyword(@PathVariable("keyword") String keyword) throws KeywordNotFoundException {
+    public List<ReaderDto> getReadersByKeyword(@PathVariable("keyword") String keyword) {
         log.info("getReadersByKeyword, keyword is " + keyword);
         return subscriptionService.getByKeyword(keyword);
     }
 
-    private void validateSubscriptionRequest(SubscriptionRequest request) throws ReaderValidationException {
+    private void validateSubscriptionRequest(SubscriptionRequest request) {
         if (request == null || request.getKeywordNames() == null || request.getTimesPerDay() == 0) {
             throw new ReaderValidationException("request cannot be null");
         }

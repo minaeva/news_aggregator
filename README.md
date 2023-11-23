@@ -33,9 +33,15 @@ The server will start at http://localhost:8072
 >
 >docker-compose up -d
 
-When running for the first time, go to _aggregator-service/src/main/resources/application.properties_ and uncomment 
+When running for the first time, go to _aggregator-service/src/main/resources/application.properties_
 
->_spring.jpa.hibernate.ddl-auto=create_
+uncomment 
+
+>spring.jpa.hibernate.ddl-auto=create
+
+and provide values for
+
+> GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY
 
 keywords.txt contains the list of keywords to track
 

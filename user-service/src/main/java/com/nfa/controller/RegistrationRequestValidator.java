@@ -12,7 +12,7 @@ public class RegistrationRequestValidator {
     private RegistrationRequestValidator() {
     }
 
-    public static void validateRegistrationRequest(RegistrationRequest request) throws ReaderValidationException {
+    public static void validateRegistrationRequest(RegistrationRequest request) {
 
         if (RegistrationSource.ONSITE.equals(request.getRegistrationSource()) &&
                 !StringUtils.hasLength(request.getPassword())) {

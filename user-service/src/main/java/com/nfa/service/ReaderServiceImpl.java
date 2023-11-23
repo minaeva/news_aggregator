@@ -16,7 +16,7 @@ public class ReaderServiceImpl implements ReaderService {
     private final KeywordService keywordService;
 
     @Override
-    public ReaderDto findByEmail(String email) throws ReaderNotFoundException {
+    public ReaderDto findByEmail(String email) {
         Reader reader = readerRepository.findByEmail(email)
                 .orElseThrow(ReaderNotFoundException::new);
 
@@ -24,7 +24,7 @@ public class ReaderServiceImpl implements ReaderService {
     }
 
     @Override
-    public ReaderDto findByEmailAndPassword(String email, String password) throws ReaderNotFoundException {
+    public ReaderDto findByEmailAndPassword(String email, String password) {
         Reader reader = readerRepository.findByEmailAndPassword(email, password)
                 .orElseThrow(ReaderNotFoundException::new);
 
@@ -38,7 +38,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     //TODO: check if needed
     @Override
-    public ReaderDto update(String email, SubscriptionDto request) throws ReaderNotFoundException {
+    public ReaderDto update(String email, SubscriptionDto request) {
         Reader reader = readerRepository.findByEmail(email)
                 .orElseThrow(ReaderNotFoundException::new);
         Reader savedReader = readerRepository.save(reader);

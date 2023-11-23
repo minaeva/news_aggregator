@@ -1,6 +1,6 @@
 package com.nfa.exception;
 
-public class ReaderUnauthorizedException extends Exception {
+public class ReaderUnauthorizedException extends RuntimeException {
 
     public ReaderUnauthorizedException(String message) {
             super(message);

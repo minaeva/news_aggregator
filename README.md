@@ -24,7 +24,7 @@ Maven 3.9.2 should be installed
 To start the notification-service, locate the folder, run
 >mvn spring-boot:run
 
-The server will start at http://localhost:8072/notificator
+The server will start at http://localhost:8072
 
 --------
 **2. aggregator-service**
@@ -33,9 +33,15 @@ The server will start at http://localhost:8072/notificator
 >
 >docker-compose up -d
 
-When running for the first time, go to _aggregator-service/src/main/resources/application.properties_ and uncomment 
+When running for the first time, go to _aggregator-service/src/main/resources/application.properties_
 
->_spring.jpa.hibernate.ddl-auto=create_
+uncomment 
+
+>spring.jpa.hibernate.ddl-auto=create
+
+and provide values for
+
+> GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY
 
 keywords.txt contains the list of keywords to track
 
@@ -47,7 +53,7 @@ docker-compose up -d
 To start the aggregator-service, locate the folder, run 
 >mvn spring-boot:run
 
-The server will start at http://localhost:8071/aggregator
+The server will start at http://localhost:8071
 
 To debug the application, go to AggregatorServiceApplication > right-click line with the class name > debug
 
@@ -64,7 +70,7 @@ When running for the first time, go to _user-service/src/main/resources/applicat
 To start the aggregator-service, locate the folder, run
 >mvn spring-boot:run 
  
-The server will start at http://localhost:8073/user
+The server will start at http://localhost:8073
 
 ----------
 

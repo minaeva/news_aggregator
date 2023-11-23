@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS public.subscription
+(
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    times_per_day integer,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS public.reader
 (
     id integer NOT NULL,
@@ -6,9 +14,12 @@ CREATE TABLE IF NOT EXISTS public.reader
     password character varying(400),
     role character varying(40),
     registration_source character varying(40),
-    times_per_day integer,
-    PRIMARY KEY (email)
-    );
+    subscription_id integer,
+    PRIMARY KEY (email),
+    FOREIGN KEY (subscription_id)
+        REFERENCES public.subscription (id)
+        ON DELETE CASCADE
+);
 
 CREATE TABLE IF NOT EXISTS public.keyword
 (
@@ -17,12 +28,12 @@ CREATE TABLE IF NOT EXISTS public.keyword
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS public.reader_keyword
+CREATE TABLE IF NOT EXISTS public.subscription_keyword
 (
-    reader_email character varying(40) NOT NULL,
+    subscription_id integer NOT NULL,
     keyword_id integer NOT NULL,
-    FOREIGN KEY (reader_email)
-        REFERENCES public.reader (email) MATCH SIMPLE
+    FOREIGN KEY (subscription_id)
+        REFERENCES public.subscription (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     FOREIGN KEY (keyword_id)

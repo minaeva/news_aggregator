@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
 
@@ -32,7 +31,6 @@ public class Keyword {
             joinColumns = @JoinColumn(name = "keyword_id"),
             inverseJoinColumns = @JoinColumn(name = "article_id")
     )
-    @Lazy
     @ToString.Exclude
     private List<Article> articles;
 

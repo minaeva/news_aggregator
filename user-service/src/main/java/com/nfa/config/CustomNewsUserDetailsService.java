@@ -22,7 +22,7 @@ public class CustomNewsUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public CustomNewsUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public CustomNewsUserDetails loadUserByUsername(String email) {
         ReaderDto readerDto;
         try {
             readerDto = readerService.findByEmail(email);

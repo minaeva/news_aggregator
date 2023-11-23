@@ -1,9 +1,9 @@
 package com.nfa.batch;
 
-import com.nfa.entities.Article;
-import com.nfa.entities.Keyword;
-import com.nfa.services.ArticleService;
-import com.nfa.services.KeywordService;
+import com.nfa.entity.Article;
+import com.nfa.entity.Keyword;
+import com.nfa.service.ArticleService;
+import com.nfa.service.KeywordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

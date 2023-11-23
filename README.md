@@ -1,52 +1,72 @@
 **Thesis**
 
-Application helps the user to subscribe to the keywords he is interested in, and to get notification as soon as news with a keyword in a title is posted.
+Application helps to subscribe to the keywords one is interested in, and to get an email notification as many times per day as requested as soon as a news containing a keyword in a title is posted.
 
 
 **Workflow**
 
-User: registers, subscribes to a keyword/set of keywords
-News-aggregator: fetches the news, saves the new ones to db, looks for the keywords, if any is found - it is produced to the Kafka broker
-Notification: consumes the event and sends emails to the users who have the subscription to the keyword the event contains
+User: registers, subscribes to a keyword/set of keywords.
 
-**To run/debug**
+News-aggregator: fetches the news, saves the new ones to db, looks for the keywords, if any is found - it is produced to the Kafka broker.
+
+Notification: consumes the event and sends emails to the users who have the subscription to the keyword the event contains.
+
+-------
+**Prerequisites**
 
 JVM 17 should be installed 
 
-Maven should be installed
+Maven 3.9.2 should be installed
+
+-------
+**1. notification-service**
+
+To start the notification-service, locate the folder, run
+>mvn spring-boot:run
+
+The server will start at http://localhost:8072
 
 --------
-**aggregator-service**
+**2. aggregator-service**
 
-When running for the first time, go to 
-aggregator-service/src/main/resources/application.properties
+>cd aggregator-service 
+>
+>docker-compose up -d
 
-and uncomment 
+When running for the first time, go to _aggregator-service/src/main/resources/application.properties_
 
-_spring.jpa.hibernate.ddl-auto=create_
+uncomment 
+
+>spring.jpa.hibernate.ddl-auto=create
+
+and provide values for
+
+> GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY
 
 keywords.txt contains the list of keywords to track
 
-To start Kafka,  
-cd aggregator-service
-docker-compose up -d
-
-
 To start the aggregator-service, locate the folder, run 
-_mvn spring-boot:run_
+>mvn spring-boot:run
 
-The server will start at http://localhost:8071/aggregator
+The server will start at http://localhost:8071
 
 To debug the application, go to AggregatorServiceApplication > right-click line with the class name > debug
 
-spring.application.name=aggregator
-server.port=8071
+-------
+**3. user-service**
 
-spring.application.name=notificator
-server.port=8072
+>cd user-service 
+> 
+>docker-compose up -d
 
-spring.application.name=user
-server.port=8073
+When running for the first time, go to _user-service/src/main/resources/application.properties_ and uncomment
+>spring.jpa.hibernate.ddl-auto=create
+
+To start the aggregator-service, locate the folder, run
+>mvn spring-boot:run 
+ 
+The server will start at http://localhost:8073
+
 ----------
 
 **News providers limitations**

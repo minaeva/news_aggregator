@@ -1,8 +1,8 @@
 package com.nfa.batch.writers;
 
 import com.nfa.dto.KeywordDto;
-import com.nfa.entities.Keyword;
-import com.nfa.repositories.KeywordRepository;
+import com.nfa.entity.Keyword;
+import com.nfa.repository.KeywordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;

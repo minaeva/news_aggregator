@@ -1,8 +1,8 @@
 package com.nfa.config;
 
-import com.nfa.dto.NewsUserDto;
-import com.nfa.exception.NewsUserNotFoundException;
-import com.nfa.service.NewsUserService;
+import com.nfa.dto.ReaderDto;
+import com.nfa.exception.ReaderNotFoundException;
+import com.nfa.service.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,22 +14,22 @@ import static com.nfa.config.CustomNewsUserDetails.fromNewsUserDtoToCustomUserDe
 @Component
 public class CustomNewsUserDetailsService implements UserDetailsService {
 
-    private NewsUserService newsUserService;
+    private final ReaderService readerService;
 
     @Autowired
-    CustomNewsUserDetailsService(@Lazy NewsUserService newsUserService) {
-        this.newsUserService = newsUserService;
+    CustomNewsUserDetailsService(@Lazy ReaderService readerService) {
+        this.readerService = readerService;
     }
 
     @Override
-    public CustomNewsUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        NewsUserDto newsUserDto;
+    public CustomNewsUserDetails loadUserByUsername(String email) {
+        ReaderDto readerDto;
         try {
-            newsUserDto = newsUserService.findByEmail(email);
-        } catch (NewsUserNotFoundException ex) {
+            readerDto = readerService.findByEmail(email);
+        } catch (ReaderNotFoundException ex) {
             throw new UsernameNotFoundException("No user with this email");
         }
-        return fromNewsUserDtoToCustomUserDetails(newsUserDto);
+        return fromNewsUserDtoToCustomUserDetails(readerDto);
     }
 
 }

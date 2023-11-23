@@ -1,9 +1,15 @@
 package com.nfa.service;
 
+import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
-import com.nfa.exception.NewsUserNotFoundException;
+import com.nfa.dto.SubscriptionRequest;
+
+import java.util.List;
 
 public interface SubscriptionService {
 
-    void save(SubscriptionDto subscriptionDto, String email) throws NewsUserNotFoundException;
+    SubscriptionDto update(String email, SubscriptionRequest request);
+
+    List<ReaderDto> getByKeyword(String keyword);
+
 }

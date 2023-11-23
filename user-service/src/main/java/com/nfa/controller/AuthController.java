@@ -5,12 +5,13 @@ import com.nfa.controller.request.AuthRequest;
 import com.nfa.controller.request.RegistrationRequest;
 import com.nfa.controller.response.AuthResponse;
 import com.nfa.controller.response.RegistrationResponse;
-import com.nfa.dto.NewsUserDto;
+import com.nfa.dto.ReaderDto;
+import com.nfa.entity.ReaderRole;
 import com.nfa.entity.RegistrationSource;
-import com.nfa.exception.NewsUserNotFoundException;
-import com.nfa.exception.NewsUserUnauthorizedException;
-import com.nfa.exception.NewsUserValidationException;
-import com.nfa.service.NewsUserService;
+import com.nfa.exception.ReaderNotFoundException;
+import com.nfa.exception.ReaderUnauthorizedException;
+import com.nfa.exception.ReaderValidationException;
+import com.nfa.service.ReaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.web.bind.annotation.*;
@@ -25,58 +26,54 @@ import static com.nfa.controller.RegistrationRequestValidator.validateRegistrati
 @CrossOrigin
 public class AuthController {
 
-    private final NewsUserService newsUserService;
+    private final ReaderService readerService;
     private final JwtProvider jwtProvider;
 
-    @PostMapping("/register")
-    public RegistrationResponse registerNewsUser(@RequestBody RegistrationRequest request) throws NewsUserValidationException {
+    @PostMapping("/registration")
+    public RegistrationResponse registerNewsUser(@RequestBody RegistrationRequest request) {
         log.info("handling register news user request: " + request);
 
         if (!RegistrationSource.ONSITE.equals(request.getRegistrationSource())) {
-            throw new NewsUserValidationException("Custom registration type of request expected");
+            throw new ReaderValidationException("Custom registration type of request expected");
         }
 
         validateRegistrationRequest(request);
-        NewsUserDto newsUserDto = requestToDto(request);
-        newsUserService.save(newsUserDto);
+        ReaderDto readerDto = toReaderDto(request);
+        readerDto.setRole(ReaderRole.READER_ROLE);
+        readerService.save(readerDto);
 
         String jwt = jwtProvider.generateToken(request.getEmail());
         return new RegistrationResponse(jwt, request.getEmail());
     }
 
     @PostMapping("/auth")
-    public AuthResponse authenticate(@RequestBody AuthRequest authRequest)
-            throws NewsUserUnauthorizedException {
+    public AuthResponse authenticate(@RequestBody AuthRequest authRequest) {
         log.info("handling authenticate news user request: " + authRequest);
-        NewsUserDto newsUserDto;
+        ReaderDto readerDto;
         try {
-            newsUserDto = newsUserService.findByEmailAndPassword(authRequest.getEmail(), authRequest.getPassword());
-        } catch (NewsUserNotFoundException e) {
-            throw new NewsUserUnauthorizedException(e.getMessage());
+            readerDto = readerService.findByEmailAndPassword(authRequest.getEmail(), authRequest.getPassword());
+        } catch (ReaderNotFoundException e) {
+            throw new ReaderUnauthorizedException(e.getMessage());
         }
 
-        String jwt = jwtProvider.generateToken(newsUserDto.getEmail());
-        return new AuthResponse(jwt, newsUserDto.getId(), newsUserDto.getEmail());
+        String jwt = jwtProvider.generateToken(readerDto.getEmail());
+        return new AuthResponse(jwt, readerDto.getId(), readerDto.getEmail());
     }
 
     @GetMapping("/jwt")
-    public NewsUserDto getUserByJwt(@RequestHeader(AUTHORIZATION) String jwtWithBearer) throws NewsUserNotFoundException, NewsUserUnauthorizedException {
+    public ReaderDto getUserByJwt(@RequestHeader(AUTHORIZATION) String jwtWithBearer) {
         log.info("handling getUserByJwt request: " + jwtWithBearer);
         String jwt = getJwtFromString(jwtWithBearer);
 
         if (jwt != null && jwtProvider.validateToken(jwt)) {
             String email = jwtProvider.getEmailFromToken(jwt);
-            return newsUserService.findByEmail(email);
+            return readerService.findByEmail(email);
         }
-        throw new NewsUserUnauthorizedException("JWT is not correct");
+        throw new ReaderUnauthorizedException("JWT is not correct");
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "test";
-    }
-    private NewsUserDto requestToDto(RegistrationRequest request) {
-        NewsUserDto dto = new NewsUserDto();
+    private ReaderDto toReaderDto(RegistrationRequest request) {
+        ReaderDto dto = new ReaderDto();
         dto.setName(request.getName());
         dto.setEmail(request.getEmail());
         dto.setPassword(request.getPassword());

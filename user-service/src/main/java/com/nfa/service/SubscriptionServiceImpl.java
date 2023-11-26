@@ -1,6 +1,5 @@
 package com.nfa.service;
 
-import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.dto.SubscriptionRequest;
 import com.nfa.entity.Keyword;
@@ -52,16 +51,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public List<ReaderDto> getByKeyword(String keyword) {
+    public List<SubscriptionDto> getByKeyword(String keyword) {
         Keyword existingKeyword = keywordRepository.findByName(keyword)
                 .orElseThrow(KeywordNotFoundException::new);
 
         Optional<List<Subscription>> subscriptions = subscriptionRepository.findByKeywordsContaining(existingKeyword);
 
         return subscriptions.map(subscriptionList -> subscriptionList.stream()
-                .map(Subscription::getReader)
-                .map(ReaderServiceImpl::toDto)
-                .collect(toList())).orElse(null);
+                .map(this::toDto)
+                .collect(toList())).orElse(List.of());
     }
 
     private Set<Keyword> getKeywords(SubscriptionRequest request) {
@@ -74,9 +72,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return keywordList;
     }
 
-    private static SubscriptionDto toDto(Subscription subscription) {
+    private SubscriptionDto toDto(Subscription subscription) {
         SubscriptionDto result = new SubscriptionDto();
         result.setReaderId(subscription.getReader().getId());
+        result.setReaderName(subscription.getReader().getName());
+        result.setReaderEmail(subscription.getReader().getEmail());
         result.setTimesPerDay(subscription.getTimesPerDay());
         List<String> keywordNames = subscription.getKeywords().stream().map(Keyword::getName).collect(toList());
         result.setKeywordNames(keywordNames);

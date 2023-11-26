@@ -30,4 +30,10 @@ public class KeywordService {
         log.info("finding all keywords");
         return keywordRepository.findAll();
     }
+
+    public void delete(String name) {
+        log.info("deleting by keyword {}", name);
+        Optional<Keyword> existingKeyword = findByName(name);
+        existingKeyword.ifPresent(keywordRepository::delete);
+    }
 }

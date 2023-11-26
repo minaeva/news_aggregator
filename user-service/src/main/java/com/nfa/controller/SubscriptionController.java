@@ -1,7 +1,6 @@
 package com.nfa.controller;
 
 import com.nfa.config.jwt.JwtProvider;
-import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.dto.SubscriptionRequest;
 import com.nfa.exception.ReaderUnauthorizedException;
@@ -42,7 +41,7 @@ public class SubscriptionController {
     }
 
     @GetMapping("/{keyword}")
-    public List<ReaderDto> getReadersByKeyword(@PathVariable("keyword") String keyword) {
+    public List<SubscriptionDto> getReadersByKeyword(@PathVariable("keyword") String keyword) {
         log.info("getReadersByKeyword, keyword is " + keyword);
         return subscriptionService.getByKeyword(keyword);
     }

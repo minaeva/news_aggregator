@@ -68,6 +68,8 @@ To start the aggregator-service, locate the folder, run
 The server will start at http://localhost:8073
 
 ----------
+**4. eureka server**
+The server will start at http://localhost:8761
 
 **News providers limitations**
 

@@ -1,5 +1,6 @@
 package com.nfa.model;
 
+import com.nfa.dto.SubscriptionDto;
 import lombok.Data;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -12,7 +13,7 @@ public class Keyword implements Serializable {
 
     Integer id;
     private String name;
-    private List<Reader> readers;
+    private List<SubscriptionDto> subscriptionDtos;
 
     public Keyword(String name) {
         this.name = name;

@@ -1,7 +1,6 @@
 package com.nfa.controller;
 
 import com.nfa.config.jwt.JwtProvider;
-import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.dto.SubscriptionRequest;
 import com.nfa.exception.ReaderUnauthorizedException;
@@ -42,14 +41,20 @@ public class SubscriptionController {
     }
 
     @GetMapping("/{keyword}")
-    public List<ReaderDto> getReadersByKeyword(@PathVariable("keyword") String keyword) {
+    public List<SubscriptionDto> getReadersByKeyword(@PathVariable("keyword") String keyword) {
         log.info("getReadersByKeyword, keyword is " + keyword);
         return subscriptionService.getByKeyword(keyword);
     }
 
     private void validateSubscriptionRequest(SubscriptionRequest request) {
-        if (request == null || request.getKeywordNames() == null || request.getTimesPerDay() == 0) {
-            throw new ReaderValidationException("request cannot be null");
+        if (request == null) {
+            throw new ReaderValidationException("Request cannot be null");
+        }
+        if (request.getKeywordNames() == null) {
+            throw new ReaderValidationException("Request keywords cannot be empty");
+        }
+        if (request.getTimesPerDay() == 0) {
+            throw new ReaderValidationException("Request times per day cannot be zero");
         }
     }
 }

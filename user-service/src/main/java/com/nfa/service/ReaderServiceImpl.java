@@ -18,7 +18,7 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDto findByEmail(String email) {
         Reader reader = readerRepository.findByEmail(email)
-                .orElseThrow(ReaderNotFoundException::new);
+                .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
 
         return toDto(reader);
     }
@@ -26,7 +26,7 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDto findByEmailAndPassword(String email, String password) {
         Reader reader = readerRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(ReaderNotFoundException::new);
+                .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
 
         return toDto(reader);
     }
@@ -36,11 +36,10 @@ public class ReaderServiceImpl implements ReaderService {
         readerRepository.save(toEntity(readerDto));
     }
 
-    //TODO: check if needed
     @Override
     public ReaderDto update(String email, SubscriptionDto request) {
         Reader reader = readerRepository.findByEmail(email)
-                .orElseThrow(ReaderNotFoundException::new);
+                .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
         Reader savedReader = readerRepository.save(reader);
         return toDto(savedReader);
     }

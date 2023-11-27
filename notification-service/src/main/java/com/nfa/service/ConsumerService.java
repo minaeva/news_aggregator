@@ -1,6 +1,5 @@
 package com.nfa.service;
 
-import com.nfa.model.Keyword;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -15,11 +14,8 @@ public class ConsumerService {
     private static final String KEYWORDS_TOPIC = "keywordstopic";
 
     @KafkaListener(topics = KEYWORDS_TOPIC, groupId = "news_consumer_group_id")
-    public void consume(String message) {
-        log.info("Consumed " + message);
-
-        if (keywordService.findByName(message).isEmpty()) {
-            keywordService.save(new Keyword(message));
-        }
+    public void consume(String keyword) {
+        log.info("Consumed " + keyword);
+        keywordService.save(keyword);
     }
 }

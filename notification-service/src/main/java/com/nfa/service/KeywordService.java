@@ -1,13 +1,11 @@
 package com.nfa.service;
 
-import com.nfa.model.Keyword;
 import com.nfa.repository.KeywordRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -16,24 +14,18 @@ public class KeywordService {
 
     private final KeywordRepository keywordRepository;
 
-    public Keyword save(Keyword keyword) {
+    public void save(String keyword) {
         log.info("saving mailing {}", keyword);
-        return keywordRepository.save(keyword);
+        keywordRepository.addKeyword(keyword);
     }
 
-    public Optional<Keyword> findByName(String name) {
-        log.info("finding by keyword {}", name);
-        return keywordRepository.findByName(name);
-    }
-
-    public List<Keyword> findAll() {
+    public Set<String> findAll() {
         log.info("finding all keywords");
-        return keywordRepository.findAll();
+        return keywordRepository.getAllKeywords();
     }
 
-    public void delete(String name) {
-        log.info("deleting by keyword {}", name);
-        Optional<Keyword> existingKeyword = findByName(name);
-        existingKeyword.ifPresent(keywordRepository::delete);
+    public void delete(String keyword) {
+        log.info("deleting by keyword {}", keyword);
+        keywordRepository.deleteKeyword(keyword);
     }
 }

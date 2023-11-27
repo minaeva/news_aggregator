@@ -11,6 +11,6 @@ public class EmailClientImpl implements EmailClient {
 
     @Override
     public void sendEmail(String email) {
-
+        log.info("Sending email to {}", email);
     }
 }

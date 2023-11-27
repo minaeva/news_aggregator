@@ -1,16 +1,28 @@
 package com.nfa.repository;
 
-import com.nfa.model.Keyword;
-import org.springframework.data.repository.CrudRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Repository
-public interface KeywordRepository extends CrudRepository<Keyword, Integer> {
+@AllArgsConstructor
+public class KeywordRepository {
 
-    Optional<Keyword> findByName(String name);
+    private final StringRedisTemplate redisTemplate;
 
-    List<Keyword> findAll();
+    private static final String KEY = "keywords";
+
+    public void addKeyword(String keyword) {
+        redisTemplate.opsForSet().add(KEY, keyword);
+    }
+
+    public Set<String> getAllKeywords() {
+        return redisTemplate.opsForSet().members(KEY);
+    }
+
+    public void deleteKeyword(String keyword) {
+        redisTemplate.opsForSet().remove(KEY, keyword);
+    }
 }

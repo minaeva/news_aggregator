@@ -5,7 +5,6 @@ import com.nfa.dto.SubscriptionRequest;
 import com.nfa.entity.Keyword;
 import com.nfa.entity.Reader;
 import com.nfa.entity.Subscription;
-import com.nfa.exception.KeywordNotFoundException;
 import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.repository.KeywordRepository;
 import com.nfa.repository.ReaderRepository;
@@ -52,10 +51,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<SubscriptionDto> getByKeyword(String keyword) {
-        Keyword existingKeyword = keywordRepository.findByNameIgnoreCase(keyword)
-                .orElseThrow(() -> new KeywordNotFoundException("Keyword with name " + keyword + " does not exist"));
+        Optional<Keyword> existingKeyword = keywordRepository.findByNameIgnoreCase(keyword);
+        if (existingKeyword.isEmpty()) {
+            return List.of();
+        }
 
-        Optional<List<Subscription>> subscriptions = subscriptionRepository.findByKeywordsContaining(existingKeyword);
+        Optional<List<Subscription>> subscriptions = subscriptionRepository.findByKeywordsContaining(existingKeyword.get());
 
         return subscriptions.map(subscriptionList -> subscriptionList.stream()
                 .map(this::toDto)

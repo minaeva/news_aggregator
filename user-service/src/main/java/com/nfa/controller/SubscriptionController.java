@@ -47,8 +47,14 @@ public class SubscriptionController {
     }
 
     private void validateSubscriptionRequest(SubscriptionRequest request) {
-        if (request == null || request.getKeywordNames() == null || request.getTimesPerDay() == 0) {
-            throw new ReaderValidationException("request cannot be null");
+        if (request == null) {
+            throw new ReaderValidationException("Request cannot be null");
+        }
+        if (request.getKeywordNames() == null) {
+            throw new ReaderValidationException("Request keywords cannot be empty");
+        }
+        if (request.getTimesPerDay() == 0) {
+            throw new ReaderValidationException("Request times per day cannot be zero");
         }
     }
 }

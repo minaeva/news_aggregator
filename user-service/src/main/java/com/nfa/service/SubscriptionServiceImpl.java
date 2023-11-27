@@ -32,7 +32,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public SubscriptionDto update(String email, SubscriptionRequest request) {
         Reader reader = readerRepository.findByEmail(email)
-                .orElseThrow(ReaderNotFoundException::new);
+                .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
 
         Subscription subscription = reader.getSubscription();
         if (subscription == null) {
@@ -52,8 +52,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<SubscriptionDto> getByKeyword(String keyword) {
-        Keyword existingKeyword = keywordRepository.findByName(keyword)
-                .orElseThrow(KeywordNotFoundException::new);
+        Keyword existingKeyword = keywordRepository.findByNameIgnoreCase(keyword)
+                .orElseThrow(() -> new KeywordNotFoundException("Keyword with name " + keyword + " does not exist"));
 
         Optional<List<Subscription>> subscriptions = subscriptionRepository.findByKeywordsContaining(existingKeyword);
 

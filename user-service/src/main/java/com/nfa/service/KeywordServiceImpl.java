@@ -16,7 +16,7 @@ public class KeywordServiceImpl implements KeywordService {
 
     @Override
     public Keyword getByNameOrCreate(String name) {
-        Optional<Keyword> existingKeyword = keywordRepository.findByName(name);
+        Optional<Keyword> existingKeyword = keywordRepository.findByNameIgnoreCase(name);
         return existingKeyword.orElseGet(() -> keywordRepository.save(new Keyword(name)));
     }
 

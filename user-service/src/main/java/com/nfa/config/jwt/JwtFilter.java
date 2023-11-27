@@ -35,7 +35,7 @@ public class JwtFilter extends GenericFilterBean {
         logger.info("do filter...");
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token == null) {
-            log.severe("token is absent");
+            log.severe("Token is absent");
         }
         if (token != null && jwtProvider.validateToken(token)) {
             String userEmail = jwtProvider.getEmailFromToken(token);

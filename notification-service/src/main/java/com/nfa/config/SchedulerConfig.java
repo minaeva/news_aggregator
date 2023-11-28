@@ -1,7 +1,8 @@
 package com.nfa.config;
 
-import com.nfa.client.EmailClient;
+import com.nfa.service.EmailService;
 import com.nfa.client.ReaderClient;
+import com.nfa.dto.SubscriptionDto;
 import com.nfa.service.KeywordService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableScheduling
@@ -20,7 +22,7 @@ public class SchedulerConfig {
 
     private final KeywordService keywordService;
     private final ReaderClient readerClient;
-    private final EmailClient emailClient;
+    private final EmailService emailService;
 
     @Scheduled(cron = "${cron.expression}")
     public void handleKeywords() {
@@ -28,13 +30,18 @@ public class SchedulerConfig {
         log.info("Job scheduler started");
 
         Set<String> cachedKeywords = keywordService.findAll();
-        cachedKeywords.stream()
+        Set<String> emails = cachedKeywords.stream()
                 .map(keyword -> readerClient.getSubscriptionsByKeyword(keyword))
                 .flatMap(Collection::stream)
-                .forEach(subscriptionDto -> emailClient.sendEmail(subscriptionDto.getReaderEmail()));
+                .map(SubscriptionDto::getReaderEmail)
+                .collect(Collectors.toSet());
 
-        cachedKeywords.stream()
-                .forEach(keyword -> keywordService.delete(keyword));
+        if (!emails.isEmpty()) {
+            log.info("Processing emails: ", emails);
+            emailService.sendEmailAsync(emails);
+            cachedKeywords.stream()
+                    .forEach(keyword -> keywordService.delete(keyword));
+        }
 
         log.info("***");
         log.info("Job scheduler finished");

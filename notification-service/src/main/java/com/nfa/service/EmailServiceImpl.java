@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -25,9 +24,7 @@ public class EmailServiceImpl implements EmailService {
         ExecutorService service = Executors.newFixedThreadPool(10);
 
         for (String email : emails) {
-            service.submit(() -> {
-                sendEmail(email);
-            });
+            service.submit(() -> sendEmail(email));
         }
 
         service.shutdownNow();
@@ -37,13 +34,14 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendEmail(String email) {
         try {
+            log.info("sending email to {}", email);
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setFrom("s.minaeva@gmail.com");
-        simpleMailMessage.setTo(email);
-        simpleMailMessage.setSubject("There's new articles fitting keywords you subscribed to");
-        javaMailSender.send(simpleMailMessage);
-        log.info("sending...");
-        } catch (MessagingException mex) {
+            simpleMailMessage.setFrom("chooseZeNews@gmail.com");
+            simpleMailMessage.setTo(email);
+            simpleMailMessage.setSubject("Fresh news for you");
+            simpleMailMessage.setText(String.format("Hi %s, there are news with keywords you've subscribed to. Please find them with the link http://chooseZeNews.com", email));
+            javaMailSender.send(simpleMailMessage);
+        } catch (Exception mex) {
             log.error("send failed, exception: " + mex);
         }
     }

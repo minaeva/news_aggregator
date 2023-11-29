@@ -19,6 +19,10 @@ JVM 17 should be installed
 Maven 3.9.2 should be installed
 
 -------
+**0. eureka server**
+The server will start at http://localhost:8761
+
+-------
 **1. notification-service**
 
 To start the notification-service, locate the folder, run
@@ -32,6 +36,9 @@ The server will start at http://localhost:8072
 >cd aggregator-service 
 >
 >docker-compose up -d
+
+
+![img.png](img.png)
 
 When running for the first time, go to _aggregator-service/src/main/resources/application.properties_
 
@@ -68,8 +75,6 @@ To start the aggregator-service, locate the folder, run
 The server will start at http://localhost:8073
 
 ----------
-**4. eureka server**
-The server will start at http://localhost:8761
 
 **News providers limitations**
 

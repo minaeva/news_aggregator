@@ -1,5 +1,6 @@
 package com.nfa.controller;
 
+import com.nfa.dto.ErrorDto;
 import com.nfa.exception.KeywordNotFoundException;
 import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.exception.ReaderUnauthorizedException;
@@ -15,33 +16,31 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(value = {KeywordNotFoundException.class})
     public ResponseEntity<ErrorDto> handleNotFoundException(KeywordNotFoundException exception) {
-        return ResponseEntity.badRequest().body(ErrorDto.builder()
-                .message(exception.getMessage())
-                .time(LocalDateTime.now())
-                .build());
+        return ResponseEntity.badRequest().body(composeErrorDto(exception));
     }
 
     @ExceptionHandler(value = {ReaderNotFoundException.class})
     public ResponseEntity<ErrorDto> handleReaderNotFoundException(ReaderNotFoundException exception) {
-        return ResponseEntity.badRequest().body(ErrorDto.builder()
-                .message(exception.getMessage())
-                .time(LocalDateTime.now())
-                .build());
+        return ResponseEntity.badRequest().body(composeErrorDto(exception));
+
     }
 
     @ExceptionHandler(value = {ReaderUnauthorizedException.class})
     public ResponseEntity<ErrorDto> handleReaderUnauthorizedException(ReaderUnauthorizedException exception) {
-        return ResponseEntity.badRequest().body(ErrorDto.builder()
-                .message(exception.getMessage())
-                .time(LocalDateTime.now())
-                .build());
+        return ResponseEntity.badRequest().body(composeErrorDto(exception));
+
     }
 
     @ExceptionHandler(value = {ReaderValidationException.class})
     public ResponseEntity<ErrorDto> handleReaderValidationException(ReaderValidationException exception) {
-        return ResponseEntity.badRequest().body(ErrorDto.builder()
-                .message(exception.getMessage())
-                .time(LocalDateTime.now())
-                .build());
+        return ResponseEntity.badRequest().body(composeErrorDto(exception));
     }
+
+    private ErrorDto composeErrorDto(RuntimeException exception) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setMessage(exception.getMessage());
+        errorDto.setTime(LocalDateTime.now());
+        return errorDto;
+    }
+
 }

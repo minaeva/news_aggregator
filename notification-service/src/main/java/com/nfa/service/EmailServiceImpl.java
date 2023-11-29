@@ -2,6 +2,7 @@ package com.nfa.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,16 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Value("${mail.from}")
+    private String mailFrom;
+
+    @Value("${mail.subject}")
+    private String mailSubject;
+
+    @Value("${mail.text}")
+    private String mailText;
+
+
     @Override
     public void sendEmailAsync(Set<String> emails) {
         log.info("Sending email to {}", emails);
@@ -30,16 +41,14 @@ public class EmailServiceImpl implements EmailService {
         service.shutdownNow();
     }
 
-
-    @Override
-    public void sendEmail(String email) {
+    private void sendEmail(String email) {
         try {
             log.info("sending email to {}", email);
             SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-            simpleMailMessage.setFrom("chooseZeNews@gmail.com");
+            simpleMailMessage.setFrom(mailFrom);
             simpleMailMessage.setTo(email);
-            simpleMailMessage.setSubject("Fresh news for you");
-            simpleMailMessage.setText(String.format("Hi %s, there are news with keywords you've subscribed to. Please find them with the link http://chooseZeNews.com", email));
+            simpleMailMessage.setSubject(mailSubject);
+            simpleMailMessage.setText(String.format(mailText, email));
             javaMailSender.send(simpleMailMessage);
         } catch (Exception mex) {
             log.error("send failed, exception: " + mex);

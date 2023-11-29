@@ -1,12 +1,10 @@
-package com.nfa.controller;
+package com.nfa.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
 public class ErrorDto {
 
     private String message;

@@ -1,8 +1,9 @@
 package com.nfa.client;
 
 import com.nfa.dto.SubscriptionDto;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -12,17 +13,20 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-@AllArgsConstructor
 @Slf4j
 public class ReaderClientImpl implements ReaderClient {
 
-    private final RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${user.app.url}")
+    private String userAppUrl;
 
     @Override
     public List<SubscriptionDto> getSubscriptionsByKeyword(String keyword) {
 
         log.info("getSubscriptionsByKeyword {}", keyword);
-        String url = String.format("http://user-app/subscription/%s", keyword);
+        String url = String.format(userAppUrl, keyword);
         ResponseEntity<SubscriptionDto[]> responseEntity = restTemplate
                 .getForEntity(url, SubscriptionDto[].class);
 

@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>com.nfa</groupId>
+    <groupId>ua.kiev.minaeva</groupId>
     <artifactId>aggregator-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>aggregator-service</name>

@@ -40,7 +40,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Configuration
@@ -197,10 +196,5 @@ public class BatchConfig {
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new JpaTransactionManager();
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 }

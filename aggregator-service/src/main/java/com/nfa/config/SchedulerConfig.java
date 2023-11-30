@@ -22,11 +22,9 @@ public class SchedulerConfig {
 
     @Scheduled(fixedDelayString = "${scheduled.delay.fixed}", initialDelayString = "${scheduled.delay.initial}")
     public void scheduleJob() throws Exception {
-        log.info("***");
         log.info("Job scheduler started");
         jobLauncher.run(job, new JobParametersBuilder()
                 .addLong("uniqueness", System.nanoTime()).toJobParameters());
-        log.info("***");
         log.info("Job scheduler finished");
     }
 }

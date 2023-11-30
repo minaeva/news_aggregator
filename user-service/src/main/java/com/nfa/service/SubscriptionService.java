@@ -1,7 +1,7 @@
 package com.nfa.service;
 
+import com.nfa.controller.request.SubscriptionRequest;
 import com.nfa.dto.SubscriptionDto;
-import com.nfa.dto.SubscriptionRequest;
 
 import java.util.List;
 
@@ -11,4 +11,5 @@ public interface SubscriptionService {
 
     List<SubscriptionDto> getByKeyword(String keyword);
 
+    SubscriptionDto getByEmail(String email);
 }

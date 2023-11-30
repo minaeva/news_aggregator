@@ -15,5 +15,7 @@ public interface KeywordService {
 
     void deleteById(int theId);
 
-    public Keyword getByNameOrSave(String name);
+    Keyword getByNameOrSave(String name);
+
+    Optional<Keyword> getByName(String name);
 }

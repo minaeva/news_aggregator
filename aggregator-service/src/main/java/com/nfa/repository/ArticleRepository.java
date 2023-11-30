@@ -1,6 +1,7 @@
 package com.nfa.repository;
 
 import com.nfa.entity.Article;
+import com.nfa.entity.Keyword;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
@@ -17,4 +18,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     Optional<List<Article>> findArticleByDateAdded(LocalDateTime date);
 
     List<Article> findAllByProcessedIsFalseAndKeywordsNotEmpty();
+
+    List<Article> findByKeywords(Keyword keyword);
 }

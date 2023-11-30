@@ -1,7 +1,7 @@
 package com.nfa.service;
 
 import com.nfa.dto.SubscriptionDto;
-import com.nfa.dto.SubscriptionRequest;
+import com.nfa.controller.request.SubscriptionRequest;
 import com.nfa.entity.Keyword;
 import com.nfa.entity.Reader;
 import com.nfa.entity.Subscription;
@@ -61,6 +61,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptions.map(subscriptionList -> subscriptionList.stream()
                 .map(this::toDto)
                 .collect(toList())).orElse(List.of());
+    }
+
+    @Override
+    public SubscriptionDto getByEmail(String email) {
+
+        Optional<Subscription> subscription = subscriptionRepository.findByReader_Email(email);
+        return subscription.map(this::toDto).orElse(null);
     }
 
     private Set<Keyword> getKeywords(SubscriptionRequest request) {

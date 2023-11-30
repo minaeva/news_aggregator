@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS public.subscription
 (
-    id integer NOT NULL,
+    id SERIAL NOT NULL,
     name character varying(100) NOT NULL,
     times_per_day integer,
     PRIMARY KEY (id)
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS public.subscription
 
 CREATE TABLE IF NOT EXISTS public.reader
 (
-    id integer NOT NULL,
+    id SERIAL NOT NULL,
     name character varying(40) NOT NULL,
     email character varying(40) NOT NULL,
     password character varying(400),
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS public.reader
 
 CREATE TABLE IF NOT EXISTS public.keyword
 (
-    id integer NOT NULL,
+    id SERIAL NOT NULL,
     name character varying(100) NOT NULL,
     PRIMARY KEY (id)
 );

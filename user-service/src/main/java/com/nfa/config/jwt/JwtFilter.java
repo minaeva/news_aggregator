@@ -7,7 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import static org.springframework.util.StringUtils.hasText;
 
 @Component
-@Log
+@Slf4j
 public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
@@ -32,10 +32,10 @@ public class JwtFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        logger.info("do filter...");
+        log.info("do filter...");
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
         if (token == null) {
-            log.severe("Token is absent");
+            log.info("Token is absent");
         }
         if (token != null && jwtProvider.validateToken(token)) {
             String userEmail = jwtProvider.getEmailFromToken(token);

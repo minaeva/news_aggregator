@@ -10,3 +10,4 @@ Russia|russian
 China|chinese
 India|indian
 Terrorism|terroristic
+War|war

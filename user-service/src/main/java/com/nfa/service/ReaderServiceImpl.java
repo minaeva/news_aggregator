@@ -4,6 +4,7 @@ import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.entity.Reader;
 import com.nfa.exception.ReaderNotFoundException;
+import com.nfa.exception.ReaderValidationException;
 import com.nfa.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class ReaderServiceImpl implements ReaderService {
 
     private final ReaderRepository readerRepository;
-    private final KeywordService keywordService;
 
     @Override
     public ReaderDto findByEmail(String email) {
@@ -33,7 +33,11 @@ public class ReaderServiceImpl implements ReaderService {
 
     @Override
     public void save(ReaderDto readerDto) {
-        readerRepository.save(toEntity(readerDto));
+        try {
+            readerRepository.save(toEntity(readerDto));
+        } catch (Exception e) {
+            throw new ReaderValidationException(e.getMessage());
+        }
     }
 
     @Override

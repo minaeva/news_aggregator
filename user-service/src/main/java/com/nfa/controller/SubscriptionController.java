@@ -1,5 +1,6 @@
 package com.nfa.controller;
 
+import com.nfa.config.CustomNewsUserDetails;
 import com.nfa.config.jwt.JwtProvider;
 import com.nfa.controller.request.JwtRequest;
 import com.nfa.controller.request.SubscriptionRequest;
@@ -11,6 +12,8 @@ import com.nfa.service.ReaderService;
 import com.nfa.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,16 +47,11 @@ public class SubscriptionController {
         return subscriptionService.update(email, request);
     }
 
-    @PostMapping("/jwt")
-    public SubscriptionDto getSubscriptionByJwt(@RequestBody JwtRequest jwtRequest) {
-        log.info("Handling getSubscriptionByJwt, jwt: " + jwtRequest);
-
-        String jwt = getJwtFromString(jwtRequest.getJwt());
-        if (jwt == null || !jwtProvider.validateToken(jwt)) {
-            throw new ReaderUnauthorizedException("Token is invalid");
-        }
-        String email = jwtProvider.getEmailFromToken(jwt);
-        ReaderDto readerDto = readerService.findByEmail(email);
+    @GetMapping("/jwt")
+    public SubscriptionDto getSubscriptionByJwt() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomNewsUserDetails principal = (CustomNewsUserDetails) authentication.getPrincipal();
+        ReaderDto readerDto = readerService.findByEmail(principal.getUsername());
         if (readerDto != null && readerDto.getEmail() != null) {
             return subscriptionService.getByEmail(readerDto.getEmail());
         }

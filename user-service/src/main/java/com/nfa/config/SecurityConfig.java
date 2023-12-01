@@ -35,8 +35,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/registration", "/auth").permitAll()
-                        .requestMatchers(antMatcher(HttpMethod.GET, "/subscription/**")).permitAll()
-                        .requestMatchers(antMatcher(HttpMethod.POST, "/subscription/jwt")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

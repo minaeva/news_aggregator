@@ -5,5 +5,5 @@ import com.nfa.dto.SubscriptionDto;
 
 public interface ReaderClient {
 
-    SubscriptionDto getSubscriptionByJwt(JwtRequest jwtRequest);
+    SubscriptionDto getSubscriptionByJwt(String jwt);
 }

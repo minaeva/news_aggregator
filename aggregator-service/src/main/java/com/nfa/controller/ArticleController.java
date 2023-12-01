@@ -24,8 +24,6 @@ public class ArticleController {
 
     @GetMapping()
     public Set<ArticleDto> getReadersArticles(@RequestHeader(AUTHORIZATION) String jwtWithBearer) {
-        JwtRequest jwtRequest = new JwtRequest();
-        jwtRequest.setJwt(jwtWithBearer);
-        return articleService.findAllByJwt(jwtRequest);
+        return articleService.findAllByJwt(jwtWithBearer);
     }
 }

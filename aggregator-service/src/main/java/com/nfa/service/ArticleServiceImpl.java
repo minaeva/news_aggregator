@@ -78,8 +78,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Set<ArticleDto> findAllByJwt (JwtRequest jwtRequest) {
-        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwtRequest);
+    public Set<ArticleDto> findAllByJwt (String jwt) {
+        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwt);
 
         Set<Article> foundArticles = new HashSet<>();
         for (String keywordName: subscriptionDto.getKeywordNames()) {

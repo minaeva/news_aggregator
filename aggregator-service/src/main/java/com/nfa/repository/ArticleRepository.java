@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
@@ -19,5 +20,5 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     List<Article> findAllByProcessedIsFalseAndKeywordsNotEmpty();
 
-    List<Article> findByKeywords(Keyword keyword);
+    List<Article> findByKeywordsIn(Set<Keyword> keywords);
 }

@@ -1,7 +1,6 @@
 package com.nfa.service;
 
 import com.nfa.client.ReaderClient;
-import com.nfa.controller.JwtRequest;
 import com.nfa.dto.ArticleDto;
 import com.nfa.dto.KeywordDto;
 import com.nfa.dto.SourceDto;
@@ -78,18 +77,17 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Set<ArticleDto> findAllByJwt (JwtRequest jwtRequest) {
-        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwtRequest);
+    public Set<ArticleDto> findAllByJwt(String jwt) {
+        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwt);
 
-        Set<Article> foundArticles = new HashSet<>();
-        for (String keywordName: subscriptionDto.getKeywordNames()) {
+        Set<Keyword> readersKeywords = new HashSet<>();
+        for (String keywordName : subscriptionDto.getKeywordNames()) {
             Optional<Keyword> savedKeyword = keywordService.getByName(keywordName);
-            if (savedKeyword.isPresent()) {
-                List<Article> articles = articleRepository.findByKeywords(savedKeyword.get());
-                foundArticles.addAll(articles);
-            }
+            savedKeyword.ifPresent(readersKeywords::add);
         }
-        return foundArticles.stream()
+
+        List<Article> articles = articleRepository.findByKeywordsIn(readersKeywords);
+        return articles.stream()
                 .map(this::toDto)
                 .collect(toSet());
     }

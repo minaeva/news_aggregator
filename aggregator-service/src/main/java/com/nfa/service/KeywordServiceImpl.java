@@ -36,12 +36,12 @@ public class KeywordServiceImpl implements KeywordService {
 
     @Override
     public Keyword getByNameOrSave(String name) {
-        Optional<Keyword> savedKeyword = keywordRepository.findByName(name);
+        Optional<Keyword> savedKeyword = keywordRepository.findByNameIgnoreCase(name);
         return savedKeyword.orElseGet(() -> keywordRepository.save(new Keyword(name)));
     }
 
     @Override
     public Optional<Keyword> getByName(String name) {
-        return keywordRepository.findByName(name);
+        return keywordRepository.findByNameIgnoreCase(name);
     }
 }

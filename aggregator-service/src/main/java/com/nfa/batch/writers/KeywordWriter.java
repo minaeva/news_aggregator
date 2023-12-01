@@ -24,7 +24,7 @@ public class KeywordWriter implements ItemWriter<KeywordDto> {
         log.info("Writing: {}", chunk.getItems().size());
         List<Keyword> newKeywords = new ArrayList<>();
         for (KeywordDto keywordDto : chunk.getItems()) {
-            Optional<Keyword> savedKeyword = keywordRepository.findByName(keywordDto.getName());
+            Optional<Keyword> savedKeyword = keywordRepository.findByNameIgnoreCase(keywordDto.getName());
             if (savedKeyword.isEmpty()) {
                 Keyword keywordToSave = new Keyword(keywordDto.getName());
                 newKeywords.add(keywordToSave);

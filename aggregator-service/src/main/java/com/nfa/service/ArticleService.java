@@ -23,5 +23,5 @@ public interface ArticleService {
 
     boolean isArticleInDB(LocalDateTime dateAdded, String title);
 
-    Set<ArticleDto> findAllByJwt (JwtRequest jwtRequest);
+    Set<ArticleDto> findAllByJwt (String jwt);
 }

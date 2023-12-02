@@ -37,6 +37,9 @@ The server will start at http://localhost:8072
 >
 >docker-compose up -d
 
+
+![img.png](img.png)
+
 When running for the first time, go to _aggregator-service/src/main/resources/application.properties_
 and provide values for GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY
 
@@ -62,8 +65,6 @@ To start the aggregator-service, locate the folder, run
 The server will start at http://localhost:8073
 
 ----------
-**4. eureka server**
-The server will start at http://localhost:8761
 
 **News providers limitations**
 

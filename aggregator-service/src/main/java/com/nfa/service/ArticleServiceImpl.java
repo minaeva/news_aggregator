@@ -1,8 +1,10 @@
 package com.nfa.service;
 
+import com.nfa.client.ReaderClient;
 import com.nfa.dto.ArticleDto;
 import com.nfa.dto.KeywordDto;
 import com.nfa.dto.SourceDto;
+import com.nfa.dto.SubscriptionDto;
 import com.nfa.entity.Article;
 import com.nfa.entity.Keyword;
 import com.nfa.repository.ArticleRepository;
@@ -14,11 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,8 @@ public class ArticleServiceImpl implements ArticleService {
 
     private static final String DATE_ADDED = "dateAdded";
     private final ArticleRepository articleRepository;
+    private final ReaderClient readerClient;
+    private final KeywordService keywordService;
 
     @Override
     public List<ArticleDto> findAll(int pageNumber, int pageSize) {
@@ -34,7 +37,7 @@ public class ArticleServiceImpl implements ArticleService {
 
         Page<Article> articleEntities = articleRepository.findAll(pageRequest);
 
-        return entityToDtoArticleList(articleEntities);
+        return toArticleDtoList(articleEntities);
     }
 
     @Override
@@ -44,7 +47,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Article save(ArticleDto articleDto) {
-        return articleRepository.save(dtoToEntity(articleDto));
+        return articleRepository.save(toEntity(articleDto));
     }
 
     @Override
@@ -52,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> saveAll(List<ArticleDto> articleDtoList) {
         return articleRepository.saveAll(
                 articleDtoList.stream()
-                        .map(this::dtoToEntity)
+                        .map(this::toEntity)
                         .toList());
     }
 
@@ -73,15 +76,31 @@ public class ArticleServiceImpl implements ArticleService {
         return result.get();
     }
 
-    private List<ArticleDto> entityToDtoArticleList(Page<Article> articleEntities) {
+    @Override
+    public Set<ArticleDto> findAllByJwt(String jwt) {
+        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwt);
+
+        Set<Keyword> readersKeywords = new HashSet<>();
+        for (String keywordName : subscriptionDto.getKeywordNames()) {
+            Optional<Keyword> savedKeyword = keywordService.getByName(keywordName);
+            savedKeyword.ifPresent(readersKeywords::add);
+        }
+
+        List<Article> articles = articleRepository.findByKeywordsIn(readersKeywords);
+        return articles.stream()
+                .map(this::toDto)
+                .collect(toSet());
+    }
+
+    private List<ArticleDto> toArticleDtoList(Page<Article> articleEntities) {
         List<ArticleDto> articleDtoList = new ArrayList<>();
         for (Article article : articleEntities) {
-            articleDtoList.add(entityToDto(article));
+            articleDtoList.add(toDto(article));
         }
         return articleDtoList;
     }
 
-    private ArticleDto entityToDto(Article article) {
+    private ArticleDto toDto(Article article) {
         ArticleDto articleDto = new ArticleDto();
         articleDto.setTitle(article.getTitle());
         articleDto.setDescription(article.getDescription());
@@ -100,18 +119,17 @@ public class ArticleServiceImpl implements ArticleService {
         return articleDto;
     }
 
-    private Article dtoToEntity(ArticleDto articleDto) {
+    private Article toEntity(ArticleDto articleDto) {
         Article article = new Article();
         article.setTitle(articleDto.getTitle());
         article.setDescription(articleDto.getDescription());
         article.setUrl(articleDto.getUrl());
         article.setDateAdded(articleDto.getDateAdded());
-        //TODO: article.setSource(articleDto.getSourceDto());
         if (articleDto.getKeywordDtos() != null) {
             article.setKeywords(
                     articleDto.getKeywordDtos().stream()
                             .map(this::categoryDtoToEntity)
-                            .collect(Collectors.toSet()));
+                            .collect(toSet()));
         }
         return article;
     }

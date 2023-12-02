@@ -1,4 +1,4 @@
-package com.nfa.dto;
+package com.nfa.controller.request;
 
 import lombok.Data;
 

@@ -41,16 +41,9 @@ The server will start at http://localhost:8072
 ![img.png](img.png)
 
 When running for the first time, go to _aggregator-service/src/main/resources/application.properties_
+and provide values for GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY
 
-uncomment 
-
->spring.jpa.hibernate.ddl-auto=create
-
-and provide values for
-
-> GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY
-
-keywords.txt contains the list of keywords to track
+File _keywords.txt_ contains the list of keywords to track
 
 To start the aggregator-service, locate the folder, run 
 >mvn spring-boot:run
@@ -65,9 +58,6 @@ To debug the application, go to AggregatorServiceApplication > right-click line 
 >cd user-service 
 > 
 >docker-compose up -d
-
-When running for the first time, go to _user-service/src/main/resources/application.properties_ and uncomment
->spring.jpa.hibernate.ddl-auto=create
 
 To start the aggregator-service, locate the folder, run
 >mvn spring-boot:run 

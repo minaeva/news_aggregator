@@ -1,6 +1,7 @@
 package com.nfa.batch.readers;
 
 import com.nfa.client.Client;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
@@ -8,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 public class RestApiItemReader<T> implements ItemReader {
 
     private final Client client;
@@ -34,6 +36,7 @@ public class RestApiItemReader<T> implements ItemReader {
     private List<T> fetchDataFromApi() {
         if (cachedData == null) {
             cachedData = client.fetchData();
+            log.info("From {} have fetched news {}", client, cachedData);
         }
         return cachedData;
     }

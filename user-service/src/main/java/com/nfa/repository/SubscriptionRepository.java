@@ -14,5 +14,5 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Inte
 
     Optional<List<Subscription>> findByKeywordsContaining(Keyword keyword);
 
-    Optional<Subscription> findByReader_Email(String email);
+    Optional<Subscription> findByReaderEmail(String email);
 }

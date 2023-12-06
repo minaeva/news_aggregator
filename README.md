@@ -47,8 +47,7 @@ To start the aggregator-service, locate the folder, run
 
 The server will start at http://localhost:8071
 
-To debug the application, go to AggregatorServiceApplication > right-click line with the class name > debug
-
+Open API http://localhost:8071/swagger-ui/index.html
 -------
 **3. user-service**
 

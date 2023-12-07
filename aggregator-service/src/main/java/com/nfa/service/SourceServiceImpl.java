@@ -18,13 +18,13 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public List<SourceDto> findAll() {
         List<Source> sources = sourceRepository.findAll();
-        return entityToDtoList(sources);
+        return toDtoList(sources);
     }
 
     @Override
     public SourceDto findById(int theId) {
         Optional<Source> source = sourceRepository.findById(theId);
-        return source.map(this::entityToDto).orElse(null);
+        return source.map(this::toDto).orElse(null);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public Source save(SourceDto sourceDto) {
-        return sourceRepository.save(dtoToEntity(sourceDto));
+        return sourceRepository.save(toEntity(sourceDto));
     }
 
     @Override
@@ -43,15 +43,15 @@ public class SourceServiceImpl implements SourceService {
         sourceRepository.deleteById(theId);
     }
 
-    private Source dtoToEntity(SourceDto sourceDto) {
-        return new Source(sourceDto.getName());
+    private Source toEntity(SourceDto sourceDto) {
+        return new Source(sourceDto.name());
     }
 
-    private SourceDto entityToDto(Source source) {
+    private SourceDto toDto(Source source) {
         return new SourceDto(source.getName());
     }
 
-    private List<SourceDto> entityToDtoList(List<Source> sources) {
+    private List<SourceDto> toDtoList(List<Source> sources) {
         List<SourceDto> sourceDtoList = new ArrayList<>();
         for (Source source : sources) {
             sourceDtoList.add(new SourceDto(source.getName()));

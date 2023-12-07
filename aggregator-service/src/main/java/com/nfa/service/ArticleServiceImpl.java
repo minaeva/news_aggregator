@@ -77,11 +77,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Set<ArticleDto> findAllByJwt(String jwt) {
-        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwt);
+    public Set<ArticleDto> findAllByJwt(String jwtWithBearer) {
+        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwtWithBearer);
 
         Set<Keyword> readersKeywords = new HashSet<>();
-        for (String keywordName : subscriptionDto.getKeywordNames()) {
+        for (String keywordName : subscriptionDto.keywordNames()) {
             Optional<Keyword> savedKeyword = keywordService.getByName(keywordName);
             savedKeyword.ifPresent(readersKeywords::add);
         }
@@ -101,43 +101,38 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     private ArticleDto toDto(Article article) {
-        ArticleDto articleDto = new ArticleDto();
-        articleDto.setTitle(article.getTitle());
-        articleDto.setDescription(article.getDescription());
-        articleDto.setUrl(article.getUrl());
-        articleDto.setDateAdded(article.getDateAdded());
+        SourceDto sourceDto = null;
         if (article.getSource() != null) {
-            articleDto.setSourceDto(new SourceDto(article.getSource().getName()));
+            sourceDto = new SourceDto(article.getSource().getName());
         }
+
         List<KeywordDto> keywordDtoList = new ArrayList<>();
         for (Keyword keyword : article.getKeywords()) {
-            KeywordDto keywordDto = new KeywordDto();
-            keywordDto.setName(keyword.getName());
-            keywordDtoList.add(keywordDto);
+            keywordDtoList.add(new KeywordDto(keyword.getName()));
         }
-        articleDto.setKeywordDtos(keywordDtoList);
-        return articleDto;
+
+        return new ArticleDto(article.getTitle(), article.getDescription(), article.getUrl(),
+                article.getDateAdded(), sourceDto, keywordDtoList);
     }
 
     private Article toEntity(ArticleDto articleDto) {
         Article article = new Article();
-        article.setTitle(articleDto.getTitle());
-        article.setDescription(articleDto.getDescription());
-        article.setUrl(articleDto.getUrl());
-        article.setDateAdded(articleDto.getDateAdded());
-        if (articleDto.getKeywordDtos() != null) {
+        article.setTitle(articleDto.title());
+        article.setDescription(articleDto.description());
+        article.setUrl(articleDto.url());
+        article.setDateAdded(articleDto.dateAdded());
+        if (articleDto.keywordDtos() != null) {
             article.setKeywords(
-                    articleDto.getKeywordDtos().stream()
-                            .map(this::categoryDtoToEntity)
+                    articleDto.keywordDtos().stream()
+                            .map(this::toEntity)
                             .collect(toSet()));
         }
         return article;
     }
 
-    private Keyword categoryDtoToEntity(KeywordDto keywordDto) {
+    private Keyword toEntity(KeywordDto keywordDto) {
         Keyword keyword = new Keyword();
-        keyword.setId(keywordDto.getId());
-        keyword.setName(keywordDto.getName());
+        keyword.setName(keywordDto.name());
         return keyword;
     }
 }

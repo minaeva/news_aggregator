@@ -26,9 +26,9 @@ public class ReaderClientImpl implements ReaderClient {
 
 
     @Override
-    public SubscriptionDto getSubscriptionByJwt(String jwt) {
+    public SubscriptionDto getSubscriptionByJwt(String jwtWithBearer) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add("Authorization", jwt);
+        headers.add("Authorization", jwtWithBearer);
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
 
         ResponseEntity<SubscriptionDto> subscriptionDtoResponseEntity = restTemplate

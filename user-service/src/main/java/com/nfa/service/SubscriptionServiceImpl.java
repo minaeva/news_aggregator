@@ -81,13 +81,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private SubscriptionDto toDto(Subscription subscription) {
-        SubscriptionDto result = new SubscriptionDto();
-        result.setReaderId(subscription.getReader().getId());
-        result.setReaderName(subscription.getReader().getName());
-        result.setReaderEmail(subscription.getReader().getEmail());
-        result.setTimesPerDay(subscription.getTimesPerDay());
         List<String> keywordNames = subscription.getKeywords().stream().map(Keyword::getName).collect(toList());
-        result.setKeywordNames(keywordNames);
-        return result;
+
+        return new SubscriptionDto(
+                subscription.getReader().getId(),
+                subscription.getReader().getName(),
+                subscription.getReader().getEmail(),
+                keywordNames,
+                subscription.getTimesPerDay());
     }
 }

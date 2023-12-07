@@ -15,7 +15,7 @@ public class KeywordService {
     private final KeywordRepository keywordRepository;
 
     public void save(String keyword) {
-        log.info("saving mailing {}", keyword);
+        log.info("saving keyword {}", keyword);
         keywordRepository.addKeyword(keyword);
     }
 

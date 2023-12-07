@@ -50,8 +50,9 @@ To start the aggregator-service, locate the folder, run
 
 The server will start at http://localhost:8071
 
-Open API http://localhost:8071/swagger-ui/index.html
--------
+Open API 
+
+http://localhost:8071/swagger-ui/index.html
 **3. user-service**
 
 >cd user-service 

@@ -8,9 +8,6 @@ public class KeywordMapper implements FieldSetMapper<KeywordDto> {
 
     @Override
     public KeywordDto mapFieldSet(FieldSet fieldSet) {
-        return KeywordDto.builder()
-                .name(fieldSet.readString("name"))
-                .rule(fieldSet.readString("rule"))
-                .build();
+        return new KeywordDto(fieldSet.readString("name"), fieldSet.readString("rule"));
     }
 }

@@ -18,7 +18,8 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDto findByEmail(String email) {
         Reader reader = readerRepository.findByEmail(email)
-                .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
+                .orElseThrow(() -> new ReaderNotFoundException(
+                        String.format("No reader with email %s found", email)));
 
         return toDto(reader);
     }
@@ -26,7 +27,8 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDto findByEmailAndPassword(String email, String password) {
         Reader reader = readerRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
+                .orElseThrow(() -> new ReaderNotFoundException(
+                        String.format("No reader with email %s and password found", email)));
 
         return toDto(reader);
     }
@@ -43,28 +45,24 @@ public class ReaderServiceImpl implements ReaderService {
     @Override
     public ReaderDto update(String email, SubscriptionDto request) {
         Reader reader = readerRepository.findByEmail(email)
-                .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
+                .orElseThrow(() -> new ReaderNotFoundException(
+                        String.format("No reader with email %s found", email)));
         Reader savedReader = readerRepository.save(reader);
         return toDto(savedReader);
     }
 
     private Reader toEntity(ReaderDto dto) {
         Reader entity = new Reader();
-        entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
-        entity.setRole(dto.getRole());
-        entity.setRegistrationSource(dto.getRegistrationSource());
+        entity.setName(dto.name());
+        entity.setPassword(dto.password());
+        entity.setEmail(dto.email());
+        entity.setRole(dto.role());
+        entity.setRegistrationSource(dto.registrationSource());
         return entity;
     }
 
     public static ReaderDto toDto(Reader reader) {
-        ReaderDto readerDto = new ReaderDto();
-        readerDto.setId(reader.getId());
-        readerDto.setName(reader.getName());
-        readerDto.setEmail(reader.getEmail());
-        readerDto.setRole(reader.getRole());
-        readerDto.setRegistrationSource(reader.getRegistrationSource());
-        return readerDto;
+        return new ReaderDto(reader.getId(), reader.getName(), null,
+                reader.getEmail(), reader.getRole(), reader.getRegistrationSource());
     }
 }

@@ -37,10 +37,7 @@ public class ControllerAdvisor {
     }
 
     private ErrorDto composeErrorDto(RuntimeException exception) {
-        ErrorDto errorDto = new ErrorDto();
-        errorDto.setMessage(exception.getMessage());
-        errorDto.setTime(LocalDateTime.now());
-        return errorDto;
+       return new ErrorDto(exception.getMessage(),LocalDateTime.now());
     }
 
 }

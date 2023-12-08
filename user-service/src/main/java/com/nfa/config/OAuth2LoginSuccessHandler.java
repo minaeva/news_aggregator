@@ -38,26 +38,23 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             String name = attributes.getOrDefault("name", "").toString();
             String email = attributes.getOrDefault("email", "").toString();
 
-            ReaderDto readerDto = new ReaderDto();
+            ReaderDto readerDto;
             try {
                 readerDto = readerService.findByEmail(email);
-                DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
+                DefaultOAuth2User newUser = new DefaultOAuth2User(List.of(new SimpleGrantedAuthority(readerDto.role().name())),
                         attributes, "id");
-                Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
+                Authentication securityAuth = new OAuth2AuthenticationToken(newUser, List.of(new SimpleGrantedAuthority(readerDto.role().name())),
                         oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                 SecurityContextHolder.getContext().setAuthentication(securityAuth);
             } catch (ReaderNotFoundException e) {
-                readerDto.setName(name);
-                readerDto.setEmail(email);
-                readerDto.setRole(ReaderRole.READER_ROLE);
-                readerDto.setRegistrationSource(RegistrationSource.GOOGLE);
+                readerDto = new ReaderDto(null, name, null, email, ReaderRole.READER_ROLE, RegistrationSource.GOOGLE);
                 readerService.save(readerDto);
 
                 DefaultOAuth2User newUser = new DefaultOAuth2User(
-                        List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
+                        List.of(new SimpleGrantedAuthority(readerDto.role().name())),
                         attributes, "id");
                 Authentication securityAuth = new OAuth2AuthenticationToken(newUser,
-                        List.of(new SimpleGrantedAuthority(readerDto.getRole().name())),
+                        List.of(new SimpleGrantedAuthority(readerDto.role().name())),
                         oAuth2AuthenticationToken.getAuthorizedClientRegistrationId());
                 SecurityContextHolder.getContext().setAuthentication(securityAuth);
             }

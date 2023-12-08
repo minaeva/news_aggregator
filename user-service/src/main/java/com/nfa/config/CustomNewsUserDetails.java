@@ -17,8 +17,8 @@ public class CustomNewsUserDetails implements UserDetails {
 
     public static CustomNewsUserDetails fromNewsUserDtoToCustomUserDetails(ReaderDto readerDto){
         CustomNewsUserDetails details = new CustomNewsUserDetails();
-        details.email = readerDto.getEmail();
-        details.password = readerDto.getPassword();
+        details.email = readerDto.email();
+        details.password = readerDto.password();
         details.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(NEWS_USER));
         return details;
     }

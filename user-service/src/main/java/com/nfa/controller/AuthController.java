@@ -39,7 +39,6 @@ public class AuthController {
 
         validateRegistrationRequest(request);
         ReaderDto readerDto = toReaderDto(request);
-        readerDto.setRole(ReaderRole.READER_ROLE);
         readerService.save(readerDto);
 
         String jwt = jwtProvider.generateToken(request.getEmail());
@@ -56,8 +55,8 @@ public class AuthController {
             throw new ReaderUnauthorizedException(e.getMessage());
         }
 
-        String jwt = jwtProvider.generateToken(readerDto.getEmail());
-        return new AuthResponse(jwt, readerDto.getId(), readerDto.getEmail());
+        String jwt = jwtProvider.generateToken(readerDto.email());
+        return new AuthResponse(jwt, readerDto.id(), readerDto.email());
     }
 
     @GetMapping("/jwt")
@@ -73,11 +72,7 @@ public class AuthController {
     }
 
     private ReaderDto toReaderDto(RegistrationRequest request) {
-        ReaderDto dto = new ReaderDto();
-        dto.setName(request.getName());
-        dto.setEmail(request.getEmail());
-        dto.setPassword(request.getPassword());
-        dto.setRegistrationSource(request.getRegistrationSource());
-        return dto;
+        return new ReaderDto(null, request.getName(), request.getPassword(),
+                request.getEmail(), ReaderRole.READER_ROLE, request.getRegistrationSource());
     }
 }

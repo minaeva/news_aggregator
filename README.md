@@ -19,52 +19,37 @@ JVM 17 should be installed
 Maven 3.9.2 should be installed
 
 -------
-**0. eureka server**
-The server will start at http://localhost:8761
-
+**1. Start all the containers**
+`````
+docker-compose -f aggregator-service/docker-compose.yml up
+docker-compose -f notification-service/docker-compose.yml up
+docker-compose -f user-service/docker-compose.yml up
+`````
 -------
-**1. notification-service**
-
-To start the notification-service, locate the folder, run
->mvn spring-boot:run
-
+**2. Run eureka server**
+The server will start at http://localhost:8761
+-------
+**3. Run user-service**
+`mvn spring-boot:run`
+The server will start at http://localhost:8073
+-------
+**4. Run notification-service**
+`mvn spring-boot:run`
 The server will start at http://localhost:8072
-
 --------
-**2. aggregator-service**
-
->cd aggregator-service 
->
->docker-compose up -d
-
-
-![img.png](img.png)
+**5. Run aggregator-service**
 
 When running for the first time, go to _aggregator-service/src/main/resources/application.properties_
-and provide values for GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY
-
+and provide values for GNEWS_API_KEY, BBC_API_KEY, and NY_TIMES_API_KEY.
 File _keywords.txt_ contains the list of keywords to track
 
-To start the aggregator-service, locate the folder, run 
->mvn spring-boot:run
-
+`mvn spring-boot:run`
 The server will start at http://localhost:8071
 
-Open API 
-
+Open API:
 http://localhost:8071/swagger-ui/index.html
-**3. user-service**
 
->cd user-service 
-> 
->docker-compose up -d
-
-To start the aggregator-service, locate the folder, run
->mvn spring-boot:run 
- 
-The server will start at http://localhost:8073
-
-----------
+-----
 
 **News providers limitations**
 
@@ -73,5 +58,3 @@ Gnews - https://gnews.io/#pricing 100 requests per day/ 10 records per request
 NYTimes - https://developer.nytimes.com/docs/most-popular-product/1/overview
 
 BBC - https://newsapi.org/account/manage-subscription/change-plan
-
-

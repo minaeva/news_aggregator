@@ -32,7 +32,7 @@ public class SchedulerComponent {
         Set<String> emails = cachedKeywords.stream()
                 .map(readerClient::getSubscriptionsByKeyword)
                 .flatMap(Collection::stream)
-                .map(SubscriptionDto::getReaderEmail)
+                .map(SubscriptionDto::readerEmail)
                 .collect(Collectors.toSet());
 
         if (!emails.isEmpty()) {

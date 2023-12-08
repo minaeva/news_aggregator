@@ -2,7 +2,6 @@ package com.nfa.controller;
 
 import com.nfa.config.CustomNewsUserDetails;
 import com.nfa.config.jwt.JwtProvider;
-import com.nfa.controller.request.JwtRequest;
 import com.nfa.controller.request.SubscriptionRequest;
 import com.nfa.dto.ReaderDto;
 import com.nfa.dto.SubscriptionDto;
@@ -52,8 +51,8 @@ public class SubscriptionController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomNewsUserDetails principal = (CustomNewsUserDetails) authentication.getPrincipal();
         ReaderDto readerDto = readerService.findByEmail(principal.getUsername());
-        if (readerDto != null && readerDto.getEmail() != null) {
-            return subscriptionService.getByEmail(readerDto.getEmail());
+        if (readerDto != null && readerDto.email() != null) {
+            return subscriptionService.getByEmail(readerDto.email());
         }
         return null;
     }

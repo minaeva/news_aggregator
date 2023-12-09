@@ -32,8 +32,7 @@ dependencies {
 	implementation 'org.postgresql:postgresql:42.6.0'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
-	compileOnly 'org.projectlombok:lombok'
+	implementation 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'javax.xml.bind:jaxb-api:2.3.1'
 	annotationProcessor 'org.projectlombok:lombok'

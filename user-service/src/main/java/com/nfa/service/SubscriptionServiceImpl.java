@@ -24,9 +24,9 @@ import static java.util.stream.Collectors.toList;
 public class SubscriptionServiceImpl implements SubscriptionService {
 
     private final ReaderRepository readerRepository;
-    private final KeywordService keywordService;
     private final SubscriptionRepository subscriptionRepository;
     private final KeywordRepository keywordRepository;
+    private final KeywordService keywordService;
 
     @Override
     public SubscriptionDto update(String email, SubscriptionRequest request) {

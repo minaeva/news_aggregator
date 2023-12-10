@@ -1,6 +1,10 @@
 package com.nfa.service;
 
 import com.nfa.controller.request.SubscriptionRequest;
+import com.nfa.dto.SubscriptionDto;
+import com.nfa.entity.Keyword;
+import com.nfa.entity.Reader;
+import com.nfa.entity.Subscription;
 import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.repository.KeywordRepository;
 import com.nfa.repository.ReaderRepository;
@@ -11,15 +15,18 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.system.OutputCaptureExtension;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith({MockitoExtension.class, OutputCaptureExtension.class})
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -51,6 +58,41 @@ class SubscriptionServiceImplTest {
 
         Throwable throwable = catchThrowable(() -> subject.update(readerEmail, request));
         Assertions.assertThat(throwable).isInstanceOf(ReaderNotFoundException.class);
+    }
+
+    @Test
+    void update_whenNoSubscription_shouldCreateSubscription() {
+        String readerEmail = "reader@gmail.com";
+
+        Reader readerWithNoSubscription = new Reader();
+        readerWithNoSubscription.setEmail(readerEmail);
+
+        SubscriptionRequest request = new SubscriptionRequest();
+        request.setTimesPerDay(1);
+        request.setKeywordNames(List.of("first"));
+        Keyword keywordFirst = new Keyword("first");
+
+        when(readerRepository.findByEmail(readerEmail))
+                .thenReturn(Optional.of(readerWithNoSubscription));
+        when(keywordService.getByNameOrCreate("first"))
+                .thenReturn(keywordFirst);
+        when(subscriptionRepository.save(any()))
+                .thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(readerRepository.save(any()))
+                .thenAnswer(invocation -> invocation.getArguments()[0]);
+
+        SubscriptionDto result = subject.update(readerEmail, request);
+
+        ArgumentCaptor<Subscription> subscriptionArgumentCaptor = ArgumentCaptor.forClass(Subscription.class);
+        verify(subscriptionRepository, times(1)).save(subscriptionArgumentCaptor.capture());
+        assertThat(subscriptionArgumentCaptor.getValue().getReader()).isEqualTo(readerWithNoSubscription);
+        ArgumentCaptor<Reader> readerArgumentCaptor = ArgumentCaptor.forClass(Reader.class);
+        verify(readerRepository, times(1)).save(readerArgumentCaptor.capture());
+        assertThat(readerArgumentCaptor.getValue().getEmail()).isEqualTo(readerEmail);
+
+        assertThat(result.readerEmail()).isEqualTo(readerEmail);
+        assertThat(result.keywordNames()).isEqualTo(request.getKeywordNames());
+        assertThat(result.timesPerDay()).isEqualTo(request.getTimesPerDay());
     }
 
     @Test

@@ -12,10 +12,7 @@ import com.nfa.repository.SubscriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -81,8 +78,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private SubscriptionDto toDto(Subscription subscription) {
-        List<String> keywordNames = subscription.getKeywords().stream().map(Keyword::getName).collect(toList());
-
+        List<String> keywordNames = new ArrayList<>();
+        if (subscription.getKeywords() != null){
+            keywordNames = subscription.getKeywords().stream().map(Keyword::getName).collect(toList());
+        }
         return new SubscriptionDto(
                 subscription.getReader().getId(),
                 subscription.getReader().getName(),

@@ -23,6 +23,7 @@ import org.springframework.boot.test.system.OutputCaptureExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
@@ -76,9 +77,9 @@ class SubscriptionServiceImplTest {
                 .thenReturn(Optional.of(readerWithNoSubscription));
         when(keywordService.getByNameOrCreate("first"))
                 .thenReturn(keywordFirst);
-        when(subscriptionRepository.save(any()))
-                .thenAnswer(invocation -> invocation.getArguments()[0]);
         when(readerRepository.save(any()))
+                .thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(subscriptionRepository.save(any()))
                 .thenAnswer(invocation -> invocation.getArguments()[0]);
 
         SubscriptionDto result = subject.update(readerEmail, request);
@@ -86,6 +87,45 @@ class SubscriptionServiceImplTest {
         ArgumentCaptor<Subscription> subscriptionArgumentCaptor = ArgumentCaptor.forClass(Subscription.class);
         verify(subscriptionRepository, times(1)).save(subscriptionArgumentCaptor.capture());
         assertThat(subscriptionArgumentCaptor.getValue().getReader()).isEqualTo(readerWithNoSubscription);
+        ArgumentCaptor<Reader> readerArgumentCaptor = ArgumentCaptor.forClass(Reader.class);
+        verify(readerRepository, times(1)).save(readerArgumentCaptor.capture());
+        assertThat(readerArgumentCaptor.getValue().getEmail()).isEqualTo(readerEmail);
+
+        assertThat(result.readerEmail()).isEqualTo(readerEmail);
+        assertThat(result.keywordNames()).isEqualTo(request.getKeywordNames());
+        assertThat(result.timesPerDay()).isEqualTo(request.getTimesPerDay());
+    }
+
+    @Test
+    void whenSubscriptionExists_shouldUpdateKeywordsAndTimesPerDay() {
+        String readerEmail = "reader@gmail.com";
+
+        Subscription existingSubscription = new Subscription();
+        existingSubscription.setTimesPerDay(1);
+        existingSubscription.setKeywords(Set.of(new Keyword("one")));
+        Reader readerWithSubscription = new Reader();
+        readerWithSubscription.setEmail(readerEmail);
+        readerWithSubscription.setSubscription(existingSubscription);
+
+        SubscriptionRequest request = new SubscriptionRequest();
+        request.setTimesPerDay(2);
+        request.setKeywordNames(List.of("two"));
+        Keyword keywordTwo = new Keyword("two");
+
+        when(readerRepository.findByEmail(readerEmail))
+                .thenReturn(Optional.of(readerWithSubscription));
+        when(keywordService.getByNameOrCreate("two"))
+                .thenReturn(keywordTwo);
+        when(readerRepository.save(any()))
+                .thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(subscriptionRepository.save(any()))
+                .thenAnswer(invocation -> invocation.getArguments()[0]);
+
+        SubscriptionDto result = subject.update(readerEmail, request);
+
+        ArgumentCaptor<Subscription> subscriptionArgumentCaptor = ArgumentCaptor.forClass(Subscription.class);
+        verify(subscriptionRepository, times(1)).save(subscriptionArgumentCaptor.capture());
+        assertThat(subscriptionArgumentCaptor.getValue().getReader()).isEqualTo(readerWithSubscription);
         ArgumentCaptor<Reader> readerArgumentCaptor = ArgumentCaptor.forClass(Reader.class);
         verify(readerRepository, times(1)).save(readerArgumentCaptor.capture());
         assertThat(readerArgumentCaptor.getValue().getEmail()).isEqualTo(readerEmail);

@@ -4,6 +4,7 @@ import com.nfa.controller.request.SubscriptionRequest;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.entity.Keyword;
 import com.nfa.entity.Reader;
+import com.nfa.entity.RegistrationSource;
 import com.nfa.entity.Subscription;
 import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.repository.KeywordRepository;
@@ -136,10 +137,73 @@ class SubscriptionServiceImplTest {
     }
 
     @Test
-    void getByKeyword() {
+    void getByKeyword_whenNoKeywordExists_shouldReturnEmptyList() {
+        when(keywordRepository.findByNameIgnoreCase(any())).thenReturn(Optional.empty());
+
+        List<SubscriptionDto> result = subject.getByKeyword("keyword");
+
+        assertThat(result).isEqualTo(List.of());
     }
 
     @Test
-    void getByEmail() {
+    void getByKeyword_whenKeywordExists_whenNoSubscriptionExists_shouldReturnEmptyList() {
+        String keywordName = "keyword";
+        Keyword keyword = new Keyword(keywordName);
+        when(keywordRepository.findByNameIgnoreCase(eq("keyword")))
+                .thenReturn(Optional.of(keyword));
+        when(subscriptionRepository.findByKeywordsContaining(keyword))
+                .thenReturn(Optional.empty());
+
+        List<SubscriptionDto> result = subject.getByKeyword(keywordName);
+
+        assertThat(result).isEqualTo(List.of());
     }
+
+    @Test
+    void getByKeyword_whenKeywordAndSubscriptionExist_shouldReturnListOfSubscriptionDetails() {
+        String keywordName = "keyword";
+        Keyword keyword = new Keyword(keywordName);
+        when(keywordRepository.findByNameIgnoreCase(eq("keyword")))
+                .thenReturn(Optional.of(keyword));
+        Subscription subscription = new Subscription();
+        subscription.setReader(new Reader("Alex", "alex@gmail.com",null, RegistrationSource.ONSITE));
+        subscription.setKeywords(Set.of(keyword));
+        subscription.setTimesPerDay(1);
+        when(subscriptionRepository.findByKeywordsContaining(keyword))
+                .thenReturn(Optional.of(List.of(subscription)));
+
+        List<SubscriptionDto> result = subject.getByKeyword(keywordName);
+
+        SubscriptionDto subscriptionDto = new SubscriptionDto(
+                null, "Alex", "alex@gmail.com", List.of("keyword"), 1);
+        assertThat(result).isEqualTo(List.of(subscriptionDto));
+    }
+
+    @Test
+    void getByEmail_whenNoSubscriptionExists_shouldReturnNull() {
+        when(subscriptionRepository.findByReaderEmail(any())).thenReturn(Optional.empty());
+
+        SubscriptionDto result = subject.getByEmail("alex@gmail.com");
+        assertThat(result).isEqualTo(null);
+    }
+
+    @Test
+    void getByEmail_whenSubscriptionExists_shouldReturnSubscription() {
+        String keywordName = "keyword";
+        Keyword keyword = new Keyword(keywordName);
+        String email = "alex@gmail.com";
+        Subscription subscription = new Subscription();
+        subscription.setReader(new Reader("Alex", "alex@gmail.com",null, RegistrationSource.ONSITE));
+        subscription.setKeywords(Set.of(keyword));
+        subscription.setTimesPerDay(1);
+        when(subscriptionRepository.findByReaderEmail(eq("alex@gmail.com")))
+                .thenReturn(Optional.of(subscription));
+
+        SubscriptionDto result = subject.getByEmail(email);
+
+        SubscriptionDto subscriptionDto = new SubscriptionDto(
+                null, "Alex", "alex@gmail.com", List.of("keyword"), 1);
+        assertThat(result).isEqualTo(subscriptionDto);
+    }
+
 }

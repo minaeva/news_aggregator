@@ -62,8 +62,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionDto getByEmail(String email) {
-
-        Optional<Subscription> subscription = subscriptionRepository.findByReaderEmail(email);
+        Optional<Subscription> subscription = subscriptionRepository
+                .findByReaderEmail(email);
         return subscription.map(this::toDto).orElse(null);
     }
 

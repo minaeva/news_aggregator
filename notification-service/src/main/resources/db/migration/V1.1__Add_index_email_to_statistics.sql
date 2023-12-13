@@ -1,0 +1,1 @@
+CREATE INDEX index_email ON public.statistics (email);

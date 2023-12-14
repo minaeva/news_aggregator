@@ -1,6 +1,6 @@
 package com.nfa.service;
 
-import com.nfa.client.ReaderClient;
+import com.nfa.client.UserClient;
 import com.nfa.dto.ArticleDto;
 import com.nfa.dto.KeywordDto;
 import com.nfa.dto.SourceDto;
@@ -29,7 +29,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     private static final String DATE_ADDED = "dateAdded";
     private final ArticleRepository articleRepository;
-    private final ReaderClient readerClient;
+    private final UserClient userClient;
     private final KeywordService keywordService;
 
     @Override
@@ -80,7 +80,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Set<ArticleDto> findAllByJwt(String jwtWithBearer) {
-        SubscriptionDto subscriptionDto = readerClient.getSubscriptionByJwt(jwtWithBearer);
+        SubscriptionDto subscriptionDto = userClient.getSubscriptionByJwt(jwtWithBearer);
         if (subscriptionDto == null) {
             log.info("Reader doesn't have any subscription with keywords to find the news to fit");
             return Set.of();

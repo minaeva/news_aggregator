@@ -1,6 +1,5 @@
 package com.nfa.service;
 
-import com.nfa.controller.JwtRequest;
 import com.nfa.dto.ArticleDto;
 import com.nfa.entity.Article;
 

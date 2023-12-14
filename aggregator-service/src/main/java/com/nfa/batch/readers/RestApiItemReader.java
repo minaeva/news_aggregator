@@ -1,13 +1,8 @@
 package com.nfa.batch.readers;
 
 import com.nfa.client.Client;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpStatus;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,14 +20,7 @@ public class RestApiItemReader<T> implements ItemReader {
         this.targetType = targetType;
     }
 
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-
     @Override
-    @CircuitBreaker(name = "myCircuitBreaker", fallbackMethod = "fallback")
     public T read() {
         if (fetchDataFromApi() == null) {
             return null;
@@ -49,10 +37,6 @@ public class RestApiItemReader<T> implements ItemReader {
             log.info("From {} have fetched news {}", client, cachedData);
         }
         return cachedData;
-    }
-
-    private ResponseEntity<String> fallback(Throwable t) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Fallback Response");
     }
 
 }

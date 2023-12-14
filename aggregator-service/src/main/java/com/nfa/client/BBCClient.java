@@ -2,8 +2,10 @@ package com.nfa.client;
 
 import com.nfa.client.responses.BBCArticle;
 import com.nfa.client.responses.BBCResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,10 @@ import java.util.List;
 @Slf4j
 public class BBCClient implements Client {
 
+    public static final String BBC_CIRCUIT_BREAKER = "BBCCircuitBreaker";
+
     @Autowired
+    @Qualifier("external")
     @Lazy
     private RestTemplate restTemplate;
 
@@ -23,6 +28,7 @@ public class BBCClient implements Client {
     private String url;
 
     @Override
+    @CircuitBreaker(name = BBC_CIRCUIT_BREAKER, fallbackMethod = "fallback")
     public List<BBCArticle> fetchData() {
         try {
             BBCResponse response = restTemplate.getForObject(this.url, BBCResponse.class);
@@ -34,4 +40,10 @@ public class BBCClient implements Client {
         }
         return null;
     }
+
+    private List<BBCArticle> fallback(Throwable t) {
+        log.error("BBC_CIRCUIT_BREAKER is triggered");
+        return null;
+    }
+
 }

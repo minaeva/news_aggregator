@@ -3,6 +3,8 @@ package com.nfa.controller;
 import com.nfa.dto.ArticleDto;
 import com.nfa.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,5 +27,9 @@ public class ArticleController {
     @GetMapping()
     public Set<ArticleDto> getReadersArticles(@RequestHeader(AUTHORIZATION) String jwtWithBearer) {
         return articleService.findAllByJwt(jwtWithBearer);
+    }
+
+    private ResponseEntity<String> fallback(Throwable t) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Fallback Response");
     }
 }

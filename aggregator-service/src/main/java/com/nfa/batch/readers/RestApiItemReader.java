@@ -3,8 +3,6 @@ package com.nfa.batch.readers;
 import com.nfa.client.Client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Iterator;
 import java.util.List;
@@ -39,11 +37,6 @@ public class RestApiItemReader<T> implements ItemReader {
             log.info("From {} have fetched news {}", client, cachedData);
         }
         return cachedData;
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
     }
 
 }

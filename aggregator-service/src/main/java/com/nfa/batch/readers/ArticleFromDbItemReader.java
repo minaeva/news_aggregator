@@ -25,7 +25,6 @@ public class ArticleFromDbItemReader implements ItemReader<Article> {
     }
 
     private List<Article> fetchDataFromDb() {
-
         List<Article> articlesToProcess = articleRepository.findAllByProcessedIsFalseAndKeywordsNotEmpty();
         log.info("fetchDataFromDb, articlesToProcess = {}", articlesToProcess);
         return articlesToProcess;

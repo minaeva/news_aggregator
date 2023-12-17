@@ -3,7 +3,6 @@ package com.nfa.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.nfa.dto.ArticleDto;
 import com.nfa.dto.SubscriptionDto;
@@ -18,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,6 +40,93 @@ public class ArticleServiceIntegrationTest {
     private ArticleRepository articleRepository;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Test
+    void isArticleInDB_whenNoArticleWithSameDate_shouldReturnFalse() {
+        LocalDateTime time = LocalDateTime.now();
+        when(articleRepository.findArticleByDateAdded(time)).thenReturn(Optional.empty());
+
+        boolean result = subject.isArticleInDB(time, "title");
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void isArticleInDB_whenArticleWithSameDateExists_andTitleIsDifferent_shouldReturnFalse() {
+        LocalDateTime time = LocalDateTime.now();
+        Article article = new Article();
+        article.setDateAdded(time);
+        article.setTitle("other");
+        when(articleRepository.findArticleByDateAdded(time)).thenReturn(Optional.of(List.of(article)));
+
+        boolean result = subject.isArticleInDB(time, "title");
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void isArticleInDB_whenArticleWithSameDateExists_andTitleIsSame_shouldReturnTrue() {
+        LocalDateTime time = LocalDateTime.now();
+        Article article = new Article();
+        article.setDateAdded(time);
+        article.setTitle("title");
+        when(articleRepository.findArticleByDateAdded(time)).thenReturn(Optional.of(List.of(article)));
+
+        boolean result = subject.isArticleInDB(time, "title");
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void findAllByJwt_whenSubscriptionDoesNotExist_shouldReturnEmptySet() {
+        stubFor(WireMock.get(urlPathMatching("/subscription/jwt"))
+                .willReturn(ok()
+                        .withHeader("Content-Type", "application/json")
+                        .withJsonBody(null)));
+
+        Set<ArticleDto> result = subject.findAllByJwt("token");
+
+        assertThat(result).isEqualTo(Set.of());
+    }
+
+    @Test
+    void findAllByJwt_whenSubscriptionExists_andKeywordDoesNotExist_shouldReturnEmptySet() {
+        SubscriptionDto subscriptionDto = new SubscriptionDto(
+                1L, "Alex", "alex@gmail.com", List.of("peace"), 1);
+        JsonNode subscriptionAsJson = objectMapper.valueToTree(subscriptionDto);
+        stubFor(WireMock.get(urlPathMatching("/subscription/jwt"))
+                .willReturn(ok()
+                        .withHeader("Content-Type", "application/json")
+                        .withJsonBody(subscriptionAsJson)));
+
+        when(keywordService.getByName("peace")).thenReturn(Optional.empty());
+
+        Set<ArticleDto> result = subject.findAllByJwt("token");
+
+        assertThat(result).isEqualTo(Set.of());
+    }
+
+    @Test
+    void findAllByJwt_whenSubscriptionExists_andArticleDoesNotExist_shouldReturnEmptySet() {
+        SubscriptionDto subscriptionDto = new SubscriptionDto(
+                1L, "Alex", "alex@gmail.com", List.of("peace"), 1);
+        JsonNode subscriptionAsJson = objectMapper.valueToTree(subscriptionDto);
+        stubFor(WireMock.get(urlPathMatching("/subscription/jwt"))
+                .willReturn(ok()
+                        .withHeader("Content-Type", "application/json")
+                        .withJsonBody(subscriptionAsJson)));
+
+        Keyword keyword = new Keyword("peace");
+        when(keywordService.getByName("peace")).thenReturn(Optional.of(keyword));
+
+        Set<Keyword> set = Set.of(keyword);
+        when(articleRepository.findByKeywordsIn(set)).thenReturn(List.of());
+
+        Set<ArticleDto> result = subject.findAllByJwt("token");
+
+        assertThat(result)
+                .isEqualTo(Set.of());
+    }
 
     @Test
     void findAllByJwt_whenSubscriptionExists_andArticleExists_shouldReturnArticle() {

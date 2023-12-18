@@ -75,6 +75,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public Set<ArticleDto> findAllByJwt(String jwtWithBearer) {
         SubscriptionDto subscriptionDto = userClient.getSubscriptionByJwt(jwtWithBearer);
         if (subscriptionDto == null) {

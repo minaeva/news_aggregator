@@ -5,46 +5,81 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import com.nfa.dto.ArticleDto;
+import com.nfa.dto.KeywordDto;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.entity.Article;
 import com.nfa.entity.Keyword;
 import com.nfa.repository.ArticleRepository;
+import com.nfa.repository.KeywordRepository;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class)
 @WireMockTest(httpPort = 8181)
+@Testcontainers
 public class ArticleServiceIntegrationTest {
 
     @Autowired
     private ArticleService subject;
-    @MockBean
-    private KeywordService keywordService;
-    @MockBean
+
+    @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private KeywordRepository keywordRepository;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    @Container
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest");
+
+    @DynamicPropertySource
+    static void postgresqlProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create"); // Set Hibernate DDL auto configuration
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        postgreSQLContainer.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgreSQLContainer.stop();
+    }
+
+    @BeforeEach
+    void setUp() {
+        articleRepository.deleteAll();
+    }
 
     @Test
     void isArticleInDB_whenNoArticleWithSameDate_shouldReturnFalse() {
         LocalDateTime time = LocalDateTime.now();
-        when(articleRepository.findArticleByDateAdded(time)).thenReturn(Optional.empty());
 
         boolean result = subject.isArticleInDB(time, "title");
 
@@ -57,7 +92,7 @@ public class ArticleServiceIntegrationTest {
         Article article = new Article();
         article.setDateAdded(time);
         article.setTitle("other");
-        when(articleRepository.findArticleByDateAdded(time)).thenReturn(Optional.of(List.of(article)));
+        articleRepository.save(article);
 
         boolean result = subject.isArticleInDB(time, "title");
 
@@ -70,7 +105,7 @@ public class ArticleServiceIntegrationTest {
         Article article = new Article();
         article.setDateAdded(time);
         article.setTitle("title");
-        when(articleRepository.findArticleByDateAdded(time)).thenReturn(Optional.of(List.of(article)));
+        articleRepository.save(article);
 
         boolean result = subject.isArticleInDB(time, "title");
 
@@ -99,8 +134,6 @@ public class ArticleServiceIntegrationTest {
                         .withHeader("Content-Type", "application/json")
                         .withJsonBody(subscriptionAsJson)));
 
-        when(keywordService.getByName("peace")).thenReturn(Optional.empty());
-
         Set<ArticleDto> result = subject.findAllByJwt("token");
 
         assertThat(result).isEqualTo(Set.of());
@@ -115,17 +148,12 @@ public class ArticleServiceIntegrationTest {
                 .willReturn(ok()
                         .withHeader("Content-Type", "application/json")
                         .withJsonBody(subscriptionAsJson)));
-
-        Keyword keyword = new Keyword("peace");
-        when(keywordService.getByName("peace")).thenReturn(Optional.of(keyword));
-
-        Set<Keyword> set = Set.of(keyword);
-        when(articleRepository.findByKeywordsIn(set)).thenReturn(List.of());
+        Keyword keyword = new Keyword("climate");
+        keywordRepository.save(keyword);
 
         Set<ArticleDto> result = subject.findAllByJwt("token");
 
-        assertThat(result)
-                .isEqualTo(Set.of());
+        assertThat(result).isEqualTo(Set.of());
     }
 
     @Test
@@ -137,23 +165,18 @@ public class ArticleServiceIntegrationTest {
                 .willReturn(ok()
                         .withHeader("Content-Type", "application/json")
                         .withJsonBody(subscriptionAsJson)));
-
-        Keyword keyword = new Keyword("peace");
-        when(keywordService.getByName("peace")).thenReturn(Optional.of(keyword));
-
-        Set<Keyword> set = Set.of(keyword);
         Article foundArticle = new Article("title", "description", "url");
-        List<Article> articleList = List.of(foundArticle);
-        when(articleRepository.findByKeywordsIn(set)).thenReturn(articleList);
+        Keyword keyword = new Keyword("peace");
+        foundArticle.setKeywords(Set.of(keyword));
+        articleRepository.save(foundArticle);
 
         Set<ArticleDto> result = subject.findAllByJwt("token");
 
         Set<ArticleDto> articleDtos = Set.of(new ArticleDto("title", "description", "url",
-                null, null, List.of()));
+                null, null, List.of(new KeywordDto("peace"))));
         assertThat(articleDtos)
                 .usingRecursiveAssertion()
                 .ignoringFields("id", "content", "processed")
                 .isEqualTo(result);
     }
-
 }

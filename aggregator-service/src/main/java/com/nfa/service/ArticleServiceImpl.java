@@ -109,12 +109,10 @@ public class ArticleServiceImpl implements ArticleService {
             sourceDto = new SourceDto(article.getSource().getName());
         }
 
-        List<KeywordDto> keywordDtoList = new ArrayList<>();
-        if (article.getKeywords() != null) {
-            for (Keyword keyword : article.getKeywords()) {
-                keywordDtoList.add(new KeywordDto(keyword.getName()));
-            }
-        }
+        List<KeywordDto> keywordDtoList = article.getKeywords().stream()
+                .map(Keyword::getName)
+                .map(KeywordDto::new)
+                .toList();
 
         return new ArticleDto(article.getTitle(), article.getDescription(), article.getUrl(),
                 article.getDateAdded(), sourceDto, keywordDtoList);

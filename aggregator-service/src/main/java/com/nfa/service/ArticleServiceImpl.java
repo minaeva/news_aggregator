@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -70,15 +69,13 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public boolean isArticleInDB(LocalDateTime dateAdded, String title) {
         Optional<List<Article>> articlesByDateAdded = articleRepository.findArticleByDateAdded(dateAdded);
-        AtomicBoolean result = new AtomicBoolean(false);
-        articlesByDateAdded.ifPresent(articles ->
-                result.set(articles.stream()
-                        .anyMatch(article -> article.getTitle().contains(title))
-                ));
-        return result.get();
+        return articlesByDateAdded.isPresent() && articlesByDateAdded.get().stream()
+                .anyMatch(article -> article.getTitle().contains(title));
+
     }
 
     @Override
+    @Transactional
     public Set<ArticleDto> findAllByJwt(String jwtWithBearer) {
         SubscriptionDto subscriptionDto = userClient.getSubscriptionByJwt(jwtWithBearer);
         if (subscriptionDto == null) {
@@ -113,8 +110,10 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         List<KeywordDto> keywordDtoList = new ArrayList<>();
-        for (Keyword keyword : article.getKeywords()) {
-            keywordDtoList.add(new KeywordDto(keyword.getName()));
+        if (article.getKeywords() != null) {
+            for (Keyword keyword : article.getKeywords()) {
+                keywordDtoList.add(new KeywordDto(keyword.getName()));
+            }
         }
 
         return new ArticleDto(article.getTitle(), article.getDescription(), article.getUrl(),

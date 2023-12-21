@@ -8,13 +8,15 @@
 
 ### Workflow
 
-User: registers, subscribes to a keyword/set of keywords.
+User-service: accepts user's registration and subscription to the keywords.
 
-News-aggregator: fetches the news, saves the new ones to db, looks for the keywords, if any is found - it is produced to the Kafka broker.
+Aggregator-service: fetches the news, saves the new ones to db, looks for the keywords, if any is found - it is produced to the Kafka broker.
 
-Notification: consumes the event and sends emails to the users who have the subscription to the keyword the event contains. 
+Notification-service: consumes the event and sends emails to the users who have the subscription to the keyword the event contains. 
 
-News-aggregator: gets the users request with the JWT token, requests users' keywords, responds with all the articles having the keywords user has subscribed to.
+Aggregator-service: gets the users request with the JWT token, requests users' keywords, responds with all the articles having the keywords user has subscribed to.
+
+[To Do] Statistics-service: provides reports on keywords, users, articles.
 
 ---
 ### Technology stack
@@ -22,6 +24,7 @@ News-aggregator: gets the users request with the JWT token, requests users' keyw
 Java 17, Spring Boot 3, Spring Cloud, Spring Family (Batch, Security, Data, Validation, Mail, Test),
 Maven, Gradle, Docker, PostgreSQL, FlywayDB, Kafka, Redis, Eureka, Feign Client, Circuit breaker,
 Open API, Oauth2.0, Lombok, Mockito, Wiremock, Testcontainers
+
 ---
 ### Prerequisites
 

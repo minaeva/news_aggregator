@@ -1,7 +1,10 @@
-# Thesis
+## ChoosezeNews
 
-Application helps to subscribe to the keywords one is interested in, and to get an email notification as many times per day as requested as soon as a news containing a keyword in a title is posted.
-
+1. User subscribes to the keywords he/she is interested in.
+2. Job fetches the news from the outside news providers, checks every article if it needs to be saved into DB, if yes, saves it and extracts the keywords from the title.
+3. Kafka producer sends the keywords, Kafka Broker consumes them and stores in the cache.
+4. Job to send emails is triggered 3 times a day to collect all the users who have interest in the keywords in the cache.
+5. On getting the email, user clicks the link to the website, where he/she will be shown only the articles he/she has subscribed to.
 
 ### Workflow
 
@@ -9,8 +12,16 @@ User: registers, subscribes to a keyword/set of keywords.
 
 News-aggregator: fetches the news, saves the new ones to db, looks for the keywords, if any is found - it is produced to the Kafka broker.
 
-Notification: consumes the event and sends emails to the users who have the subscription to the keyword the event contains.
+Notification: consumes the event and sends emails to the users who have the subscription to the keyword the event contains. 
 
+News-aggregator: gets the users request with the JWT token, requests users' keywords, responds with all the articles having the keywords user has subscribed to.
+
+---
+### Technology stack
+
+Java 17, Spring Boot 3, Spring Cloud, Spring Family (Batch, Security, Data, Validation, Mail, Test),
+Maven, Gradle, Docker, PostgreSQL, FlywayDB, Kafka, Redis, Eureka, Feign Client, Circuit breaker,
+Open API, Oauth2.0, Lombok, Mockito, Wiremock, Testcontainers
 ---
 ### Prerequisites
 

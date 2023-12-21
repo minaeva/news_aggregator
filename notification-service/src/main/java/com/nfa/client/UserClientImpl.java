@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Component
 @Slf4j
-public class ReaderClientImpl implements ReaderClient {
+public class UserClientImpl implements UserClient {
 
     @Autowired
     private RestTemplate restTemplate;

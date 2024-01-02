@@ -1,4 +1,4 @@
-## ChoosezeNews
+## Choose the News
 
 1. User subscribes to the keywords he/she is interested in.
 2. Job fetches the news from the outside news providers, checks every article if it needs to be saved into DB, if yes, saves it and extracts the keywords from the title.

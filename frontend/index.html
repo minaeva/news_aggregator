@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Responsive Admin Dashboard Template">
+    <meta name="keywords" content="admin,dashboard">
+    <meta name="author" content="stacks">
+    <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title -->
+    <title>Choose The News - Login</title>
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/plugins/icomoon/style.css" rel="stylesheet">
+    <link href="assets/plugins/uniform/css/default.css" rel="stylesheet"/>
+    <link href="assets/plugins/switchery/switchery.min.css" rel="stylesheet"/>
+
+    <!-- Theme Styles -->
+    <link href="assets/css/space.css" rel="stylesheet">
+    <link href="assets/css/themes/admin3.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<!-- Page Container -->
+<div class="page-container">
+    <!-- Page Inner -->
+    <div class="page-inner login-page">
+        <div id="main-wrapper" class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6 col-md-3 login-box">
+                    <h4 class="login-title">Login</h4>
+                    <form>
+                        <div class="form-group" id="login_email_group">
+                            <label for="reader_email">Email
+                            </label><span style="color:red;"> *</span>
+                            <input type="email" class="form-control" id="reader_email" autocomplete="on" maxlength="50">
+                        </div>
+                        <div class="form-group" id="login_password_group">
+                            <label for="reader_password"> Password</label>
+                            </label><span style="color:red;"> *</span>
+                            <input type="password" class="form-control" id="reader_password" autocomplete="off"
+                                   maxlength="50">
+                        </div>
+                        <a href="#" class="btn btn-primary"
+                           onclick="authenticate(document.getElementById('reader_email').value, document.getElementById('reader_password').value); return false">
+                        Login
+                        </a>
+                        <a href="register.html" class="btn btn-default">Register</a><br>
+                        <!--                                    <a href="index.html" class="forgot-link">Forgot password?</a>-->
+                    </form>
+
+                    <!--                    <div class="social-login">-->
+                    <!--                        <span class="social-label">Or login with Google</span>-->
+                    <!--                    </div>&nbsp;-->
+                    <!--                    <div id="g_id_onload"-->
+                    <!--                         data-client_id="225049560926-gvnegbk3dnj6bgraot5h7d0gaoarge8b.apps.googleusercontent.com"-->
+                    <!--                         data-callback="handleCredentialResponse">-->
+                    <!--                    </div>-->
+                    <!--                    <div class="g_id_signin" data-type="standard"></div>-->
+
+
+                </div>
+
+                <div class="modal fade bs-example-modal-sm border" tabindex="-1" role="dialog"
+                     aria-labelledby="smallModalLabel" aria-hidden="true" id="smallModal">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-label="Close"><span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="smallModalTitle"></h4>
+                            </div>
+                            <div class="modal-body" id="smallModalBody">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-info" data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div><!-- /Page Content -->
+</div><!-- /Page Container -->
+
+
+<!-- Javascripts -->
+<script src="assets/plugins/jquery/jquery-3.1.0.min.js"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="assets/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+<script src="assets/plugins/switchery/switchery.min.js"></script>
+<script src="assets/js/space.min.js"></script>
+
+<script src="js/environment.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/validate.js"></script>
+
+</body>
+</html>

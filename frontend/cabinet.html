@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Sharing good Books with good People">
-    <meta name="keywords" content="book, share, boobook">
-    <meta name="author" content="sveta minaeva">
+    <meta name="description" content="Choose the News">
+    <meta name="keywords" content="news, keywords">
+    <meta name="author" content="misha minaeva">
     <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="google-signin-client_id"
-          content="225049560926-gvnegbk3dnj6bgraot5h7d0gaoarge8b.apps.googleusercontent.com">
+<!--    <meta name="google-signin-client_id"-->
+<!--          content="225049560926-gvnegbk3dnj6bgraot5h7d0gaoarge8b.apps.googleusercontent.com">-->
 
     <!-- Title -->
     <title>Choose The News</title>
@@ -24,7 +24,7 @@
 
     <!-- Theme Styles -->
     <link href="assets/css/space.css" rel="stylesheet">
-    <link href="assets/css/themes/admin3.css" rel="stylesheet">
+    <link href="assets/css/themes/admin2.css" rel="stylesheet">
     <link href="assets/css/custom.css" rel="stylesheet">
 
     <!--    libs for stomp and sockjs-->
@@ -60,8 +60,8 @@
         <div class="page-sidebar-inner">
             <div class="page-sidebar-menu">
                 <ul class="accordion-menu">
-                    <li class="active-page">
-                        <a href="#" onclick="clickHome(); return false;">
+                    <li class="menu_home active-page">
+                        <a href="#" onclick="activateMyBooksMenu(); return false;">
                             <i class="menu-icon icon-home4"></i><span id="menu_my_books_title">News</span>
                         </a>
                     </li>
@@ -133,167 +133,23 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="add_book_title"></h4>
+                        <h4 class="modal-title" id="add_book_title">Add keyword</h4>
                     </div>
                     <div class="modal-body">
                         <div class="form-group required" id="book_title_group">
-                            <label for="book_title" class="control-label" id="book_title_title"></label>
+                            <label for="book_title" class="control-label" id="book_title_title">Keyword</label>
                             <textarea rows="1" type="text" class="form-control" id="book_title" placeholder=""
                                       maxlength="200">
                             </textarea>
                         </div>
 
-                        <div class="row">
-                            <div class="form-group col-sm-6 required" id="author_name_group">
-                                <label for="author_name" class="control-label" id="author_name_title"></label>
-                                <textarea rows="1" type="text" class="form-control" id="author_name" placeholder=""
-                                          maxlength="50">
-                                </textarea>
-                            </div>
-                            <div class="form-group col-sm-6 required" id="author_surname_group">
-                                <label for="author_surname" class="control-label" id="author_surname_title"></label>
-                                <textarea rows="1" type="text" class="form-control" id="author_surname" placeholder=""
-                                          maxlength="50">
-                                </textarea>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-sm-4">
-                                <label for="publisher" class="control-label" id="publisher_title"></label>
-                                <textarea rows="1" type="text" class="form-control" id="publisher" placeholder=""
-                                          maxlength="50">
-                                </textarea>
-                            </div>
-                            <div class="form-group col-sm-4" id="year_group">
-                                <label for="year" class="control-label" id="year_title"></label>
-                                <input type="text" class="form-control yearpicker" id="year" autocomplete="off">
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <label for="pages_quantity" class="control-label" id="pages_quantity_title"></label>
-                                <input type="number" class="form-control" id="pages_quantity" placeholder="">
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group col-sm-3">
-                                <label for="language" class="control-label" id="language_title"></label>
-                                <div class="">
-                                    <select style="margin-bottom:15px;" class="form-control" id="language">
-                                        <option value="0" id="language_select_title"></option>
-                                        <option value="1" id="language_rus_title"></option>
-                                        <option value="2" id="language_ukr_title"></option>
-                                        <option value="3" id="language_eng_title"></option>
-                                        <option value="4" id="language_oth_title"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="control-label" for="cover" id="cover_title"></label>
-                                <div class="">
-                                    <select style="margin-bottom:15px;" class="form-control" id="cover">
-                                        <option value="0" id="select_cover_title"></option>
-                                        <option value="1" id="select_hard_title"></option>
-                                        <option value="2" id="select_soft_title"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="control-label" for="illustrations" id="illustrations_title"></label>
-                                <div class="">
-                                    <select style="margin-bottom:15px;" class="form-control"
-                                            id="illustrations">
-                                        <option value="0" id="select_illustrations_title"></option>
-                                        <option value="1" id="select_illustrations_no_title"></option>
-                                        <option value="2" id="select_illustrations_bw_title"></option>
-                                        <option value="3" id="select_illustrations_color_title"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="control-label" for="age_group" id="age_group_title"></label>
-                                <div class="">
-                                    <select style="margin-bottom:15px;" class="form-control" id="age_group">
-                                        <option value="0" id="select_age_title"></option>
-                                        <option value="1" id="select_age_baby_title"></option>
-                                        <option value="2" id="select_age_preschool_title"></option>
-                                        <option value="3" id="select_age_junior_title"></option>
-                                        <option value="4" id="select_age_midschool_title"></option>
-                                        <option value="5" id="select_age_adult_title"></option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label" for="description" id="description_title"></label>
-                                <div class="col-sm-10">
-                                    <textarea class="form-control" id="description" rows="2" maxlength="600"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            &nbsp;
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-9 help-inline" id="images_description_title">
-                            </div>
-                            <input type="file" id="fileInput" multiple accept="image/*"
-                                   onchange="showMultiplePreviews('target', this.files)">
-                            <button class="btn btn-default" id="fileButton"></button>
-                        </div>
-
-                        <div class="row">
-                            &nbsp;
-                        </div>
-
-                        <div class="row col-sm-12">
-                                <span class="nowrap">
-                                <label for="src0"><img id="target0" src="images/book-placeholder.png"
-                                                       class="thumbnail"/></label>
-                                <input id="src0" type="file"/>
-                                <a class="remove" href="#" onclick="removePreview('target0')"><i class="icon-close"></i></a>
-                                </span>
-
-                            <span class="nowrap">
-                                <label for="src1"><img id="target1" src="images/book-placeholder.png"
-                                                       class="thumbnail"/></label>
-                                <input id="src1" type="file"/>
-                                <a class="remove" href="#" onclick="removePreview('target1')"><i class="icon-close"></i></a>
-                                </span>
-
-                            <span class="nowrap">
-                                <label for="src2"><img id="target2" src="images/book-placeholder.png"
-                                                       class="thumbnail"/></label>
-                                <input id="src2" type="file"/>
-                                <a class="remove" href="#" onclick="removePreview('target2')"><i class="icon-close"></i></a>
-                                </span>
-
-                            <span class="nowrap">
-                                <label for="src3"><img id="target3" src="images/book-placeholder.png"
-                                                       class="thumbnail"/></label>
-                                <input id="src3" type="file"/>
-                                <a class="remove" href="#" onclick="removePreview('target3')"><i class="icon-close"></i></a>
-                                </span>
-
-                            <span class="nowrap">
-                                <label for="src4"><img id="target4" src="images/book-placeholder.png"
-                                                       class="thumbnail"/></label>
-                                <input id="src4" type="file"/>
-                                <a class="remove" href="#" onclick="removePreview('target4')"><i class="icon-close"></i></a>
-                                </span>
-                        </div>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal"
-                                onclick="closeAddBookModal(); return false" id="add_book_close_title">
+                                onclick="closeAddKeywordModal(); return false" id="add_book_close_title">Close
                         </button>
-                        <button type="button" class="btn btn-info" onclick="saveBook(); return false"
-                                id="add_book_button_title">
+                        <button type="button" class="btn btn-info" onclick="saveKeyword(); return false"
+                                id="add_book_button_title">Add
                         </button>
                     </div>
                 </div>
@@ -517,45 +373,6 @@
                 </div>
             </div>
         </div>
-        <!-- MESSAGE - modal - end-->
-
-        <!-- IMAGE PREVIEW - modal - start-->
-        <div class="modal fade border" tabindex="-1" role="dialog" aria-hidden="true" id="imageModal">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" id="image_modal_content">
-                    <div class="modal-header">
-                        <div class="col-md-3"></div>
-                        <div class="col-md-6 center-arrows">
-                            <a href="#" id="left_arrow">
-                                <i class="fa fa-arrow-left image-arrow"></i>
-                            </a>
-                            <a href="#" id="right_arrow">
-                                <i class="fa fa-arrow-right image-arrow"></i>
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="button" class="close" data-dismiss="modal"
-                                    onclick="closeImageModal(); return false"><span aria-hidden="true">&times;</span>
-                                <span class="sr-only" id="image_close_button_title"></span></button>
-                        </div>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-12 big_image_container">
-                                <img src="" id="imagepreview" class="big_image">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"
-                                onclick="closeImageModal(); return false"
-                                id="image_close_button_footer_title"></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- IMAGE PREVIEW - modal - end-->
-
 
         <!-- Page Inner Cabinet -->
         <div class="page-inner" id="page-inner-cabinet">

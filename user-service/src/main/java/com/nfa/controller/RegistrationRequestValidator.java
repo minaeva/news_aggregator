@@ -13,6 +13,10 @@ public class RegistrationRequestValidator {
     }
 
     public static void validateRegistrationRequest(RegistrationRequest request) {
+        // todo remove after accepting google auth
+        if (!RegistrationSource.ONSITE.equals(request.getRegistrationSource())) {
+            throw new ReaderValidationException("Custom registration type of request expected");
+        }
 
         if (RegistrationSource.ONSITE.equals(request.getRegistrationSource()) &&
                 !StringUtils.hasLength(request.getPassword())) {

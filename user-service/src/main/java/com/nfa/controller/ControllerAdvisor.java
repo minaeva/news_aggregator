@@ -2,6 +2,7 @@ package com.nfa.controller;
 
 import com.nfa.dto.ErrorDto;
 import com.nfa.exception.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,7 +37,7 @@ public class ControllerAdvisor {
 
     @ExceptionHandler(value = {ReaderUnauthorizedException.class})
     public ResponseEntity<ErrorDto> handleReaderUnauthorizedException(ReaderUnauthorizedException exception) {
-        return ResponseEntity.badRequest().body(composeErrorDto(exception));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(composeErrorDto(exception));
 
     }
 

@@ -7,10 +7,7 @@ import com.nfa.controller.response.AuthResponse;
 import com.nfa.controller.response.RegistrationResponse;
 import com.nfa.dto.ReaderDto;
 import com.nfa.entity.ReaderRole;
-import com.nfa.entity.RegistrationSource;
-import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.exception.ReaderUnauthorizedException;
-import com.nfa.exception.ReaderValidationException;
 import com.nfa.service.ReaderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -31,11 +28,7 @@ public class AuthController {
 
     @PostMapping("/registration")
     public RegistrationResponse registerNewsUser(@RequestBody RegistrationRequest request) {
-        log.info("handling register news user request: " + request);
-
-        if (!RegistrationSource.ONSITE.equals(request.getRegistrationSource())) {
-            throw new ReaderValidationException("Custom registration type of request expected");
-        }
+        log.info("handling register a reader request: " + request);
 
         validateRegistrationRequest(request);
         ReaderDto readerDto = toReaderDto(request);
@@ -47,13 +40,9 @@ public class AuthController {
 
     @PostMapping("/auth")
     public AuthResponse authenticate(@RequestBody AuthRequest authRequest) {
-        log.info("handling authenticate news user request: " + authRequest);
+        log.info("handling authenticate reader request: " + authRequest);
         ReaderDto readerDto;
-        try {
-            readerDto = readerService.findByEmailAndPassword(authRequest.getEmail(), authRequest.getPassword());
-        } catch (ReaderNotFoundException e) {
-            throw new ReaderUnauthorizedException(e.getMessage());
-        }
+        readerDto = readerService.authenticate(authRequest.getEmail(), authRequest.getPassword());
 
         String jwt = jwtProvider.generateToken(readerDto.email());
         return new AuthResponse(jwt, readerDto.id(), readerDto.email());

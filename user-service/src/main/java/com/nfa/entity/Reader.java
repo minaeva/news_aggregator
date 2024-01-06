@@ -23,6 +23,9 @@ public class Reader {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "salt")
+    private String salt;
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private ReaderRole role;

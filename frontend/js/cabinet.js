@@ -5,16 +5,12 @@ function hideLeftMenu() {
 
 function clickHome() {
     hideLeftMenu();
-    activateMyBooksMenu();
+    activateHomeMenu();
 }
 
-function clickHomeForTheFirstTime() {
-    activateMyBooksMenu();
-}
-
-function activateMyBooksMenu() {
+function activateHomeMenu() {
     activateCabinet();
-    selectMenu("menu_home");
+    selectMenu('menu_home');
     setPageTitle('News');
     setPageSubtitle('');
     clearContent();
@@ -24,7 +20,7 @@ function activateMyBooksMenu() {
 function clickAllKeywords() {
     hideLeftMenu();
     activateCabinet();
-    selectMenu("menu_keywords");
+    selectMenu('menu_keywords');
     setPageTitle('Keywords');
     setPageSubtitle('');
     clearContent();
@@ -34,11 +30,10 @@ function clickAllKeywords() {
 
 function clickAbout() {
     hideLeftMenu();
-    selectMenu('profile_about_title');
-    activateAbout();
-
-    setPageTitle('Choose the News - Workflow');
+    selectMenu('menu_about');
+    setPageTitle('About');
     setPageSubtitle('');
+    activateAbout();
     clearContent();
 }
 
@@ -55,7 +50,7 @@ function activateAbout() {
 
 function openCabinet() {
     showReadersKeywords();
-    clickHomeForTheFirstTime();
+    activateHomeMenu();
 }
 
 function showReadersKeywords() {
@@ -151,12 +146,12 @@ function saveKeyword() {
         if (this.readyState === 4) {
             if (this.status === 500) {
                 closeAddKeywordModal();
-                showWarningModal('Keyword ' + book_title + 'cannot be added');
+                showWarningModal('Keyword ' + book_title + ' cannot be added');
                 return false;
             } else if (this.status === 200) {
                 let response = JSON.parse(this.responseText);
                 let bookId = response.id;
-                showSuccessModal('Keyword ' + book_title + 'has been added');
+                showSuccessModal('Keyword ' + book_title + ' has been added');
 
                 showReadersKeywords();
             }

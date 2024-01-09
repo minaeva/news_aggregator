@@ -14,7 +14,65 @@ function activateHomeMenu() {
     setPageTitle('News');
     setPageSubtitle('');
     clearContent();
-    showReadersKeywords();
+    showReadersNews();
+}
+
+function showReadersNews() {
+    if (getCurrentUserId() == null) {
+        logout();
+    }
+    setPageTitle('News');
+
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+
+        if (this.readyState === 4) {
+            //to do
+            // if no news are there, show add keywords button
+            if (this.status === 404) {
+                let subHeader =
+                    '<br/><h4 class="panel-title">Add one or more keywords of your interest</h4>\n' +
+                    '     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addBookModal">Add</button>\n';
+                setPageSubtitle(subHeader);
+
+            } else if (this.status === 200) {
+                let articles = JSON.parse(this.responseText);
+                console.log(articles);
+                for (let i = 0; i < articles.length; i++) {
+                    let article = articles[i];
+                    console.log(article);
+                    subscription.description;
+                    subscription.url;
+                    subscription.dateAdded;
+                    let html = '';
+
+                //     html = html +
+                //         '<div class="panel panel-default">\n' +
+                //         '    <div class="panel-heading" role="tab" id="heading' + article.id + '">\n' +
+                //         '        <h4 class="panel-title">\n' +
+                //         '            <a data-toggle="collapse" onclick="showBookDetails(' + article.id + ', ' + article.ownerId + '); return false;" data-parent="#accordion" href="#collapse' + article.id + '"\n' +
+                //         '               aria-expanded="true" aria-controls="collapse' + article.id + '">\n' + article.title +
+                //         '            <h5 class="text-muted">' + notNull(article.authorName) + ' ' + notNull(article.authorSurname) + '</h5>\n' +
+                //         '            </a>\n' +
+                //         '        </h4>\n' +
+                //         '    </div>\n' +
+                //         '    <div id="collapse' + article.id + '" class="panel-collapse collapse" role="tabpanel"\n' +
+                //         '         aria-labelledby="heading' + article.id + '">\n' +
+                //         '    </div>\n' +
+                //         '</div>';
+                }
+                // document.getElementById("accordion").innerHTML = html;
+                document.getElementById("accordion").innerHTML = 'ARTICLES';
+            }
+        }
+    }
+
+    let getNewsUrl = AGGREGATOR_SERVICE + "/articles";
+    xhr.open("GET", getNewsUrl, true);
+    addAuthorization(xhr);
+    xhr.send();
+
+    return false;
 }
 
 function clickAllKeywords() {
@@ -42,15 +100,9 @@ function activateCabinet() {
     removeClassFromElement("books_readers_body", "hidden");
 }
 
-
 function activateAbout() {
     addClassToElement("books_readers_body", "hidden");
     removeClassFromElement("about_body", "hidden");
-}
-
-function openCabinet() {
-    showReadersKeywords();
-    activateHomeMenu();
 }
 
 function showReadersKeywords() {
@@ -72,15 +124,21 @@ function showReadersKeywords() {
     xhr.onreadystatechange = function () {
 
         if (this.readyState === 4) {
+            //to do
+            // if no keywords are there, show button
             if (this.status === 404) {
                 let subHeader =
-                    '<br/><h4 class="panel-title">Add one or more keywords you want to read the news</h4>\n' +
+                    '<br/><h4 class="panel-title">Add one or more keywords of your interest</h4>\n' +
                     '     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addBookModal">Add</button>\n';
                 setPageSubtitle(subHeader);
 
             } else if (this.status === 200) {
-                // let articles = JSON.parse(this.responseText);
-                // let html = '';
+                let subscription = JSON.parse(this.responseText);
+                console.log(subscription);
+                subscription.keywordNames;
+                subscription.readerName;
+                subscription.readerEmail;
+                let html = '';
                 // for (let i = 0; i < articles.length; i++) {
                 //     let article = articles[i];
                 //     console.log(article);
@@ -113,7 +171,6 @@ function showReadersKeywords() {
     return false;
 }
 
-
 function openAddKeywordModal() {
     $('#addBookModal').modal('show');
 
@@ -133,12 +190,10 @@ function closeAddKeywordModal() {
 }
 
 function saveKeyword() {
-
-    let book_title = document.getElementById("book_title").value.trim();
-    if (!validateKeyword(book_title)) {
+    let keyword = document.getElementById("keyword_title").value.trim();
+    if (!validateKeyword(keyword)) {
         return false;
     }
-
     closeAddKeywordModal();
 
     let xhr = new XMLHttpRequest();
@@ -146,13 +201,11 @@ function saveKeyword() {
         if (this.readyState === 4) {
             if (this.status === 500) {
                 closeAddKeywordModal();
-                showWarningModal('Keyword ' + book_title + ' cannot be added');
+                showWarningModal('Keyword ' + keyword + ' cannot be added');
                 return false;
             } else if (this.status === 200) {
                 let response = JSON.parse(this.responseText);
-                let bookId = response.id;
-                showSuccessModal('Keyword ' + book_title + ' has been added');
-
+                showSuccessModal('Keyword ' + keyword + ' has been added');
                 showReadersKeywords();
             }
         }
@@ -162,7 +215,7 @@ function saveKeyword() {
     // let currentUserId = getCurrentUserId();
 
     const requestBody = {
-        "keywordNames": [book_title],
+        "keywordNames": [keyword],
         "timesPerDay": 2
     };
     console.log(requestBody);

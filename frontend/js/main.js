@@ -24,8 +24,7 @@ function showSuccessModal(text) {
 function getTokenFromLocalStorage() {
     let localStorageInfo = localStorage.getItem('tokenData');
     let jsonInsideLocalStorage = JSON.parse(localStorageInfo);
-    let tokenString = jsonInsideLocalStorage.jwt;
-    return tokenString;
+    return jsonInsideLocalStorage.jwt;
 }
 
 function addAuthorization(xhr) {
@@ -104,11 +103,7 @@ function notNull(str) {
 }
 
 function isEmpty(str) {
-    if (str === null || str === '') {
-        return true;
-    }
-    return false;
-
+    return str === null || str === '';
 }
 
 function setPageTitle(text) {
@@ -120,9 +115,8 @@ function setPageSubtitle(text) {
 }
 
 function clearContent() {
-    document.getElementById("accordion").innerHTML = '';
+    document.getElementById("news_body").innerHTML = '';
 }
-
 
 function loadRegister() {
     clearRegisterForm();

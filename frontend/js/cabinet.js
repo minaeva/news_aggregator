@@ -14,10 +14,10 @@ function activateHomeMenu() {
     setPageTitle('News');
     setPageSubtitle('');
     clearContent();
-    showReadersNews();
+    showNews();
 }
 
-function showReadersNews() {
+function showNews() {
     if (getCurrentUserId() == null) {
         logout();
     }
@@ -27,42 +27,66 @@ function showReadersNews() {
     xhr.onreadystatechange = function () {
 
         if (this.readyState === 4) {
-            //to do
-            // if no news are there, show add keywords button
+
             if (this.status === 404) {
                 let subHeader =
                     '<br/><h4 class="panel-title">Add one or more keywords of your interest</h4>\n' +
-                    '     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addBookModal">Add</button>\n';
+                    '     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addKeywordModal">Add</button>\n';
                 setPageSubtitle(subHeader);
 
             } else if (this.status === 200) {
                 let articles = JSON.parse(this.responseText);
                 console.log(articles);
-                for (let i = 0; i < articles.length; i++) {
-                    let article = articles[i];
-                    console.log(article);
-                    subscription.description;
-                    subscription.url;
-                    subscription.dateAdded;
-                    let html = '';
-
-                //     html = html +
-                //         '<div class="panel panel-default">\n' +
-                //         '    <div class="panel-heading" role="tab" id="heading' + article.id + '">\n' +
-                //         '        <h4 class="panel-title">\n' +
-                //         '            <a data-toggle="collapse" onclick="showBookDetails(' + article.id + ', ' + article.ownerId + '); return false;" data-parent="#accordion" href="#collapse' + article.id + '"\n' +
-                //         '               aria-expanded="true" aria-controls="collapse' + article.id + '">\n' + article.title +
-                //         '            <h5 class="text-muted">' + notNull(article.authorName) + ' ' + notNull(article.authorSurname) + '</h5>\n' +
-                //         '            </a>\n' +
-                //         '        </h4>\n' +
-                //         '    </div>\n' +
-                //         '    <div id="collapse' + article.id + '" class="panel-collapse collapse" role="tabpanel"\n' +
-                //         '         aria-labelledby="heading' + article.id + '">\n' +
-                //         '    </div>\n' +
-                //         '</div>';
+                if (articles === null || articles.length === 0) {
+                    clickKeywords();
+                } else {
+                    let html =
+                        '<div class="row">\n' +
+                        '<div class="col-md-12">\n' +
+                        '<div class="panel panel-white">\n' +
+                        '<div class="panel-heading clearfix">\n' +
+                        '  <h4 class="panel-title" id="news_table_title"></h4>\n' +
+                        '</div>\n' +
+                        '<div class="panel-body">\n' +
+                        '  <div class="table-responsive">\n' +
+                        '   <table class="table" id="news_table">' +
+                        '<thead>\n' +
+                        '   <tr>\n' +
+                        '     <th>Date</th>\n' +
+                        '     <th>Title</th>\n' +
+                        '     <th>Link</th>\n' +
+                        '     <th>Source</th>\n' +
+                        '     <th>Content</th>\n' +
+                        '   </tr>\n' +
+                        ' </thead>\n' +
+                        ' <tbody>';
+                    for (let i = 0; i < articles.length; i++) {
+                        let article = articles[i];
+                        console.log(article);
+                        // article.title;
+                        // article.description;
+                        // article.content;
+                        // article.url;
+                        // article.dateCreated;
+                        // article.sourceDto.name;
+                        // article.keywordDtos;
+                        html = html +
+                            '<tr>\n' +
+                            '<th scope="row">' + article.dateCreated +'</th>\n' +
+                            '<td>' + article.title + '</td>\n' +
+                            '<td><a href="' + article.url + '" target="_blank">link</a></td>\n' +
+                            '<td>' + article.sourceDto.name + '</td>\n' +
+                            '<td>'+ article.content + '</td>\n' +
+                            '</tr>';
+                    }
+                    html = html +
+                        '</table>\n' +
+                        ' </div>\n' +
+                        ' </div>\n' +
+                        ' </div>';
+                    document.getElementById("news_body").innerHTML = html;
                 }
-                // document.getElementById("accordion").innerHTML = html;
-                document.getElementById("accordion").innerHTML = 'ARTICLES';
+
             }
         }
     }
@@ -75,15 +99,13 @@ function showReadersNews() {
     return false;
 }
 
-function clickAllKeywords() {
+function clickKeywords() {
     hideLeftMenu();
     activateCabinet();
     selectMenu('menu_keywords');
     setPageTitle('Keywords');
     setPageSubtitle('');
     clearContent();
-
-    // showSearchBooksHeader();
 }
 
 function clickAbout() {
@@ -97,15 +119,15 @@ function clickAbout() {
 
 function activateCabinet() {
     addClassToElement("about_body", "hidden");
-    removeClassFromElement("books_readers_body", "hidden");
+    removeClassFromElement("news_body", "hidden");
 }
 
 function activateAbout() {
-    addClassToElement("books_readers_body", "hidden");
+    addClassToElement("news_body", "hidden");
     removeClassFromElement("about_body", "hidden");
 }
 
-function showReadersKeywords() {
+function showKeywords() {
     if (getCurrentUserId() == null) {
         logout();
     }
@@ -127,17 +149,19 @@ function showReadersKeywords() {
             //to do
             // if no keywords are there, show button
             if (this.status === 404) {
-                let subHeader =
-                    '<br/><h4 class="panel-title">Add one or more keywords of your interest</h4>\n' +
-                    '     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addBookModal">Add</button>\n';
-                setPageSubtitle(subHeader);
-
+                showWarningModal('Something went wrong');
             } else if (this.status === 200) {
                 let subscription = JSON.parse(this.responseText);
                 console.log(subscription);
-                subscription.keywordNames;
-                subscription.readerName;
-                subscription.readerEmail;
+                if (subscription === null) {
+                    let subHeader =
+                        '<br/><h4 class="panel-title">You do not have any subscription. Please add one or more keywords of your interest</h4>\n' +
+                        '     <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addKeywordModal">Add</button>\n';
+                    setPageSubtitle(subHeader);
+                } else {
+
+                }
+
                 let html = '';
                 // for (let i = 0; i < articles.length; i++) {
                 //     let article = articles[i];
@@ -158,6 +182,7 @@ function showReadersKeywords() {
                 //         '</div>';
                 // }
                 // document.getElementById("accordion").innerHTML = html;
+
                 document.getElementById("accordion").innerHTML = 'HELLO';
             }
         }
@@ -172,17 +197,18 @@ function showReadersKeywords() {
 }
 
 function openAddKeywordModal() {
-    $('#addBookModal').modal('show');
+    $('#addKeywordModal').modal('show');
 
-    $('#addBookModal').on('shown.bs.modal', function () {
+    $('#addKeywordModal').on('shown.bs.modal', function () {
         $('#book_title').focus();
     })
 
-    document.getElementById("book_title").value = '';    return false;
+    document.getElementById("book_title").value = '';
+    return false;
 }
 
 function closeAddKeywordModal() {
-    $('#addBookModal').modal('hide');
+    $('#addKeywordModal').modal('hide');
     if ($('#book_title_group').hasClass('has-error')) {
         $('#book_title_group').removeClass('has-error');
     }
@@ -206,7 +232,7 @@ function saveKeyword() {
             } else if (this.status === 200) {
                 let response = JSON.parse(this.responseText);
                 showSuccessModal('Keyword ' + keyword + ' has been added');
-                showReadersKeywords();
+                showKeywords();
             }
         }
     };

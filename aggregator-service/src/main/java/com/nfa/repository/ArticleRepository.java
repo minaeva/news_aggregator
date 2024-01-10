@@ -8,7 +8,6 @@ import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
@@ -16,7 +15,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     @Override
     List<Article> findAll(@NonNull Sort sort);
 
-    Optional<List<Article>> findArticleByDateAdded(LocalDateTime date);
+    List<Article> findArticleByDateCreated(LocalDateTime date);
 
     List<Article> findAllByProcessedIsFalseAndKeywordsNotEmpty();
 

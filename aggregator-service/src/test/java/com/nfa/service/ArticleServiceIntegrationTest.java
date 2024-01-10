@@ -90,7 +90,7 @@ public class ArticleServiceIntegrationTest {
     void isArticleInDB_whenArticleWithSameDateExists_andTitleIsDifferent_shouldReturnFalse() {
         LocalDateTime time = LocalDateTime.now();
         Article article = new Article();
-        article.setDateAdded(time);
+        article.setDateCreated(time);
         article.setTitle("other");
         articleRepository.save(article);
 
@@ -103,7 +103,7 @@ public class ArticleServiceIntegrationTest {
     void isArticleInDB_whenArticleWithSameDateExists_andTitleIsSame_shouldReturnTrue() {
         LocalDateTime time = LocalDateTime.now();
         Article article = new Article();
-        article.setDateAdded(time);
+        article.setDateCreated(time);
         article.setTitle("title");
         articleRepository.save(article);
 
@@ -172,8 +172,8 @@ public class ArticleServiceIntegrationTest {
 
         Set<ArticleDto> result = subject.findAllByJwt("token");
 
-        Set<ArticleDto> articleDtos = Set.of(new ArticleDto("title", "description", "url",
-                null, null, List.of(new KeywordDto("peace"))));
+        Set<ArticleDto> articleDtos = Set.of(new ArticleDto("title", "description", "content",
+                "url", null, null, List.of(new KeywordDto("peace"))));
         assertThat(articleDtos)
                 .usingRecursiveAssertion()
                 .ignoringFields("id", "content", "processed")

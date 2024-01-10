@@ -41,7 +41,7 @@ public class BBCProcessor implements ItemProcessor<BBCArticle, Article> {
         article.setDescription(getStringNotLongerThan(bbcArticle.getDescription(), 800));
         article.setContent(getStringNotLongerThan(bbcArticle.getContent(), 800));
         article.setUrl(getStringNotLongerThan(bbcArticle.getUrl(), 400));
-        article.setDateAdded(bbcArticle.getPublishedAt());
+        article.setDateCreated(bbcArticle.getPublishedAt());
 
         Source source = sourceService.getByNameOrSave(bbcArticle.getSource().getName());
         article.setSource(source);

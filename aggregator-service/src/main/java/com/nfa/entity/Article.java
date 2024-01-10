@@ -29,8 +29,8 @@ public class Article {
     @Column(name = "url")
     private String url;
 
-    @Column(name = "date_added")
-    private LocalDateTime dateAdded;
+    @Column(name = "date_created")
+    private LocalDateTime dateCreated;
 
     @Column(name = "is_processed")
     private boolean processed;

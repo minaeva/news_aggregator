@@ -26,7 +26,7 @@ import static java.util.stream.Collectors.toSet;
 @Slf4j
 public class ArticleServiceImpl implements ArticleService {
 
-    private static final String DATE_ADDED = "dateAdded";
+    private static final String DATE_CREATED = "dateCreated";
     private final ArticleRepository articleRepository;
     private final UserClient userClient;
     private final KeywordService keywordService;
@@ -34,7 +34,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleDto> findAll(int pageNumber, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize,
-                Sort.by(DATE_ADDED).descending());
+                Sort.by(DATE_CREATED).descending());
 
         Page<Article> articleEntities = articleRepository.findAll(pageRequest);
 
@@ -68,10 +68,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public boolean isArticleInDB(LocalDateTime dateAdded, String title) {
-        Optional<List<Article>> articlesByDateAdded = articleRepository.findArticleByDateAdded(dateAdded);
-        return articlesByDateAdded.isPresent() && articlesByDateAdded.get().stream()
+        List<Article> articlesByDateAdded = articleRepository.findArticleByDateCreated(dateAdded);
+        return articlesByDateAdded.stream()
                 .anyMatch(article -> article.getTitle().contains(title));
-
     }
 
     @Override
@@ -114,8 +113,8 @@ public class ArticleServiceImpl implements ArticleService {
                 .map(KeywordDto::new)
                 .toList();
 
-        return new ArticleDto(article.getTitle(), article.getDescription(), article.getUrl(),
-                article.getDateAdded(), sourceDto, keywordDtoList);
+        return new ArticleDto(article.getTitle(), article.getDescription(), article.getContent(), article.getUrl(),
+                article.getDateCreated(), sourceDto, keywordDtoList);
     }
 
     private Article toEntity(ArticleDto articleDto) {
@@ -123,7 +122,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setTitle(articleDto.title());
         article.setDescription(articleDto.description());
         article.setUrl(articleDto.url());
-        article.setDateAdded(articleDto.dateAdded());
+        article.setDateCreated(articleDto.dateCreated());
         if (articleDto.keywordDtos() != null) {
             article.setKeywords(
                     articleDto.keywordDtos().stream()

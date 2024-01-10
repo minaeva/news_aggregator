@@ -39,7 +39,7 @@ public class GnewsProcessor implements ItemProcessor<GnewsArticle, Article> {
         article.setDescription(getStringNotLongerThan(gnewsArticle.getDescription(), 800));
         article.setContent(getStringNotLongerThan(gnewsArticle.getContent(), 800));
         article.setUrl(getStringNotLongerThan(gnewsArticle.getUrl(), 400));
-        article.setDateAdded(gnewsArticle.getPublishedAt());
+        article.setDateCreated(gnewsArticle.getPublishedAt());
 
         Source source = sourceService.getByNameOrSave(gnewsArticle.getSource().getName());
         article.setSource(source);

@@ -40,7 +40,7 @@ public class NYTProcessor implements ItemProcessor<NYTArticle, Article> {
         article.setTitle(getStringNotLongerThan(nytArticle.getTitle(), 400));
         article.setContent(getStringNotLongerThan(nytArticle.getContent(), 800));
         article.setUrl(getStringNotLongerThan(nytArticle.getUrl(), 400));
-        article.setDateAdded(nytArticle.getPublishedDate().atStartOfDay());
+        article.setDateCreated(nytArticle.getPublishedDate().atStartOfDay());
 
         Source source = sourceService.getByNameOrSave(nytArticle.getSource());
         article.setSource(source);

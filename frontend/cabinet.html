@@ -21,11 +21,12 @@
     <link href="assets/plugins/icomoon/style.css" rel="stylesheet">
     <link href="assets/plugins/uniform/css/default.css" rel="stylesheet"/>
     <link href="assets/plugins/switchery/switchery.min.css" rel="stylesheet"/>
-
+    <link href="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
     <!-- Theme Styles -->
     <link href="assets/css/space.css" rel="stylesheet">
     <link href="assets/css/themes/admin2.css" rel="stylesheet">
     <link href="assets/css/custom.css" rel="stylesheet">
+    <link href="css/cabinet.css" rel="stylesheet">
 
     <!--    libs for stomp and sockjs-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.js"></script>
@@ -62,14 +63,14 @@
                 <ul class="accordion-menu">
                     <li class="active-page" id="menu_home">
                         <a href="#" onclick="clickHome(); return false;">
-                            <i class="menu-icon icon-home4"></i><span id="menu_my_books_title">News</span>
+                            <i class="menu-icon icon-newspaper"></i><span id="menu_my_books_title">News</span>
                         </a>
                     </li>
                     <li class="menu-divider"></li>
 
                     <li id="menu_keywords">
                         <a href="#" onclick="clickKeywords(); return false">
-                            <i class="menu-icon icon-books"></i><span id="menu_books_title">Keywords</span>
+                            <i class="menu-icon icon-key"></i><span id="menu_books_title">Keywords</span>
                         </a>
                     </li>
 
@@ -96,35 +97,6 @@
 
     <!-- Page Content -->
     <div class="page-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <span class="logo-sm">
-                            <a href="#" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
-                            <a class="logo-box" href="#"><span>Choose the News</span></a>
-                        </span>
-                    </div>
-                    <div class="navbar-right">
-                        <ul class="nav navbar-nav navbar-right">
-
-                            <!-- menu - fullscreen - start -->
-                            <li>
-                                <a href="#" id="toggle-fullscreen">
-                                    <i class="fa fa-expand"></i>
-                                </a>
-                            </li>
-                            <!-- menu - fullscreen - end -->
-
-                        </ul>
-                    </div><!-- /.navbar-collapse -->
-                </div><!-- /.container-fluid -->
-            </nav>
-        </div>
-        <!-- /Page Header -->
-
         <!-- WARNING/SUCCESS MESSAGE - modal - start-->
         <div class="modal fade bs-example-modal-sm border" tabindex="-1" role="dialog"
              aria-labelledby="smallModalLabel" aria-hidden="true" id="smallModal">
@@ -139,124 +111,14 @@
                     <div class="modal-body" id="smallModalBody">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal" id="message_close_button_title">Close
+                        <button type="button" class="btn btn-info" data-dismiss="modal" id="message_close_button_title">
+                            Close
                         </button>
                     </div>
                 </div>
             </div>
         </div>
         <!-- WARNING/SUCCESS MESSAGE - modal - end-->
-
-        <!--  ADD KEYWORD - modal - start-->
-        <div class="modal fade border" id="addKeywordModal" tabindex="-1" role="dialog" aria-labelledby="add_book_title"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="add_book_title">Add keyword</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group required" id="book_title_group">
-                            <label for="keyword_title" class="control-label">Keyword</label>
-                            <textarea rows="1" type="text" class="form-control" id="keyword_title" placeholder=""
-                                      maxlength="200">
-                            </textarea>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal"
-                                onclick="closeAddKeywordModal(); return false" id="add_book_close_title">Close
-                        </button>
-                        <button type="button" class="btn btn-info" onclick="saveKeyword(); return false"
-                                id="add_book_button_title">Add
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--  ADD KEYWORD - modal - end-->
-
-        <!--  EDIT BOOK - modal - start-->
-        <div class="modal fade border" id="editBookModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="edit_book_modal_title"></h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="form-group required col-sm-9" id="edit_book_title_group">
-                                <label for="edit_book_title" class="control-label" id="edit_book_title_title"></label>
-                                <input type="text" class="form-control" id="edit_book_title" placeholder=""
-                                       maxlength="200">
-                                <input class="hidden" id="edit_book_id">
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label for="edit_book_active" class="control-label" id="edit_book_active_title"></label>
-                                <div class="">
-                                    <select style="margin-bottom:15px;" class="form-control" id="edit_book_active">
-                                        <option value="true" id="edit_book_active_yes"></option>
-                                        <option value="false" id="edit_book_active_no"></option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-6 required" id="edit_author_name_group">
-                                <label for="edit_author_name" class="control-label"
-                                       id="edit_book_author_name_title"></label>
-                                <input type="text" class="form-control" id="edit_author_name" placeholder=""
-                                       maxlength="50">
-                            </div>
-                            <div class="form-group col-sm-6 required" id="edit_author_surname_group">
-                                <label for="edit_author_surname" class="control-label"
-                                       id="edit_book_author_surname_title"></label>
-                                <input type="text" class="form-control" id="edit_author_surname" placeholder=""
-                                       maxlength="50">
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="edit_book_close_title"
-                                onclick="closeEditBookModal(); return false">
-                        </button>
-                        <button type="button" class="btn btn-info" onclick="editBook(); return false"
-                                id="edit_book_button_title">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--  EDIT BOOK - modal - end-->
-
-        <!-- DELETE BOOK - modal - start-->
-        <div class="modal fade bs-example-modal-sm border" tabindex="-1" role="dialog"
-             aria-labelledby="deleteBookModalLabel" aria-hidden="true" id="deleteBookModal">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-label="Close"><span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="delete_book_modal_title_title"></h4>
-                    </div>
-                    <div class="modal-body" id="delete_book_modal_body_title">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="delete_book_close_title">
-                        </button>
-                        <button type="button" class="btn btn-danger" id="delete_book_delete_title">
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Page Inner Cabinet -->
         <div class="page-inner" id="page-inner-cabinet">
@@ -265,128 +127,86 @@
                     <div class="col-md-9">
 
                         <div class="panel panel-white">
+                            <!--TITLE-->
                             <div class="panel-body">
                                 <div class="panel-group">
-                                    <div class="alert alert-info">
-                                        <h4 id="accordion_header" class="panel-title top">
-                                        </h4>
-                                        <span id="accordion_subheader">
-                                        </span>
+                                    <div class="alert alert-info" id="page_title">
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="news_body">
+                            <!--NEWS-->
+                            <div id="news_body" class="hidden">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="panel panel-white">
-                                            <div class="panel-heading clearfix">
-                                                <h4 class="panel-title" id="news_table_title"></h4>
-                                            </div>
-                                            <div class="panel-body">
-                                                <div class="table-responsive">
-                                                    <table class="table" id="news_table">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>Date</th>
-                                                            <th>Title</th>
-                                                            <th>Link</th>
-                                                            <th>Source</th>
-                                                            <th>Content</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr>
-                                                            <th scope="row">Jan 09, 19:24</th>
-                                                            <td>Sam Altman, Sugarcoating the Apocalypse</td>
-                                                            <td><a href="https://www.nytimes.com/2023/12/02/opinion/ai-sam-altman-openai.html" target="_blank">link</a></td>
-                                                            <td>New York Times</td>
-                                                            <td>&nbsp;</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th scope="row">Jan 08, 13:12</th>
-                                                            <td>University of Nevada shooting: Police respond to active shooting on Las Vegas campus</td>
-                                                            <td><a href="http://www.bbc.co.uk/news/world-us-canada-67642512">link</a> </td>
-                                                            <td>BBC</td>
-                                                            <td>Police in Las Vegas are responding to an active shooter alert at the University of Nevada.
-                                                                The university posted on X at around 11:53 local time (19:53 GMT) on Wednesday that they were responding to… [+229 chars]</td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                </div><!-- Row -->
-                            </div><!-- Main Wrapper -->
+                            <!--KEYWORDS-->
+                            <div id="keywords_body" class="form-group hidden">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel-body">
+                                            <div class="row col-sm-12 keyword-tag">
+                                                <input type="text" id="keywordsInput" value=""
+                                                       data-role="tagsinput" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <button type="button" class="btn btn-success margin-12"
+                                                    onclick="handleSaveClick()">Save changes
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!--ABOUT-->
                             <div id="about_body" class="hidden">
                                 <div class="row">
-                                    <div class="col-sm-12" id="profile_about_text1">
-                                    </div>
-                                    <div class="col-sm-12" id="profile_about_text2">
-                                        <h5>1. You sign up in the system and subscribe to the keywords you are interested in.</h5>
-                                        <h5>2. Job collects the news from the news providers several times a day.</h5>
-                                        <h5>3. Once a day an email notification is sent to you, as soon as there is at least one news fitting any of your keywords.</h5>
-                                        <h5>4. You log into the Choose the News app and &ndash; see only the news that are important for you</h5>
+                                    <div class="col-md-12">
+                                        <div class="panel panel-white">
+                                            <div class="panel-body">
 
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <img src="images/about.jpg" class="about-image">
+                                                <div class="col-sm-12">
+                                                    <h4>1. You choose the keywords you are interested in.</h4>
+                                                    <h4>2. Job collects the articles from the news providers several times a
+                                                        day and collects the keywords each of them contains.</h4>
+                                                    <h4>3. Once a day an email notification is sent to you, as soon as
+                                                        there is at least one article fitting any of your keywords.</h4>
+                                                    <h4>4. You log into the Choose the News app and &ndash& see only the
+                                                        news that are important for you.</h4>
+                                                </div>
+
+                                                <div class="col-sm-12">
+                                                    <img src="images/about.jpg" class="about-image" alt="choose the news">
+                                                </div>
+
+                                                <p>&nbsp;</p>
+                                                <p>&nbsp;</p>
+                                                <p>&nbsp;</p>
+                                                <p>&nbsp;</p>
+                                                <p>&nbsp;</p>
+                                                <p>Made by Minaeva</p>
+                                            </div>
+
+                                        </div>
                                     </div>
 
                                 </div>
-                                <div>
-                                    <p>&nbsp;
-                                    </p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                    <p>&nbsp;</p>
-                                    <p>Made by Minaeva</p>
-                                </div>
-
                             </div>
 
                         </div>
 
-                    </div>
+                    </div> <!-- COL-MD-9 -->
                 </div><!-- Row -->
             </div><!-- Main Wrapper -->
-
-
-
         </div><!-- Page Inner Cabinet -->
-
-        <div class="page-right-sidebar" id="main-right-sidebar">
-            <div class="page-right-sidebar-inner">
-                <div class="right-sidebar-top">
-                    <div class="right-sidebar-tabs">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active" id="chat-tab">
-                                <a href="#chat" aria-controls="chat" role="tab" data-toggle="tab" id="chat_title"></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <a class="right-sidebar-toggle right-sidebar-close" href="#" onclick="closeDialogs()"
-                       data-sidebar-id="main-right-sidebar"><i class="icon-close"></i></a>
-                </div>
-                <div class="right-sidebar-content">
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <!--  CHAT   -->
-                        <div role="tabpanel" class="tab-pane active" id="chat">
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="page-right-sidebar" id="chat-right-sidebar">
-        </div>
     </div><!-- /Page Content -->
 </div><!-- /Page Container -->
 
@@ -398,9 +218,11 @@
 <script src="assets/plugins/uniform/js/jquery.uniform.standalone.js"></script>
 <script src="assets/plugins/switchery/switchery.min.js"></script>
 <script src="assets/plugins/summernote-master/summernote.min.js"></script>
+<script src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 <script src="assets/js/space.js"></script>
 <script src="assets/js/pages/ui-modals.js"></script>
 
+<script src="assets/js/space.min.js"></script>
 
 <script src="js/environment.js"></script>
 <script src="js/main.js"></script>

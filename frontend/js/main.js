@@ -1,5 +1,3 @@
-const BEARER = 'Bearer ';
-
 function getCurrentUserId() {
     let tokenData = localStorage.getItem('tokenData');
     let jsonInside = JSON.parse(tokenData);
@@ -80,11 +78,17 @@ function addClassToElement(elementId, classToAdd) {
     elementOnPage.classList.add(classToAdd);
 }
 
-function removeClassFromElement(elementId, classToRemove) {
-    let elementToRemoveClassFrom = document.getElementById(elementId);
-    if (elementToRemoveClassFrom.classList.contains(classToRemove)) {
-        elementToRemoveClassFrom.classList.remove(classToRemove);
-    }
+function hideAllShowOne(elementId) {
+    let news_body = document.getElementById("news_body");
+    news_body.classList.add("hidden");
+    let keywords_body = document.getElementById("keywords_body");
+    keywords_body.classList.add("hidden");
+    let about_body = document.getElementById("about_body");
+    about_body.classList.add("hidden");
+
+    document.getElementById("news_body").innerHTML = '';
+
+    document.getElementById(elementId).classList.remove("hidden");
 }
 
 function changeElementClass(elementId, classToRemove, classToAdd) {
@@ -107,15 +111,7 @@ function isEmpty(str) {
 }
 
 function setPageTitle(text) {
-    document.getElementById("accordion_header").innerHTML = text;
-}
-
-function setPageSubtitle(text) {
-    document.getElementById("accordion_subheader").innerHTML = text;
-}
-
-function clearContent() {
-    document.getElementById("news_body").innerHTML = '';
+    document.getElementById("page_title").innerHTML = text.toUpperCase();
 }
 
 function loadRegister() {
@@ -128,3 +124,30 @@ function clearRegisterForm() {
     $("#new_name").removeAttr('value');
     $("#new_password").removeAttr('value');
 }
+
+function sanitizeHTML(str) {
+    return str.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function formatDate(dateString) {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const date = new Date(dateString);
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    let formattedDate;
+    if (hours !== 0 && minutes !== 0) {
+        formattedDate = `${month} ${day}, ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    } else {
+        formattedDate = `${month} ${day}`;
+    }
+    return formattedDate;
+}
+

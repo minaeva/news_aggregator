@@ -8,13 +8,13 @@
 
 ### Workflow
 
-User-service: accepts user's registration and subscription to the keywords.
+- User-service: accepts user's registration and subscription to the keywords.
 
-Aggregator-service: fetches the news, saves the new ones to db, looks for the keywords, if any is found - it is produced to the Kafka broker.
+- Aggregator-service: fetches the news, saves the new ones to db, looks for the keywords, if any are found - it is produced to the Kafka broker.
 
-Notification-service: consumes the event and sends emails to the users who have the subscription to the keyword the event contains. 
+- Notification-service: consumes the event and sends emails to the users who have subscribed to the keyword the event contains.
 
-Aggregator-service: gets the users request with the JWT token, requests users' keywords, responds with all the articles having the keywords user has subscribed to.
+- Aggregator-service: gets the user's request with the JWT token, requests users' keywords, and responds with all the articles having the keywords the user has subscribed to.
 
 [To Do] Statistics-service: provides reports on keywords, users, articles.
 

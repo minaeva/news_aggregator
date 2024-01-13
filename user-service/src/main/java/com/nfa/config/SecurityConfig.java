@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/registration", "/auth").permitAll()
+                        .requestMatchers("/actuator/*").permitAll()
                         .requestMatchers(antMatcher(HttpMethod.GET, "/subscription/**")).permitAll()
                         .anyRequest().authenticated()
                 )

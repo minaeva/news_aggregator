@@ -2,8 +2,8 @@ package com.nfa.batch.processors;
 
 import com.nfa.batch.BatchHelper;
 import com.nfa.client.responses.NYTArticle;
-import com.nfa.entity.Article;
-import com.nfa.entity.Source;
+import com.nfa.entity.primary.Article;
+import com.nfa.entity.primary.Source;
 import com.nfa.service.SourceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;

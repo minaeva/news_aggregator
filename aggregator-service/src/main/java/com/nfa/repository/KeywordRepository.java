@@ -1,6 +1,6 @@
 package com.nfa.repository;
 
-import com.nfa.entity.Keyword;
+import com.nfa.entity.primary.Keyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

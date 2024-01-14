@@ -1,7 +1,7 @@
 package com.nfa.service;
 
 import com.nfa.dto.SourceDto;
-import com.nfa.entity.Source;
+import com.nfa.entity.primary.Source;
 
 import java.util.List;
 

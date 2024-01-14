@@ -1,7 +1,7 @@
 package com.nfa.service;
 
 import com.nfa.dto.ArticleDto;
-import com.nfa.entity.Article;
+import com.nfa.entity.primary.Article;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,9 +1,6 @@
 package com.nfa.dto;
 
-public record KeywordDto(String name, String rule) {
+public record KeywordDto(String name) {
 
-    public KeywordDto(String name) {
-        this(name, null);
-    }
 }
 

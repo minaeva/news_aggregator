@@ -5,7 +5,6 @@ import com.nfa.batch.processors.BBCProcessor;
 import com.nfa.batch.processors.GnewsProcessor;
 import com.nfa.batch.processors.NYTProcessor;
 import com.nfa.batch.readers.ArticleFromDbItemReader;
-import com.nfa.batch.readers.KeywordMapper;
 import com.nfa.batch.readers.RestApiItemReader;
 import com.nfa.batch.writers.ArticleWriter;
 import com.nfa.batch.writers.KeywordWriter;
@@ -17,8 +16,10 @@ import com.nfa.client.responses.BBCArticle;
 import com.nfa.client.responses.GnewsArticle;
 import com.nfa.client.responses.NYTArticle;
 import com.nfa.dto.KeywordDto;
-import com.nfa.entity.Article;
+import com.nfa.entity.primary.Article;
+import com.nfa.entity.secondary.SecondaryKeyword;
 import com.nfa.repository.ArticleRepository;
+import jakarta.persistence.EntityManagerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -30,15 +31,13 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
@@ -64,10 +63,12 @@ public class BatchConfig {
     Resource resource;
 
     @Bean
-    public Job newsFetcherJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Job newsFetcherJob(JobRepository jobRepository,
+                              @Qualifier("transactionManager") PlatformTransactionManager transactionManager,
+                              @Qualifier("secondEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new JobBuilder("newsFetcherJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(updateKeywordsStep(jobRepository, transactionManager))
+                .start(updateKeywordsStep(jobRepository, transactionManager, entityManagerFactory))
                 .next(gnewsStep(jobRepository, transactionManager))
                 .next(bbcStep(jobRepository, transactionManager))
                 .next(nytStep(jobRepository, transactionManager))
@@ -76,28 +77,29 @@ public class BatchConfig {
     }
 
     @Bean
-    public Step updateKeywordsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Step updateKeywordsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager, EntityManagerFactory entityManagerFactory) {
         return new StepBuilder("Keywords Step", jobRepository)
-                .<KeywordDto, KeywordDto>chunk(20, transactionManager)
-                .reader(keywordsReader())
+                .<SecondaryKeyword, KeywordDto>chunk(20, transactionManager)
+                .reader(keywordsReader(entityManagerFactory))
+                .processor(keywordsProcessor())
                 .writer(keywordsWriter())
                 .build();
     }
 
     @Bean
     @StepScope
-    public FlatFileItemReader<KeywordDto> keywordsReader() {
-        DelimitedLineTokenizer tokenizer = new DelimitedLineTokenizer();
-        tokenizer.setDelimiter("|");
-        tokenizer.setNames("name", "rule");
-        DefaultLineMapper<KeywordDto> keywordLineMapper = new DefaultLineMapper<>();
-        keywordLineMapper.setLineTokenizer(tokenizer);
-        keywordLineMapper.setFieldSetMapper(new KeywordMapper());
-        keywordLineMapper.afterPropertiesSet();
-        FlatFileItemReader<KeywordDto> reader = new FlatFileItemReader<>();
-        reader.setLineMapper(keywordLineMapper);
-        reader.setResource(resource);
+    public JpaPagingItemReader<SecondaryKeyword> keywordsReader(EntityManagerFactory entityManagerFactory) {
+        JpaPagingItemReader<SecondaryKeyword> reader = new JpaPagingItemReader<>();
+        reader.setEntityManagerFactory(entityManagerFactory);
+        reader.setQueryString("SELECT k FROM Keyword k");
+        reader.setPageSize(100);
         return reader;
+    }
+
+    @Bean
+    public ItemProcessor<SecondaryKeyword, KeywordDto> keywordsProcessor() {
+        return secondaryKeyword ->
+                new KeywordDto(secondaryKeyword.getName());
     }
 
     @Bean
@@ -193,8 +195,4 @@ public class BatchConfig {
         return new ArticleFromDbItemReader(articleRepository);
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager() {
-        return new JpaTransactionManager();
-    }
-}
+ }

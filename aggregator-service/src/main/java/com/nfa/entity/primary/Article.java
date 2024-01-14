@@ -1,4 +1,4 @@
-package com.nfa.entity;
+package com.nfa.entity.primary;
 
 import jakarta.persistence.*;
 import lombok.Data;

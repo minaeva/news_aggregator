@@ -1,7 +1,7 @@
 package com.nfa.batch;
 
-import com.nfa.entity.Article;
-import com.nfa.entity.Keyword;
+import com.nfa.entity.primary.Article;
+import com.nfa.entity.primary.Keyword;
 import com.nfa.service.ArticleService;
 import com.nfa.service.KeywordService;
 import lombok.extern.slf4j.Slf4j;

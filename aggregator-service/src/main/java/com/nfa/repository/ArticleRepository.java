@@ -1,7 +1,7 @@
 package com.nfa.repository;
 
-import com.nfa.entity.Article;
-import com.nfa.entity.Keyword;
+import com.nfa.entity.primary.Article;
+import com.nfa.entity.primary.Keyword;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;

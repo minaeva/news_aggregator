@@ -1,6 +1,6 @@
 package com.nfa.service;
 
-import com.nfa.entity.Keyword;
+import com.nfa.entity.primary.Keyword;
 
 import java.util.List;
 import java.util.Optional;

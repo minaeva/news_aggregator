@@ -2,7 +2,7 @@ package com.nfa.service;
 
 import com.nfa.dto.SourceDto;
 import com.nfa.entity.primary.Source;
-import com.nfa.repository.SourceRepository;
+import com.nfa.repository.primary.SourceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

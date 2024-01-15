@@ -7,7 +7,7 @@ import com.nfa.dto.SourceDto;
 import com.nfa.dto.SubscriptionDto;
 import com.nfa.entity.primary.Article;
 import com.nfa.entity.primary.Keyword;
-import com.nfa.repository.ArticleRepository;
+import com.nfa.repository.primary.ArticleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.nfa.service;
 
 import com.nfa.entity.primary.Keyword;
-import com.nfa.repository.KeywordRepository;
+import com.nfa.repository.primary.KeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

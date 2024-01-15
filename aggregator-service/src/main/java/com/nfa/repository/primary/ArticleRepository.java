@@ -1,4 +1,4 @@
-package com.nfa.repository;
+package com.nfa.repository.primary;
 
 import com.nfa.entity.primary.Article;
 import com.nfa.entity.primary.Keyword;

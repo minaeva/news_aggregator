@@ -3,8 +3,10 @@ package com.nfa.config;
 
 import com.nfa.batch.processors.BBCProcessor;
 import com.nfa.batch.processors.GnewsProcessor;
+import com.nfa.batch.processors.KeywordProcessor;
 import com.nfa.batch.processors.NYTProcessor;
 import com.nfa.batch.readers.ArticleFromDbItemReader;
+import com.nfa.batch.readers.KeywordReader;
 import com.nfa.batch.readers.RestApiItemReader;
 import com.nfa.batch.writers.ArticleWriter;
 import com.nfa.batch.writers.KeywordWriter;
@@ -18,8 +20,8 @@ import com.nfa.client.responses.NYTArticle;
 import com.nfa.dto.KeywordDto;
 import com.nfa.entity.primary.Article;
 import com.nfa.entity.secondary.SecondaryKeyword;
-import com.nfa.repository.ArticleRepository;
-import jakarta.persistence.EntityManagerFactory;
+import com.nfa.repository.primary.ArticleRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -31,81 +33,47 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.JpaPagingItemReader;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
 @Configuration
+@AllArgsConstructor
 public class BatchConfig {
 
-    @Autowired
-    GnewsClient gnewsClient;
-
-    @Autowired
-    BBCClient bbcClient;
-
-    @Autowired
-    NYTClient nytClient;
-
-    @Autowired
-    ArticleRepository articleRepository;
-
-    @Autowired
-    ToKafkaWriter toKafkaWriter;
-
-    @Value("classpath:${file.path.keywords}")
-    Resource resource;
+    private final KeywordReader keywordReader;
+    private final KeywordProcessor keywordProcessor;
+    private final KeywordWriter keywordWriter;
+    private final GnewsClient gnewsClient;
+    private final BBCClient bbcClient;
+    private final NYTClient nytClient;
+    private final ArticleRepository articleRepository;
+    private final ToKafkaWriter toKafkaWriter;
 
     @Bean
     public Job newsFetcherJob(JobRepository jobRepository,
-                              @Qualifier("transactionManager") PlatformTransactionManager transactionManager,
-                              @Qualifier("secondEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+                              @Qualifier("primaryTransactionManager") PlatformTransactionManager primaryTransactionManager,
+                              @Qualifier("secondaryTransactionManager") PlatformTransactionManager secondaryTransactionManager) {
         return new JobBuilder("newsFetcherJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(updateKeywordsStep(jobRepository, transactionManager, entityManagerFactory))
-                .next(gnewsStep(jobRepository, transactionManager))
-                .next(bbcStep(jobRepository, transactionManager))
-                .next(nytStep(jobRepository, transactionManager))
-                .next(produceToKafkaStep(jobRepository, transactionManager))
+                .start(keywordStep(jobRepository, secondaryTransactionManager))
+                .next(gnewsStep(jobRepository, primaryTransactionManager))
+                .next(bbcStep(jobRepository, primaryTransactionManager))
+                .next(nytStep(jobRepository, primaryTransactionManager))
+                .next(produceToKafkaStep(jobRepository, primaryTransactionManager))
                 .build();
     }
 
     @Bean
-    public Step updateKeywordsStep(JobRepository jobRepository, PlatformTransactionManager transactionManager, EntityManagerFactory entityManagerFactory) {
+    public Step keywordStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("Keywords Step", jobRepository)
                 .<SecondaryKeyword, KeywordDto>chunk(20, transactionManager)
-                .reader(keywordsReader(entityManagerFactory))
-                .processor(keywordsProcessor())
-                .writer(keywordsWriter())
+                .reader(keywordReader)
+                .processor(keywordProcessor)
+                .writer(keywordWriter)
                 .build();
-    }
-
-    @Bean
-    @StepScope
-    public JpaPagingItemReader<SecondaryKeyword> keywordsReader(EntityManagerFactory entityManagerFactory) {
-        JpaPagingItemReader<SecondaryKeyword> reader = new JpaPagingItemReader<>();
-        reader.setEntityManagerFactory(entityManagerFactory);
-        reader.setQueryString("SELECT k FROM Keyword k");
-        reader.setPageSize(100);
-        return reader;
-    }
-
-    @Bean
-    public ItemProcessor<SecondaryKeyword, KeywordDto> keywordsProcessor() {
-        return secondaryKeyword ->
-                new KeywordDto(secondaryKeyword.getName());
-    }
-
-    @Bean
-    @StepScope
-    public ItemWriter<KeywordDto> keywordsWriter() {
-        return new KeywordWriter();
     }
 
     @Bean
@@ -195,4 +163,4 @@ public class BatchConfig {
         return new ArticleFromDbItemReader(articleRepository);
     }
 
- }
+}

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -51,25 +52,51 @@ public class ArticleServiceIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${test.datasource.primary.username}")
+    private String primaryDbUsername;
+
+    @Value("${test.datasource.primary.password}")
+    private String primaryDbPassword;
+
+    @Value("${test.datasource.secondary.username}")
+    private String secondaryDbUsername;
+
+    @Value("${test.datasource.secondary.password}")
+    private String secondaryDbPassword;
+
     @Container
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:latest");
+    public static PostgreSQLContainer<?> primaryPostgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:latest")
+                    .withUsername("TO_OBSCURE")
+                    .withPassword("TO_OBSCURE");
+
+    @Container
+    public static PostgreSQLContainer<?> secondaryPostgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:latest")
+                    .withUsername("TO_OBSCURE")
+                    .withPassword("TO_OBSCURE");
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
-        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
-        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
-        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create"); // Set Hibernate DDL auto configuration
+        registry.add("spring.datasource.url", primaryPostgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", primaryPostgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", primaryPostgreSQLContainer::getPassword);
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create");
+        registry.add("spring.secondary-datasource.url", secondaryPostgreSQLContainer::getJdbcUrl);
+        registry.add("spring.secondary-datasource.username", secondaryPostgreSQLContainer::getUsername);
+        registry.add("spring.secondary-datasource.password", secondaryPostgreSQLContainer::getPassword);
     }
 
     @BeforeAll
     static void beforeAll() {
-        postgreSQLContainer.start();
+        primaryPostgreSQLContainer.start();
+        secondaryPostgreSQLContainer.start();
     }
 
     @AfterAll
     static void afterAll() {
-        postgreSQLContainer.stop();
+        primaryPostgreSQLContainer.stop();
+        secondaryPostgreSQLContainer.stop();
     }
 
     @BeforeEach
@@ -165,7 +192,7 @@ public class ArticleServiceIntegrationTest {
                 .willReturn(ok()
                         .withHeader("Content-Type", "application/json")
                         .withJsonBody(subscriptionAsJson)));
-        Article foundArticle = new Article("title", "description", "url");
+        Article foundArticle = new Article("title", "description", "content", "url");
         Keyword keyword = new Keyword("peace");
         foundArticle.setKeywords(Set.of(keyword));
         articleRepository.save(foundArticle);
@@ -176,7 +203,7 @@ public class ArticleServiceIntegrationTest {
                 "url", null, null, List.of(new KeywordDto("peace"))));
         assertThat(articleDtos)
                 .usingRecursiveAssertion()
-                .ignoringFields("id", "content", "processed")
+                .ignoringFields("id", "processed")
                 .isEqualTo(result);
     }
 }

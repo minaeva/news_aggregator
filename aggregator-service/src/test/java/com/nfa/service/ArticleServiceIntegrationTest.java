@@ -17,18 +17,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
@@ -52,29 +54,38 @@ public class ArticleServiceIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${test.datasource.primary.username}")
-    private String primaryDbUsername;
+    private static PostgreSQLContainer<?> primaryPostgreSQLContainer;
+    private static PostgreSQLContainer<?> secondaryPostgreSQLContainer;
 
-    @Value("${test.datasource.primary.password}")
-    private String primaryDbPassword;
+    @BeforeAll
+    static void beforeAll() throws IOException {
+        initContainers();
+        primaryPostgreSQLContainer.start();
+        secondaryPostgreSQLContainer.start();
+    }
 
-    @Value("${test.datasource.secondary.username}")
-    private String secondaryDbUsername;
+    static void initContainers() throws IOException {
+        Properties properties = new Properties();
+        try (InputStream input = ArticleServiceIntegrationTest.class
+                .getClassLoader().getResourceAsStream("application-test.properties")) {
+            if (input == null) {
+                throw new FileNotFoundException("application-test.properties not found in classpath");
+            }
+            properties.load(input);
+        }
 
-    @Value("${test.datasource.secondary.password}")
-    private String secondaryDbPassword;
+        String primaryDbUsername = properties.getProperty("spring.datasource.username");
+        String primaryDbPassword = properties.getProperty("spring.datasource.password");
+        String secondaryDbUsername = properties.getProperty("spring.secondary-datasource.username");
+        String secondaryDbPassword = properties.getProperty("spring.secondary-datasource.password");
 
-    @Container
-    public static PostgreSQLContainer<?> primaryPostgreSQLContainer =
-            new PostgreSQLContainer<>("postgres:latest")
-                    .withUsername("TO_OBSCURE")
-                    .withPassword("TO_OBSCURE");
-
-    @Container
-    public static PostgreSQLContainer<?> secondaryPostgreSQLContainer =
-            new PostgreSQLContainer<>("postgres:latest")
-                    .withUsername("TO_OBSCURE")
-                    .withPassword("TO_OBSCURE");
+        primaryPostgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
+                .withUsername(primaryDbUsername)
+                .withPassword(primaryDbPassword);
+        secondaryPostgreSQLContainer = new PostgreSQLContainer<>("postgres:latest")
+                .withUsername(secondaryDbUsername)
+                .withPassword(secondaryDbPassword);
+    }
 
     @DynamicPropertySource
     static void postgresqlProperties(DynamicPropertyRegistry registry) {
@@ -85,12 +96,6 @@ public class ArticleServiceIntegrationTest {
         registry.add("spring.secondary-datasource.url", secondaryPostgreSQLContainer::getJdbcUrl);
         registry.add("spring.secondary-datasource.username", secondaryPostgreSQLContainer::getUsername);
         registry.add("spring.secondary-datasource.password", secondaryPostgreSQLContainer::getPassword);
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        primaryPostgreSQLContainer.start();
-        secondaryPostgreSQLContainer.start();
     }
 
     @AfterAll

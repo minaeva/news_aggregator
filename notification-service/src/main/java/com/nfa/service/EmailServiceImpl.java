@@ -1,7 +1,6 @@
 package com.nfa.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,21 +14,27 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class EmailServiceImpl implements EmailService {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+    private final String mailFrom;
+    private final String mailSubject;
+    private final String mailText;
 
-    @Value("${mail.from}")
-    private String mailFrom;
-
-    @Value("${mail.subject}")
-    private String mailSubject;
-
-    @Value("${mail.text}")
-    private String mailText;
-
+    public EmailServiceImpl(JavaMailSender javaMailSender,
+                            @Value("${mail.from}") String mailFrom,
+                            @Value("${mail.subject}") String mailSubject,
+                            @Value("${mail.text}") String mailText) {
+        this.javaMailSender = javaMailSender;
+        this.mailFrom = mailFrom;
+        this.mailSubject = mailSubject;
+        this.mailText = mailText;
+    }
 
     @Override
     public void sendEmailAsync(Set<String> emails) {
+        if (mailFrom == null || mailSubject == null || mailText == null) {
+            log.error("Mail properties are not properly set.");
+            return;
+        }
         log.info("Sending email to {}", emails);
 
         ExecutorService service = Executors.newFixedThreadPool(10);

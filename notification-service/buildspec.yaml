@@ -8,6 +8,7 @@ phases:
     commands:
       - echo "Using Java version $(java -version)"
       - echo "Installing source and build dependencies"
+      - cd notification-service
       - mvn install -DskipTests
   build:
     commands:

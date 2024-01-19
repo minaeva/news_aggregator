@@ -14,11 +14,11 @@ phases:
   pre_build:
     commands:
       - echo Pre-build steps...
+      - cd user-service
       - gradle clean
   build:
     commands:
       - echo Build of User service started on `date`
-      - cd user-service
       - gradle build
   post_build:
     commands:

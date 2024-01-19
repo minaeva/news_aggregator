@@ -15,6 +15,8 @@ phases:
     commands:
       - echo Pre-build steps...
       - cd user-service
+      - gradle --stop
+      - rm -rf /root/.gradle/caches/  # Clear Gradle cache
       - gradle clean
   build:
     commands:

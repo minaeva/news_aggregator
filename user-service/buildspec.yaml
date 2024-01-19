@@ -4,32 +4,23 @@ phases:
   install:
     runtime-versions:
       java: corretto17
-    commands:
-      - echo Installing Gradle
-      - wget https://services.gradle.org/distributions/gradle-7.2-bin.zip
-      - unzip -q gradle-7.2-bin.zip
-      - export GRADLE_HOME=$PWD/gradle-7.2
-      - export PATH=$GRADLE_HOME/bin:$PATH
-      - gradle -v
   pre_build:
     commands:
       - echo Pre-build steps...
       - cd user-service
-      - gradle --stop
-      - rm -rf /root/.gradle/caches/  # Clear Gradle cache
-      - gradle clean
+      - ./gradlew clean
   build:
     commands:
       - echo Build of User service started on `date`
-      - gradle build
+      - ./gradlew build
   post_build:
     commands:
       - echo Build completed on `date`
 
 artifacts:
   files:
-    - build/libs/*.jar
-    -
+    - user-service/build/libs/*.jar
+
 cache:
   paths:
-    - '/root/.gradle/**/*'
+    - '/root/.gradle/caches/**/*'

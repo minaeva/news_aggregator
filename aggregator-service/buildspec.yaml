@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  pre_build:
+    commands:
+      - echo "Using Java version $(java -version)"
+      - echo "Installing source and build dependencies"
+      - mvn install -DskipTests
+  build:
+    commands:
+      - echo "Build of Aggregator service started on `date`"
+      - mvn package -DskipTests
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
+
+artifacts:
+  files:
+    - target/*.jar

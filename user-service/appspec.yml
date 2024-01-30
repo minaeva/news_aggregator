@@ -1,0 +1,10 @@
+version: 0.0
+os: linux
+files:
+  - source: /build/libs/user-service-0.0.1-SNAPSHOT.jar
+    destination: /home/ec2-user/services/user-service
+hooks:
+  ApplicationStart:
+    - location: start_application.sh
+      timeout: 180
+      runas: ec2-user

@@ -16,10 +16,13 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - cp user-service/build/libs/*.jar .
+      - chmod +x start_application.sh
+      - zip -r deployment-package.zip *.jar appspec.yml start_application.sh
 
 artifacts:
   files:
-    - user-service/build/libs/*.jar
+    - deployment-package.zip
 
 cache:
   paths:

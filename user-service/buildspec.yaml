@@ -18,11 +18,11 @@ phases:
       - echo Build completed on `date`
       - cp user-service/build/libs/*.jar .
       - chmod +x start_application.sh
-      - zip -r deployment-package.zip *.jar appspec.yml start_application.sh
+      - zip -r user-deployment-package.zip *.jar appspec.yml start_application.sh
 
 artifacts:
   files:
-    - deployment-package.zip
+    - user-deployment-package.zip
 
 cache:
   paths:

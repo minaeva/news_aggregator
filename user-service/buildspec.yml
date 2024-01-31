@@ -24,8 +24,10 @@ phases:
       - chmod +x start_application.sh
       - echo "Zipping artifacts..."
       - zip -r user-deployment-package.zip *.jar appspec.yml start_application.sh
-      - echo "Listing contents of the zip file:"
-      - unzip -l user-deployment-package.zip
+      - echo "Listing current directory, pwd:"
+      - pwd
+      - echo "Listing contents of the current directory, ls -la:"
+      - ls -la
 
 artifacts:
   files:

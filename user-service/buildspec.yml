@@ -16,6 +16,8 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo "Listing contents of the build/libs directory:"
+      - ls -l user-service/build/libs/
       - cp user-service/build/libs/*.jar .
       - chmod +x start_application.sh
       - zip -r user-deployment-package.zip *.jar appspec.yml start_application.sh

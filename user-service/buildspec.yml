@@ -16,9 +16,16 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo "Listing contents of the current directory:"
+      - ls -l
+      - echo "Listing contents of the build/libs directory:"
+      - ls -l build/libs/
       - cp build/libs/*.jar .
       - chmod +x start_application.sh
+      - echo "Zipping artifacts..."
       - zip -r user-deployment-package.zip *.jar appspec.yml start_application.sh
+      - echo "Listing contents of the zip file:"
+      - unzip -l user-deployment-package.zip
 
 artifacts:
   files:

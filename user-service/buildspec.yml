@@ -22,7 +22,6 @@ phases:
       - zip -r user-deployment-package.zip user-service/*.jar user-service/appspec.yml user-service/start_application.sh
       - pwd
       - ls -la
-      # Upload to S3
       - aws s3 cp user-deployment-package.zip s3://code-build-artifact-bucket/user-service/
       # Start a new deployment
 #      - aws deploy create-deployment --application-name YourCodeDeployApplication --deployment-group-name YourDeploymentGroup --s3-location bucket=your-deployment-bucket,key=user-service/user-deployment-package.zip,bundleType=zip

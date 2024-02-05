@@ -18,7 +18,7 @@ phases:
       - echo Build completed on `date`
       - cp build/libs/*.jar ../
       - cd ..
-      - chmod +x user-service/start_application.sh
+#      - chmod +x user-service/start_application.sh
       - zip -r user-deployment-package.zip user-service/*.jar user-service/appspec.yml user-service/start_application.sh
 #      - pwd
 #      - ls -la

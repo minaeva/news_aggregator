@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source: build/libs/user-service-0.0.1-SNAPSHOT.jar
+  - source: user-service-0.0.1-SNAPSHOT.jar
     destination: /home/ec2-user/services/user-service
 hooks:
   ApplicationStart:

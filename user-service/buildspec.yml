@@ -18,7 +18,7 @@ phases:
       - echo Build completed on `date`
       - cp build/libs/*.jar ../
       - cd ..
-#      - chmod +x user-service/start_application.sh
+      - chmod +x user-service/start_application.sh
       - zip -r user-deployment-package.zip user-service/*.jar user-service/appspec.yml user-service/start_application.sh
       - aws s3 cp user-deployment-package.zip s3://code-build-artifact-bucket/user-service/
       - aws deploy create-deployment --application-name user-service-on-ec2 --deployment-group-name deploy-user-service-group --s3-location bucket=code-build-artifact-bucket,key=user-service/user-deployment-package.zip,bundleType=zip

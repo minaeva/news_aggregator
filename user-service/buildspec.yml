@@ -19,7 +19,6 @@ phases:
       - pwd
       - ls build/libs/
       - cp build/libs/user-service-0.0.1-SNAPSHOT.jar ../
-      - pwd
       - ls
       - zip user-deployment-package.zip build/libs/user-service-0.0.1-SNAPSHOT.jar appspec.yml start_application.sh
 #      - chmod +x user-service/start_application.sh

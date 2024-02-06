@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  pre_build:
+    commands:
+      - echo "Aggregator service Pre-Build started"
+      - chmod +x aggregator-service/start_application.sh
+      - cd aggregator-service
+  build:
+    commands:
+      - echo "Aggregator service Build started on `date`"
+      - ./mvn clean package -DskipTests
+  post_build:
+    commands:
+      - echo "Aggregator service Build completed on `date`"
+      - pwd
+      - ls target/
+      - cp target/aggregator-service-0.0.1-SNAPSHOT.jar .
+      - ls
+      - zip aggregator-deployment-package.zip aggregator-service-0.0.1-SNAPSHOT.jar appspec.yml start_application.sh
+      - aws s3 cp aggregator-deployment-package.zip s3://code-build-artifact-bucket/aggregator-service/
+      - aws deploy create-deployment --application-name aggregator-service-on-ec2 --deployment-group-name deploy-aggregator-service-group --s3-location bucket=code-build-artifact-bucket,key=aggregator-service/aggregator-deployment-package.zip,bundleType=zip
+
+artifacts:
+  files:
+    - aggregator-deployment-package.zip
+
+cache:
+  paths:
+    - '/root/.m2/**/*'

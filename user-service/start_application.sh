@@ -4,6 +4,7 @@
 #!/bin/bash
 echo "Starting application..."
 cd /home/ec2-user/services/user-service
-#docker-compose up --build > /tmp/logfile.log 2> /tmp/errorlog.log
+pwd
+ls -la
 docker-compose up --build > /tmp/logfile.log 2> /tmp/errorlog.log
 echo "Application started."

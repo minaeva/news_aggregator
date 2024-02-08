@@ -16,5 +16,11 @@ services:
       - JWT_SECRET
       - MAIL_PASSWORD
       - MAIL_TO
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
     env_file:
       - .env
+    networks:
+      - choosethenews-network
+networks:
+  choosethenews-network:
+    external: true

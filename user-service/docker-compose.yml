@@ -1,28 +1,20 @@
-version: '3.7'
-
+version: '3.8'
 services:
-  postgres-user:
-    image: postgres:latest
-    restart: always
-    container_name: user-db-container
+  user-service:
+    build: .
+    ports:
+      - "8073:8073"
     environment:
-      POSTGRES_DB: ${USER_DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_ROOT_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
-    ports:
-      - ${DB_PORT}:5432
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
-
-  prometheus:
-    image: prom/prometheus
-    container_name: prometheus-container
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus:/etc/prometheus
+      - CLIENT_ID
+      - CLIENT_SECRET
+      - DB_HOST
+      - DB_PORT
+      - DB_USER
+      - DB_PASSWORD
+      - USER_DB_NAME
+      - POSTGRES_ROOT_PASSWORD
+      - JWT_SECRET
+      - MAIL_PASSWORD
+      - MAIL_TO
+    env_file:
+      - .env

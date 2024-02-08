@@ -20,7 +20,7 @@ phases:
 #      - ls build/libs/
       - cp build/libs/user-service-0.0.1-SNAPSHOT.jar .
 #      - ls
-      - zip user-deployment-package.zip user-service-0.0.1-SNAPSHOT.jar appspec.yml start_application.sh
+      - zip user-deployment-package.zip user-service-0.0.1-SNAPSHOT.jar appspec.yml Dockerfile docker-compose.yml start_application.sh
       - aws s3 cp user-deployment-package.zip s3://code-build-artifact-bucket/user-service/
       - aws deploy create-deployment --application-name user-service-on-ec2 --deployment-group-name deploy-user-service-group --s3-location bucket=code-build-artifact-bucket,key=user-service/user-deployment-package.zip,bundleType=zip
 

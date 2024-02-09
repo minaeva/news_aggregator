@@ -1,5 +1,22 @@
-version: '3.8'
+version: '3.7'
 services:
+  postgres-aggregator:
+    image: postgres:latest
+    restart: always
+    container_name: aggregator-db-container
+    environment:
+      POSTGRES_DB: ${AGGREGATOR_DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_ROOT_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
   zookeeper:
     restart: always
     image: docker.io/bitnami/zookeeper:latest
@@ -27,31 +44,6 @@ services:
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
     depends_on:
       - zookeeper
-  aggregator-service:
-    restart: always
-    build: .
-    ports:
-      - "8071:8071"
-    environment:
-      - DB_HOST
-      - DB_PORT
-      - DB_USER
-      - DB_PASSWORD
-      - AGGREGATOR_DB_NAME
-      - USER_DB_NAME
-      - POSTGRES_ROOT_PASSWORD
-      - GNEWS_API_KEY
-      - BBC_API_KEY
-      - NY_TIMES_API_KEY
-    env_file:
-      - .env
-    networks:
-      - choosethenews-network
-    depends_on:
-      - kafka
 volumes:
   kafka-volume:
   zookeeper-volume:
-networks:
-  choosethenews-network:
-    external: true

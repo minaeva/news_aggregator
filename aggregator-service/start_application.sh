@@ -1,5 +1,7 @@
-# Navigate to the application directory
+#!/bin/bash
+echo "Starting application..."
 cd /home/ec2-user/services/aggregator-service
-
-# Start the Java application
-java -jar aggregator-service-0.0.1-SNAPSHOT.jar
+pwd
+ls -la
+docker-compose up --build > /tmp/logfile.log 2> /tmp/errorlog.log
+echo "Application started."

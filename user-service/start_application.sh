@@ -1,7 +1,7 @@
 #!/bin/bash
-echo "Starting application..."
+echo "Starting user-service..."
 cd /home/ec2-user/services/user-service
 pwd
 ls -la
 docker-compose up -d --force-recreate user-service
-echo "Application started."
+echo "User-service started."

@@ -1,7 +1,7 @@
 #!/bin/bash
-echo "Starting application..."
+echo "Starting aggregator-service..."
 cd /home/ec2-user/services/aggregator-service
 pwd
 ls -la
-docker-compose up --build > /tmp/logfile.log 2> /tmp/errorlog.log
-echo "Application started."
+docker-compose up -d --force-recreate aggregator-service
+echo "Aggregator-service started."

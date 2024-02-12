@@ -9,11 +9,14 @@ services:
       - 'zookeeper-volume:/bitnami'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - choosethenews-network
   kafka:
     restart: always
     image: docker.io/bitnami/kafka:latest
     ports:
       - 9092:9092
+      - 9093:9093 # to have external access on the second listener
     volumes:
       - 'kafka-volume:/bitnami'
     environment:
@@ -23,13 +26,23 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_CREATE_TOPICS=keywordstopic:1:1
       - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://localhost:9092,EXTERNAL://localhost:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+    networks:
+      - choosethenews-network
     depends_on:
       - zookeeper
   aggregator-service:
     restart: always
-    build: .
+    image: openjdk:17
+    volumes:
+      - ${PWD}/aggregator-service-0.0.1-SNAPSHOT.jar:/app/aggregator-service.jar
+    command: >
+      java -XX:MaxRAMPercentage=10.0
+           -XX:InitialRAMPercentage=10.0
+           -XX:+ExitOnOutOfMemoryError
+           -Xmx64m
+           -jar /app/aggregator-service.jar
     ports:
       - "8071:8071"
     environment:

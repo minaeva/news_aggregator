@@ -2,7 +2,15 @@ version: '3.8'
 services:
   user-service:
     restart: always
-    build: .
+    image: openjdk:17
+    volumes:
+      - ${PWD}/user-service-0.0.1-SNAPSHOT.jar:/app/user-service.jar
+    command: >
+      java -XX:MaxRAMPercentage=10.0
+           -XX:InitialRAMPercentage=10.0
+           -XX:+ExitOnOutOfMemoryError
+           -Xmx64m
+           -jar /app/user-service.jar
     ports:
       - "8073:8073"
     environment:

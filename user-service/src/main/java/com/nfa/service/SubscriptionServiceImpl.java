@@ -1,7 +1,7 @@
 package com.nfa.service;
 
-import com.nfa.dto.SubscriptionDto;
 import com.nfa.controller.request.SubscriptionRequest;
+import com.nfa.dto.SubscriptionDto;
 import com.nfa.entity.Keyword;
 import com.nfa.entity.Reader;
 import com.nfa.entity.Subscription;
@@ -9,7 +9,6 @@ import com.nfa.exception.ReaderNotFoundException;
 import com.nfa.repository.KeywordRepository;
 import com.nfa.repository.ReaderRepository;
 import com.nfa.repository.SubscriptionRepository;
-import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final KeywordService keywordService;
 
     @Override
-    @Timed(value = "subscription.update")
     public SubscriptionDto update(String email, SubscriptionRequest request) {
         Reader reader = readerRepository.findByEmail(email)
                 .orElseThrow(() -> new ReaderNotFoundException("No reader with email " + email));
@@ -49,7 +47,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    @Timed(value = "subscription.getByKeyword")
     public List<SubscriptionDto> getByKeyword(String keyword) {
         Optional<Keyword> existingKeyword = keywordRepository.findByNameIgnoreCase(keyword);
         if (existingKeyword.isEmpty()) {
@@ -64,7 +61,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    @Timed(value = "subscription.getByEmail")
     public SubscriptionDto getByEmail(String email) {
         Optional<Subscription> subscription = subscriptionRepository
                 .findByReaderEmail(email);
@@ -83,7 +79,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private SubscriptionDto toDto(Subscription subscription) {
         List<String> keywordNames = new ArrayList<>();
-        if (subscription.getKeywords() != null){
+        if (subscription.getKeywords() != null) {
             keywordNames = subscription.getKeywords().stream().map(Keyword::getName).collect(toList());
         }
         return new SubscriptionDto(

@@ -20,7 +20,7 @@ phases:
       - pwd
 #      - ls target/
       - cp target/aggregator-service-0.0.1-SNAPSHOT.jar .
-      - zip aggregator-deployment-package.zip aggregator-service-0.0.1-SNAPSHOT.jar appspec.yml Dockerfile docker-compose.yml start_application.sh
+      - zip aggregator-deployment-package.zip aggregator-service-0.0.1-SNAPSHOT.jar appspec.yml cleanup.sh docker-compose.yml start_application.sh
       - aws s3 cp aggregator-deployment-package.zip s3://code-build-artifact-bucket/aggregator-service/
       - aws deploy create-deployment --application-name aggregator-service-on-ec2 --deployment-group-name deploy-aggregator-service-group --s3-location bucket=code-build-artifact-bucket,key=aggregator-service/aggregator-deployment-package.zip,bundleType=zip
 

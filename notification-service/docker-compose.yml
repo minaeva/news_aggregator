@@ -1,24 +1,41 @@
-version: '3.7'
+version: '3.8'
 services:
   redis:
+    restart: always
     image: "redis:alpine"
     hostname: redis
     ports:
       - "6379:6379"
-  postgres-notificator:
-    image: postgres:latest
+    networks:
+      - choosethenews-network
+  notification-service:
     restart: always
-    container_name: notificator-db-container
-    environment:
-      POSTGRES_DB: ${POSTGRES_NOTIFICATOR_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_ROOT_PASSWORD: ${POSTGRES_ROOT_PASSWORD}
-    logging:
-      options:
-        max-size: 10m
-        max-file: "3"
-    ports:
-      - ${POSTGRES_NOTIFICATOR_DB_PORT}:5432
+    image: openjdk:17
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ${PWD}/notification-service-0.0.1-SNAPSHOT.jar:/app/notification-service.jar # Adjusted the volume mapping
+    command: >
+      java -XX:MaxRAMPercentage=10.0
+           -XX:InitialRAMPercentage=10.0
+           -XX:+ExitOnOutOfMemoryError
+           -Xmx64m
+           -jar /app/notification-service.jar
+    ports:
+      - "8072:8072"
+    environment:
+      - DB_HOST
+      - DB_PORT
+      - DB_USER
+      - DB_PASSWORD
+      - NOTIFICATOR_DB_NAME
+      - POSTGRES_ROOT_PASSWORD
+      - MAIL_PASSWORD
+      - KAFKA_BROKER_URL=kafka:9092
+    env_file:
+      - .env
+    networks:
+      - choosethenews-network
+    depends_on:
+      - redis
+networks:
+  choosethenews-network:
+    external: true

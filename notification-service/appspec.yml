@@ -1,0 +1,10 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/services/notification-service
+hooks:
+  ApplicationStart:
+    - location: start_application.sh
+      timeout: 180
+      runas: ec2-user

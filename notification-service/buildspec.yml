@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+  pre_build:
+    commands:
+      - echo "Notification service Pre-Build started"
+      - docker network ls | grep choosethenews-network || docker network create choosethenews-network
+      - chmod +x notification-service/start_application.sh
+      - cd notification-service
+  build:
+    commands:
+      - echo "Notification service Build started on `date`"
+      - mvn clean package -DskipTests
+  post_build:
+    commands:
+      - echo "Notification service Build completed on `date`"
+      - pwd
+      - ls target/
+      - cp target/notification-service-0.0.1-SNAPSHOT.jar .
+      - zip notification-deployment-package.zip notification-service-0.0.1-SNAPSHOT.jar appspec.yml Dockerfile docker-compose.yml start_application.sh
+      - aws s3 cp notification-deployment-package.zip s3://code-build-artifact-bucket/notification-service/
+      - aws deploy create-deployment --application-name notification-service-on-ec2 --deployment-group-name deploy-notification-service-group --s3-location bucket=code-build-artifact-bucket,key=notification-service/notification-deployment-package.zip,bundleType=zip
+
+artifacts:
+  files:
+    - notification-deployment-package.zip
+
+cache:
+  paths:
+    - '/root/.m2/**/*'

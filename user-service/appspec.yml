@@ -4,6 +4,10 @@ files:
   - source: /
     destination: /home/ec2-user/services/user-service
 hooks:
+  BeforeInstall:
+    - location: cleanup.sh
+      timeout: 180
+      runas: ec2-user
   ApplicationStart:
     - location: start_application.sh
       timeout: 180

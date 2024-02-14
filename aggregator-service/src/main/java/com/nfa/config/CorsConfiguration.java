@@ -22,7 +22,7 @@ public class CorsConfiguration {
                                 "http://localhost:63342", // for local testing
                                 frontendUrl
                         )
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization");
             }
         };

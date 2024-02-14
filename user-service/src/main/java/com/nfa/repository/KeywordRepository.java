@@ -8,5 +8,4 @@ import java.util.Optional;
 public interface KeywordRepository extends JpaRepository<Keyword, Integer> {
 
     Optional<Keyword> findByNameIgnoreCase(String name);
-    Optional<Keyword> findByName(String name);
 }

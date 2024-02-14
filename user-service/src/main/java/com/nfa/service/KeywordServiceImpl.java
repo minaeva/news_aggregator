@@ -18,12 +18,11 @@ public class KeywordServiceImpl implements KeywordService {
     @Override
     public Keyword getByNameOrCreate(String name) {
         log.info("getByNameOrCreate, keyword is " + name);
+//        List<Keyword> all = keywordRepository.findAll();
+//        Optional<String> found = all.stream().map(Keyword::getName).map(String::toLowerCase).filter(n -> n.equals(name))
+//                .findAny();
         Optional<Keyword> existingKeyword = keywordRepository.findByNameIgnoreCase(name);
         log.info("optional findByNameIgnoreCase is " + existingKeyword);
-        log.info("findByNameIgnoreCase is ", existingKeyword.get());
-        Optional<Keyword> test = keywordRepository.findByName(name);
-        log.info("optional findByName is " + test);
-        log.info("findByName is ", test.get());
 
         return existingKeyword.orElseGet(() -> keywordRepository.save(new Keyword(name)));
     }

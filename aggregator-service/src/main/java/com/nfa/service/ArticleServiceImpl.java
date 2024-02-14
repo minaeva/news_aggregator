@@ -77,6 +77,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public Set<ArticleDto> findAllByJwt(String jwtWithBearer) {
         SubscriptionDto subscriptionDto = userClient.getSubscriptionByJwt(jwtWithBearer);
+        log.info("subscriptionDto is " + subscriptionDto);
         if (subscriptionDto == null) {
             log.info("Reader doesn't have any subscription with keywords to find the news to fit");
             return Set.of();
@@ -87,8 +88,10 @@ public class ArticleServiceImpl implements ArticleService {
             Optional<Keyword> savedKeyword = keywordService.getByName(keywordName);
             savedKeyword.ifPresent(readersKeywords::add);
         }
+        log.info("readersKeywords " + readersKeywords);
 
         List<Article> articles = articleRepository.findByKeywordsIn(readersKeywords);
+        log.info("articles " + articles);
         return articles.stream()
                 .map(this::toDto)
                 .collect(toSet());

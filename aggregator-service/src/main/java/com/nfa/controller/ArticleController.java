@@ -3,6 +3,7 @@ package com.nfa.controller;
 import com.nfa.dto.ArticleDto;
 import com.nfa.service.ArticleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/articles")
+@Slf4j
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -26,6 +28,7 @@ public class ArticleController {
 
     @GetMapping()
     public Set<ArticleDto> getReadersArticles(@RequestHeader(AUTHORIZATION) String jwtWithBearer) {
+        log.info("getReadersArticles triggered ");
         return articleService.findAllByJwt(jwtWithBearer);
     }
 

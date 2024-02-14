@@ -111,7 +111,7 @@ function isEmpty(str) {
 }
 
 function setPageTitle(text) {
-    document.getElementById("page_title").innerHTML = text.toUpperCase();
+    // document.getElementById("page_title").innerHTML = text.toUpperCase();
 }
 
 function loadRegister() {

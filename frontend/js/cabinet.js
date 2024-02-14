@@ -4,11 +4,6 @@ function hideLeftMenu() {
 }
 
 function clickHome() {
-    hideLeftMenu();
-    activateHomeMenu();
-}
-
-function activateHomeMenu() {
     if (getCurrentUserId() == null) {
         logout();
     }
@@ -38,8 +33,10 @@ async function showNews() {
             const articles = await response.json();
             console.log(articles);
             if (!articles || articles.length === 0) {
+                document.getElementById("noneOfYourKeywordsHitTheNews").classList.remove("hidden");
                 clickKeywords();
             } else {
+                document.getElementById("noneOfYourKeywordsHitTheNews").classList.add("hidden");
                 displayArticles(articles);
             }
         }
@@ -73,7 +70,7 @@ function displayArticles(articles) {
 }
 
 function clickKeywords() {
-    hideLeftMenu();
+    // hideLeftMenu();
     selectMenu('menu_keywords');
     setPageTitle('Keywords');
     hideAllShowOne("keywords_body");
@@ -81,7 +78,7 @@ function clickKeywords() {
 }
 
 function clickAbout() {
-    hideLeftMenu();
+    // hideLeftMenu();
     selectMenu('menu_about');
     setPageTitle('About');
     hideAllShowOne("about_body");
@@ -103,7 +100,7 @@ function fetchAndSetKeywords() {
             const keywords = data.keywordNames.join(',');
             console.log(keywords);
             $('.panel-body #keywordsInput').tagsinput('removeAll');
-            data.keywordNames.forEach(keyword => {
+            data.keywordNames.sort().forEach(keyword => {
                 $('.panel-body #keywordsInput').tagsinput('add', keyword);
             });
         })

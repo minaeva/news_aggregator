@@ -126,14 +126,14 @@
                 <div class="row">
                     <div class="col-md-9">
 
-                        <div class="panel panel-white">
+                        <div class="panel-white">
                             <!--TITLE-->
-                            <div class="panel-body">
-                                <div class="panel-group">
-                                    <div class="alert alert-info" id="page_title">
-                                    </div>
-                                </div>
-                            </div>
+<!--                            <div class="panel-body">-->
+<!--                                <div class="panel-group">-->
+<!--                                    <div class="alert alert-info" id="page_title">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
                             <!--NEWS-->
                             <div id="news_body" class="hidden">
@@ -151,7 +151,12 @@
                             <div id="keywords_body" class="form-group hidden">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="panel-body">
+                                        <div class="panel-body"><br>
+                                            <div class="row col-sm-12" id="noneOfYourKeywordsHitTheNews" class="hidden">
+                                                No news for you at the moment. But do not worry: <br>
+                                                - either <strong>add more keywords</strong> that are in the air (like "ukraine", "biden", "israel") <br>
+                                                - or, if you have just added, <strong>wait for a while</strong>: our collection job will work soon to fetch some fresh articles for you<br><br>
+                                            </div>
                                             <div class="row col-sm-12 keyword-tag">
                                                 <input type="text" id="keywordsInput" value=""
                                                        data-role="tagsinput" class="form-control">
@@ -170,29 +175,22 @@
                             <div id="about_body" class="hidden">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="panel panel-white">
+                                        <div class="panel-white">
                                             <div class="panel-body">
 
-                                                <div class="col-sm-12">
-                                                    <h4>1. You choose the keywords you are interested in.</h4>
-                                                    <h4>2. Job collects the articles from the news providers several times a
-                                                        day and collects the keywords each of them contains.</h4>
-                                                    <h4>3. Once a day an email notification is sent to you, as soon as
-                                                        there is at least one article fitting any of your keywords.</h4>
-                                                    <h4>4. You log into the Choose the News app and &ndash& see only the
-                                                        news that are important for you.</h4>
+                                                <div class="col-sm-12"><br>
+                                                    1. <strong>You</strong> choose the keywords<br>
+                                                    2. <strong>Job</strong> fetches the articles and collects their keywords<br>
+                                                    3. If there is an article fitting any of your keywords, <strong>you</strong> receive an email<br>
+                                                    4. <strong>You</strong> visit the Choose the News site and see only the
+                                                        news that are important for you.<br><br>
                                                 </div>
-
                                                 <div class="col-sm-12">
                                                     <img src="images/about.jpg" class="about-image" alt="choose the news">
                                                 </div>
-
-                                                <p>&nbsp;</p>
-                                                <p>&nbsp;</p>
-                                                <p>&nbsp;</p>
-                                                <p>&nbsp;</p>
-                                                <p>&nbsp;</p>
-                                                <p>Made by Minaeva</p>
+                                                <div class="col-sm-12"><br>
+                                                Made by Minaeva
+                                                </div>
                                             </div>
 
                                         </div>
@@ -231,6 +229,6 @@
 <script src="js/validate.js"></script>
 <!--<script src="js/google.js"></script>-->
 
-<script>activateHomeMenu();</script>
+<script>clickHome();</script>
 </body>
 </html>

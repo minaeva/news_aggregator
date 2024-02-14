@@ -1,5 +1,6 @@
 package com.nfa.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -8,6 +9,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfiguration {
 
+    @Value("${aws.s3.frontend.bucket}")
+    String frontendUrl;
+
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -15,8 +19,8 @@ public class CorsConfiguration {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                                "http://localhost:8073", // for local testing
-                                "http://choosethenews-frontend-bucket.s3-website.eu-central-1.amazonaws.com" // S3 frontend URL
+                                "http://localhost:63342", // for local testing
+                                frontendUrl
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
                         .allowedHeaders("Authorization");

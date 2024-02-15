@@ -8,6 +8,7 @@ import com.nfa.exception.ReaderUnauthorizedException;
 import com.nfa.exception.ReaderValidationException;
 import com.nfa.repository.ReaderRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -16,6 +17,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ReaderServiceImpl implements ReaderService {
 
@@ -27,6 +29,7 @@ public class ReaderServiceImpl implements ReaderService {
                 .orElseThrow(() -> new ReaderNotFoundException(
                         String.format("No reader with email %s found", email)));
 
+        log.info("foundByEmail user ", reader);
         return toDto(reader);
     }
 

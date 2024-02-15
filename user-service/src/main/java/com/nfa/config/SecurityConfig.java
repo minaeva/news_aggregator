@@ -33,8 +33,11 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-    @Value("${aws.s3.frontend.bucket}")
-    String frontendUrl;
+    @Value("${aws.s3.frontend.url}")
+    String httpMinaevaTech;
+
+    @Value("${aws.s3.frontend.url}")
+    String httpsMinaevaTech;
 
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
@@ -58,7 +61,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:63342", // for local testing
-                frontendUrl
+                httpMinaevaTech, httpsMinaevaTech
         ));
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

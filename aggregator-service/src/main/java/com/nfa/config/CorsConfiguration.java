@@ -9,8 +9,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfiguration {
 
-    @Value("${aws.s3.frontend.bucket}")
-    String frontendUrl;
+    @Value("${http.minaeva.tech}")
+    String httpMinaevaTech;
+
+    @Value("${https.minaeva.tech}")
+    String httpsMinaevaTech;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -20,7 +23,7 @@ public class CorsConfiguration {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:63342", // for local testing
-                                frontendUrl
+                                httpMinaevaTech, httpsMinaevaTech
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization");

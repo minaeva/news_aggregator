@@ -23,6 +23,7 @@ public class ArticleController {
 
     @GetMapping("/{pageNumber}/{pageSize}")
     public List<ArticleDto> getArticlesPaginated(@PathVariable int pageNumber, @PathVariable int pageSize) {
+        log.info("getArticlesPaginated triggered ");
         return articleService.findAll(pageNumber, pageSize);
     }
 

@@ -61,7 +61,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:63342", // for local testing
-                httpMinaevaTech, httpsMinaevaTech
+                httpMinaevaTech,
+                httpsMinaevaTech
         ));
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

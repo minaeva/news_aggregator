@@ -23,7 +23,8 @@ public class CorsConfiguration {
                 registry.addMapping("/**")
                         .allowedOrigins(
                                 "http://localhost:63342", // for local testing
-                                httpMinaevaTech, httpsMinaevaTech
+                                httpMinaevaTech,
+                                httpsMinaevaTech
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization");

@@ -33,10 +33,10 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-    @Value("${aws.s3.frontend.url}")
+    @Value("${http.minaeva.tech}")
     String httpMinaevaTech;
 
-    @Value("${aws.s3.frontend.url}")
+    @Value("${https.minaeva.tech}")
     String httpsMinaevaTech;
 
     @Bean

@@ -28,9 +28,11 @@ Open API, Oauth2.0, Lombok, Mockito, Wiremock, Testcontainers
 ---
 ### Prerequisites
 
-JVM 17 should be installed 
-
-Maven 3.9.2 should be installed
+- JVM 17 
+- Maven 3.9.2
+- Gradle 
+- Docker 
+- PSQL
 
 ---
 ### 1. Start all the containers

@@ -28,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/registration")
     public RegistrationResponse registerNewsUser(@RequestBody RegistrationRequest request) {
-        log.info("handling register a reader request: " + request);
+        log.info("handling registerNewsUser request: " + request);
 
         validateRegistrationRequest(request);
         ReaderDto readerDto = toReaderDto(request);
@@ -40,7 +40,7 @@ public class AuthController {
 
     @PostMapping("/auth")
     public AuthResponse authenticate(@RequestBody AuthRequest authRequest) {
-        log.info("handling authenticate reader request: " + authRequest);
+        log.info("handling authenticate request: " + authRequest);
         ReaderDto readerDto;
         readerDto = readerService.authenticate(authRequest.getEmail(), authRequest.getPassword());
 

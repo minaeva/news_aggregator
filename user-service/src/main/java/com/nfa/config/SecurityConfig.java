@@ -33,11 +33,8 @@ public class SecurityConfig {
     @Autowired
     private JwtFilter jwtFilter;
 
-    @Value("${http.minaeva.tech}")
-    String httpMinaevaTech;
-
-    @Value("${https.minaeva.tech}")
-    String httpsMinaevaTech;
+    @Value("${https.www.minaeva.tech}")
+    String httpsWwwMinaevaTech;
 
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
@@ -61,8 +58,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:63342", // for local testing
-                httpMinaevaTech,
-                httpsMinaevaTech
+                httpsWwwMinaevaTech
         ));
         configuration.addAllowedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

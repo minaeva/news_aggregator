@@ -17,7 +17,7 @@ phases:
   post_build:
     commands:
       - echo "User service Build completed on `date`"
-      - pwd
+#      - pwd
 #      - ls build/libs/
       - cp build/libs/user-service-0.0.1-SNAPSHOT.jar .
       - zip user-deployment-package.zip user-service-0.0.1-SNAPSHOT.jar appspec.yml cleanup.sh docker-compose.yml start_application.sh

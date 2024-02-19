@@ -26,7 +26,7 @@ services:
       - MAIL_PASSWORD
       - MAIL_TO
     env_file:
-      - .env
+      - ../.env
     networks:
       - choosethenews-network
 networks:

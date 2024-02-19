@@ -18,7 +18,6 @@ phases:
     commands:
       - echo "Aggregator service Build completed on `date`"
       - pwd
-#      - ls target/
       - cp target/aggregator-service-0.0.1-SNAPSHOT.jar .
       - zip aggregator-deployment-package.zip aggregator-service-0.0.1-SNAPSHOT.jar appspec.yml cleanup.sh docker-compose.yml start_application.sh
       - aws s3 cp aggregator-deployment-package.zip s3://code-build-artifact-bucket/aggregator-service/

@@ -1,4 +1,4 @@
 // const IP = "http://localhost";
-const IP = "http://52.57.165.188";
-const AGGREGATOR_SERVICE = IP + ":8071";
-const USER_SERVICE = IP + ":8073";
+const IP = "https://api.minaeva.tech";
+const AGGREGATOR_SERVICE = IP + ":8171";
+const USER_SERVICE = IP + ":8173";

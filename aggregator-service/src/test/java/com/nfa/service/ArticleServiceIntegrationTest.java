@@ -145,19 +145,19 @@ public class ArticleServiceIntegrationTest {
     }
 
     @Test
-    void findAllByJwt_whenSubscriptionDoesNotExist_shouldReturnEmptySet() {
+    void findAllByJwt_whenSubscriptionDoesNotExist_shouldReturnEmptyList() {
         stubFor(WireMock.get(urlPathMatching("/subscription/jwt"))
                 .willReturn(ok()
                         .withHeader("Content-Type", "application/json")
                         .withJsonBody(null)));
 
-        Set<ArticleDto> result = subject.findAllByJwt("token");
+        List<ArticleDto> result = subject.findAllByJwt("token");
 
-        assertThat(result).isEqualTo(Set.of());
+        assertThat(result).isEqualTo(List.of());
     }
 
     @Test
-    void findAllByJwt_whenSubscriptionExists_andKeywordDoesNotExist_shouldReturnEmptySet() {
+    void findAllByJwt_whenSubscriptionExists_andKeywordDoesNotExist_shouldReturnEmptyList() {
         SubscriptionDto subscriptionDto = new SubscriptionDto(
                 1L, "Alex", "alex@gmail.com", List.of("peace"), 1);
         JsonNode subscriptionAsJson = objectMapper.valueToTree(subscriptionDto);
@@ -166,13 +166,13 @@ public class ArticleServiceIntegrationTest {
                         .withHeader("Content-Type", "application/json")
                         .withJsonBody(subscriptionAsJson)));
 
-        Set<ArticleDto> result = subject.findAllByJwt("token");
+        List<ArticleDto> result = subject.findAllByJwt("token");
 
-        assertThat(result).isEqualTo(Set.of());
+        assertThat(result).isEqualTo(List.of());
     }
 
     @Test
-    void findAllByJwt_whenSubscriptionExists_andArticleDoesNotExist_shouldReturnEmptySet() {
+    void findAllByJwt_whenSubscriptionExists_andArticleDoesNotExist_shouldReturnEmptyList() {
         SubscriptionDto subscriptionDto = new SubscriptionDto(
                 1L, "Alex", "alex@gmail.com", List.of("peace"), 1);
         JsonNode subscriptionAsJson = objectMapper.valueToTree(subscriptionDto);
@@ -183,9 +183,9 @@ public class ArticleServiceIntegrationTest {
         Keyword keyword = new Keyword("climate");
         keywordRepository.save(keyword);
 
-        Set<ArticleDto> result = subject.findAllByJwt("token");
+        List<ArticleDto> result = subject.findAllByJwt("token");
 
-        assertThat(result).isEqualTo(Set.of());
+        assertThat(result).isEqualTo(List.of());
     }
 
     @Test
@@ -202,9 +202,9 @@ public class ArticleServiceIntegrationTest {
         foundArticle.setKeywords(Set.of(keyword));
         articleRepository.save(foundArticle);
 
-        Set<ArticleDto> result = subject.findAllByJwt("token");
+        List<ArticleDto> result = subject.findAllByJwt("token");
 
-        Set<ArticleDto> articleDtos = Set.of(new ArticleDto("title", "description", "content",
+        List<ArticleDto> articleDtos = List.of(new ArticleDto("title", "description", "content",
                 "url", null, null, List.of(new KeywordDto("peace"))));
         assertThat(articleDtos)
                 .usingRecursiveAssertion()

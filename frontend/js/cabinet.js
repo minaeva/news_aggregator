@@ -1,8 +1,3 @@
-function hideLeftMenu() {
-    $('#sidebar-toggle-button-close').click();
-    return false;
-}
-
 function clickHome() {
     if (getCurrentUserId() == null) {
         logout();
@@ -41,7 +36,9 @@ async function showNews() {
             }
         }
     } catch (error) {
+        showWarningModal("Server is unavailable");
         console.error('Error fetching news:', error);
+        clickAbout();
     }
 }
 
@@ -70,7 +67,6 @@ function displayArticles(articles) {
 }
 
 function clickKeywords() {
-    // hideLeftMenu();
     selectMenu('menu_keywords');
     setPageTitle('Keywords');
     hideAllShowOne("keywords_body");
@@ -78,7 +74,6 @@ function clickKeywords() {
 }
 
 function clickAbout() {
-    // hideLeftMenu();
     selectMenu('menu_about');
     setPageTitle('About');
     hideAllShowOne("about_body");

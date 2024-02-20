@@ -75,12 +75,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Set<ArticleDto> findAllByJwt(String jwtWithBearer) {
+    public List<ArticleDto> findAllByJwt(String jwtWithBearer) {
         SubscriptionDto subscriptionDto = userClient.getSubscriptionByJwt(jwtWithBearer);
         log.info("subscriptionDto is " + subscriptionDto);
         if (subscriptionDto == null) {
             log.info("Reader doesn't have any subscription with keywords to find the news to fit");
-            return Set.of();
+            return List.of();
         }
 
         Set<Keyword> readersKeywords = new HashSet<>();
@@ -91,10 +91,13 @@ public class ArticleServiceImpl implements ArticleService {
         log.info("readersKeywords " + readersKeywords);
 
         List<Article> articles = articleRepository.findByKeywordsIn(readersKeywords);
-        log.info("articles " + articles);
+
+        ArticleDateComparator comparator = new ArticleDateComparator();
+        articles.sort(comparator);
         return articles.stream()
+                .distinct()
                 .map(this::toDto)
-                .collect(toSet());
+                .toList();
     }
 
     private List<ArticleDto> toArticleDtoList(Page<Article> articleEntities) {

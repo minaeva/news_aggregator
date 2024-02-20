@@ -6,7 +6,6 @@ import com.nfa.entity.primary.Article;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface ArticleService {
 
@@ -22,5 +21,5 @@ public interface ArticleService {
 
     boolean isArticleInDB(LocalDateTime dateAdded, String title);
 
-    Set<ArticleDto> findAllByJwt (String jwt);
+    List<ArticleDto> findAllByJwt (String jwt);
 }

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
@@ -28,7 +27,7 @@ public class ArticleController {
     }
 
     @GetMapping()
-    public Set<ArticleDto> getReadersArticles(@RequestHeader(AUTHORIZATION) String jwtWithBearer) {
+    public List<ArticleDto> getReadersArticles(@RequestHeader(AUTHORIZATION) String jwtWithBearer) {
         log.info("getReadersArticles triggered ");
         return articleService.findAllByJwt(jwtWithBearer);
     }

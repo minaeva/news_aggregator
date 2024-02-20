@@ -7,8 +7,6 @@ phases:
   pre_build:
     commands:
       - echo "Aggregator service Pre-Build started"
-      - docker network ls | grep choosethenews-network || docker network create choosethenews-network
-      - chmod +x aggregator-service/start_application.sh
       - cd aggregator-service
   build:
     commands:

@@ -58,7 +58,7 @@ services:
       - BBC_API_KEY
       - NY_TIMES_API_KEY
     env_file:
-      - .env
+      - ../.env
     networks:
       - choosethenews-network
     depends_on:
